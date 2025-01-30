@@ -1,19 +1,21 @@
 # virtual-study-room
 A Virtual Study Room website called TheStudySpot made by the group MangoCat
 
-Team MangoCat Large Group Project:
-Team members
-The members of the team are:
+Team MangoCat Large Group Project Members;
+Aamukta Thogata
 Agrima Khare
-Aamukta Malyada Thogata
-
-
+Isha Selvakumaran
+Natalia Ahsan
+Onessa Crispeyn
+Prapti Patel
+Yonna Khatri
+Yuliia Bohak
 
 Project structure
-The project is called task_manager. It currently consists of a single app tasks.
+The project is called virtual-study-room. It is made up of a React frontend, Django Backend using Rest API calls.
 
 Deployed version of the application
-The deployed version of the application can be found at TeamHippo1.pythonanywhere.com.
+The deployed version of the application can be found at %%%%%%
 
 Installation instructions
 To install the software and use it in your local development environment, you must first set up and activate a local development environment. From the root of the project:
