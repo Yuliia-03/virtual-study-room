@@ -44,7 +44,7 @@ $ in application/frontend/ npm run build
 
 Run the Django project:
 ```
-$ python manage.py runserver
+$ in application/ python manage.py runserver
 ```
 
 Migrate the database:
