@@ -34,12 +34,12 @@ $ pip3 install -r requirements.txt
 Install React.js:
 
 ```
-$ frontend/npm install
+$ application/frontend/npm install
 ```
 
 Build the React project:
 ```
-$ frontend/npm run build
+$ application/frontend/npm run build
 ```
 
 Run the Django project:
