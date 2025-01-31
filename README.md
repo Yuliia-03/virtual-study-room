@@ -31,6 +31,22 @@ Install all required packages:
 $ pip3 install -r requirements.txt
 ```
 
+Install React.js:
+
+```
+$ frontend/npm install
+```
+
+Build the React project:
+```
+$ frontend/npm run build
+```
+
+Run the Django project:
+```
+$ python manage.py runserver
+```
+
 Migrate the database:
 
 ```
