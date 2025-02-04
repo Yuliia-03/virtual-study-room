@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 '''
 toDoList Model:
@@ -18,12 +19,13 @@ str Method:
 '''
 
 class toDoList(models.Model):
-    list_id = models.CharField(max_length=255, primary_key=True)
+    list_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255, blank=False)
     content = models.CharField(blank=True)
     creation_date = models.DateField(auto_now_add=True)
     is_completed = models.BooleanField(default=False)
     is_shared = models.BooleanField(default=False)
+    '''user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)'''
 
     def __str__(self):
         return(f"{self.title} has list_id {self.list_id}")
