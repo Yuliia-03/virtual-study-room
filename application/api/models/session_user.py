@@ -6,10 +6,8 @@ from .study_session import StudySession
 
 class SessionUser(models.Model):
     """
-    Represents a user's participation in a study session.
-    Tracks their status, focus time, and other session-specific information.
+    Represents a user's participation in a study session, tracking a range of session-specific information.
     """
-    id = models.AutoField(primary_key=True)
     # Foreign keys
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='session_users')
     session = models.ForeignKey(StudySession, on_delete=models.CASCADE, related_name='session_users')
@@ -25,19 +23,21 @@ class SessionUser(models.Model):
         ],
         default='CASUAL'
     )
-    # What specific thing the user is currently working on or studying
+    # What specific thing the user is currently working on
     focus_target = models.CharField(max_length=255, null=True, blank=True)
     # When the user joined the session
     joined_at = models.DateTimeField(default=now)
     # All the time spent in FOCUSED status during the session
     focus_time = models.DurationField(default=datetime.timedelta(0))
-    # Timestamp of the last status change, used to calculate focus duration
+    # Timestamps the last status change, to calculate focus duration
     last_status_change = models.DateTimeField(default=now)
     # Track user's last activity in the session
     last_active = models.DateTimeField(default=now)
 
     class Meta:
+        # Sort by newest sessions and joins first
         ordering = ['-session', '-joined_at']
+        # Index for faster user-session lookups
         indexes = [
             models.Index(fields=['user', 'session'], name='session_user_lookup_idx'),
         ]
@@ -67,10 +67,7 @@ class SessionUser(models.Model):
 
     def leave_session(self):
         """
-        Handle user leaving the session and update statistics.
-        - Finalises focus time calculation if user was in FOCUSED status
-        - Updates the user's total study hours in their profile
-        - Removes the SessionUser entry
+        Calculate final focus time, update user's study statistics, and remove session entry.
         """
         # Calculate final focus time
         if self.status == 'FOCUSED':
