@@ -6,6 +6,7 @@ from django.utils.timezone import now
 # model for the study session (can be group or individual)
 class StudySession(models.Model):
 
+    # user that creates the study session
     createdBy = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'study_session')
     sessionName = models.CharField(max_length=255, blank=False)
     startTime = models.DateTimeField(default=now)
