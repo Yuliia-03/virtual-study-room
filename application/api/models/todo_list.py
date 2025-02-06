@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.forms import ValidationError
 
 '''
 toDoList Model:
@@ -12,6 +13,10 @@ Model Breakdown:
     creation_date -> DateField and this automatically sets that field to the current date. This is effectively a read-only field.
     is_completed -> BooleanField that is set to false by default, this indiacted whether the user has completed the task.
     is_shared -> BooleanField that is also set to false by default, this field is to mark whether the user wants to share the toDolist item with others.
+
+save Method:
+    This makes sure that after the creation_date has been added as a field, it can't be amended.
+
 str Method:
     This prints out the title and list_id of the toDoList item, in the database, useful for debugging. 
 
@@ -24,6 +29,13 @@ class toDoList(models.Model):
     creation_date = models.DateField(auto_now_add=True)
     is_completed = models.BooleanField(default=False)
     is_shared = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if self.pk: 
+            original = toDoList.objects.get(pk=self.pk)
+            if self.creation_date != original.creation_date:
+                raise ValidationError("You cannot modify the creation_date.")
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return(f"{self.title} has list_id {self.list_id}")

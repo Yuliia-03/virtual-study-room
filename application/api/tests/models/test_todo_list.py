@@ -1,10 +1,11 @@
 from django.forms import ValidationError
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from api.models.todo_list import toDoList
 from datetime import date, timedelta
 
 """ Creating toDoList Model Tests"""
 
+@override_settings(MIGRATION_MODULES={"api": None})
 class toDoListModelTest(TestCase):
     """Creating test toDoList objects"""
     def setUp(self):
@@ -55,8 +56,9 @@ class toDoListModelTest(TestCase):
 
     """Testing whether an invalid boolean field is correctly shown as invalid"""
     def test_boolean_field_invalid(self):
-         with self.assertRaises(ValueError):
-            toDoList.objects.create(title="Invalid Bool", is_completed="yes")
+         with self.assertRaises(ValidationError):
+            todo3 = toDoList.objects.create(title="Invalid Bool", is_completed="yes")
+            todo3.full_clean()
 
     """Testing that after each object is created, the new toDoList object's list_id is incremented"""
     def test_auto_increment_list_id(self):
@@ -72,19 +74,20 @@ class toDoListModelTest(TestCase):
 
     """Testing if the creation_date is not amendable after the toDoList object has been created"""
     def test_creation_date_is_read_only(self):
-        with self.assertRaises(ValueError):
-            self.todo.creation_date = date.today() - timedelta(days=1)
-            self.todo.save()
+        original_date = self.todo.creation_date
+        with self.assertRaises(ValidationError):
+            self.todo.creation_date = original_date - timedelta(days=1)
+            self.todo.save() 
 
     """Testing if another toDoList object is created on the same day, then it should have the same creation_date as the previous toDoList object"""
     def test_creation_date_with_multiple_objects_is_valid(self):
         todoLater = toDoList.objects.create(title="Test task3")
-        self.assertEqual(self.todoLater.creation_date, date.today())
+        self.assertEqual(todoLater.creation_date, date.today())
         self.assertEqual(self.todo.creation_date, todoLater.creation_date)
 
     """Testing the string method, seeing if it outputs the correct expected message"""
     def test_str(self):
         expected_str = f'Test task has list_id {self.todo.list_id}'
-        self.assertEquals(str(self.todo), expected_str)
+        self.assertEqual(str(self.todo), expected_str)
 
 
