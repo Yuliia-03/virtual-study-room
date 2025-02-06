@@ -12,7 +12,6 @@ Model Breakdown:
     creation_date -> DateField and this automatically sets that field to the current date. This is effectively a read-only field.
     is_completed -> BooleanField that is set to false by default, this indiacted whether the user has completed the task.
     is_shared -> BooleanField that is also set to false by default, this field is to mark whether the user wants to share the toDolist item with others.
-
 str Method:
     This prints out the title and list_id of the toDoList item, in the database, useful for debugging. 
 
@@ -21,11 +20,10 @@ str Method:
 class toDoList(models.Model):
     list_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255, blank=False)
-    content = models.CharField(blank=True)
+    content = models.CharField(max_length=1000, blank=True)
     creation_date = models.DateField(auto_now_add=True)
     is_completed = models.BooleanField(default=False)
     is_shared = models.BooleanField(default=False)
-    '''user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)'''
 
     def __str__(self):
         return(f"{self.title} has list_id {self.list_id}")
