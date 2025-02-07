@@ -2,6 +2,7 @@
 from django.test import TestCase
 from api.models import StudySession, User
 from datetime import datetime, time, date
+from django.core.exceptions import ValidationError
 
 class StudySessionTestCase(TestCase):
     """Unit tests for the StudySession model."""
