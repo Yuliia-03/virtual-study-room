@@ -1,0 +1,32 @@
+[
+    {
+        "model": "api.friends",
+        "pk": 1,
+        "fields": {
+            "user1": 1, 
+            "user2": 2,
+            "status": "Accepted", 
+            "created_at": "2025-02-01T12:00:00Z"
+        }
+    },
+    {
+        "model": "api.friends",
+        "pk": 2,
+        "fields": {
+            "user1": 2,
+            "user2": 3,
+            "status": "Pending",
+            "created_at": "2025-02-01T12:00:00Z"
+        }
+    },
+    {
+        "model": "api.friends",
+        "pk": 3,
+        "fields": {
+            "user1": 1,
+            "user2": 3,
+            "status": "Rejected",
+            "created_at": "2025-02-01T12:00:00Z"
+        }
+    }
+]
