@@ -5,3 +5,4 @@ from .study_session import *
 from .todo_list import *
 from .todo_list_user import *
 from .user import *
+from .motivational_message import *
