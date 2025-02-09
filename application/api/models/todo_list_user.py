@@ -1,4 +1,3 @@
-from django.db import modelfrom 
 from django.db import models
 from .user import User
 from .todo_list import toDoList
