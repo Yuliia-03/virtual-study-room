@@ -33,8 +33,8 @@ class SignUpForm(NewPasswordMixin, forms.ModelForm):
         user = User(
             username=self.cleaned_data['username'],
             email=self.cleaned_data['email'],
-            first_name=self.cleaned_data['first_name'],
-            last_name=self.cleaned_data['last_name']
+            firstname=self.cleaned_data['firstname'],
+            lastname=self.cleaned_data['lastname']
         )
         user.set_password(self.cleaned_data['new_password'])
         user.save()

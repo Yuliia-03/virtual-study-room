@@ -44,7 +44,7 @@ class PasswordForm(NewPasswordMixin):
         super().clean()
         password = self.cleaned_data.get('password')
         if self.user is not None:
-            user = authenticate(username=self.user.username, password=password)
+            user = authenticate(email=self.user.email, password=password)
         else:
             user = None
         if user is None:
