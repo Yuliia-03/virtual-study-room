@@ -27,14 +27,14 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR(f'Error while seeding database: {e}'))
         
         #since we don't have a users seeder yet, I created a function, however I can't call it without creating users first
-        #self.generate_random_lessons()
+        #self.generate_random_friendss()
 
     def generate_random_friends(self):
         friends_count = Friends.objects.count()
-        while lesson_count < self.FRIENDS_COUNT:
-            print(f"Seeding lesson {friends_count}/{self.FRIENDS_COUNT}", end='\r')
-            self.generate_lesson()
-            lesson_count = Friends.objects.count()
+        while friends_count < self.FRIENDS_COUNT:
+            print(f"Seeding friends {friends_count}/{self.FRIENDS_COUNT}", end='\r')
+            self.generate_friends()
+            friends_count = Friends.objects.count()
         print("Friends seeding complete.")
 
     def generate_friends(self):
@@ -47,9 +47,21 @@ class Command(BaseCommand):
         status = choice(statuses)
 
         if not user1 == user2 and not Friends.are_friends(user1, user2):
-            self.create_lesson({
+            self.create_friends({
                 'user1': user1,
                 'user2': user2,
                 'status': status,
                 'created_at': created_at
             })
+    
+    def create_friends(self, data):
+        try:
+            friends = Friends.objects.create(
+                user1=data["user1"],
+                user2=data["user2"],
+                status=data["status"],
+                created_at=data["created_at"]
+            )
+            return friends
+        except:
+            pass
