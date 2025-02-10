@@ -11,7 +11,7 @@ class SessionUser(models.Model):
     # Foreign keys
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='session_users')
     session = models.ForeignKey(StudySession, on_delete=models.CASCADE, related_name='session_users')
-    
+    # Some extra fields
     # Track which join this is (first join = 1, second = 2, etc.)
     join_sequence = models.PositiveIntegerField(default=1)
     # Current status in the session - determines availability and focus state
@@ -36,11 +36,7 @@ class SessionUser(models.Model):
 
     class Meta:
         # Sort by newest sessions and joins first
-        ordering = ['-session', '-joined_at']
-        # Index for faster user-session lookups
-        indexes = [
-            models.Index(fields=['user', 'session'], name='session_user_lookup_idx'),
-        ]
+        ordering = ['session', 'joined_at']
 
     def __str__(self):
         return f"{self.user.username} - {self.get_status_display()} - {self.session.session_name}"
@@ -48,8 +44,8 @@ class SessionUser(models.Model):
     def update_status(self, new_status):
         """
         Update user's status and track-focused study time.
-        If user was previously in FOCUSED status, adds the elapsed time
-        to their total focus_time before changing status.
+        If user was in FOCUSED status, adds the elapsed time
+        to their total focus time before changing status.
         """
         if new_status not in dict(self.status.choices).keys():
             raise ValueError("Invalid status")
