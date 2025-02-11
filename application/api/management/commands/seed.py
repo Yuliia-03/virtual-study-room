@@ -1,0 +1,84 @@
+from django.core.management.base import BaseCommand, CommandError
+from api.models.motivational_message import MotivationalMessage
+from django.core.management import call_command
+from api.models import Friends, User, Status
+
+import pytz
+#from faker import Faker
+from random import choice
+
+'''
+For a default users we can simply create a json file and upload the data (have a look on tests/fixtures) 
+This data can be accessed and used for tests and seeder, which helps to avoid rewriting same code
+If we have to use a faker, than simply add function and call in handle function after call_command()
+'''
+
+class Command(BaseCommand):
+
+    FRIENDS_COUNT = 10
+    
+    def handle(self, *args, **kwargs):
+        print("Starting database seeding...")
+
+        try:
+            call_command('loaddata', 'api/tests/fixtures/default_user.json')
+            call_command('loaddata', 'api/tests/fixtures/default_friends.json')
+        except Exception as e:
+            self.stdout.write(self.style.ERROR(f'Error while seeding database: {e}'))
+        
+        #since we don't have a users seeder yet, I created a function, however I can't call it without creating users first
+        #self.generate_random_friendss()
+        self.seed_motivationalMessage()
+
+    def generate_random_friends(self):
+        friends_count = Friends.objects.count()
+        while friends_count < self.FRIENDS_COUNT:
+            print(f"Seeding friends {friends_count}/{self.FRIENDS_COUNT}", end='\r')
+            self.generate_friends()
+            friends_count = Friends.objects.count()
+        print("Friends seeding complete.")
+
+    def generate_friends(self):
+        users = User.objects.all()
+        statuses = [c[0] for c in Status.choices]
+        created_at = "2025-02-01T12:00:00Z"
+
+        user1 = choice(users)
+        user2 = choice(users)
+        status = choice(statuses)
+
+        if not user1 == user2 and not Friends.are_friends(user1, user2):
+            self.create_friends({
+                'user1': user1,
+                'user2': user2,
+                'status': status,
+                'created_at': created_at
+            })
+    
+    def create_friends(self, data):
+        try:
+            friends = Friends.objects.create(
+                user1=data["user1"],
+                user2=data["user2"],
+                status=data["status"],
+                created_at=data["created_at"]
+            )
+            return friends
+        except:
+            pass
+    
+    def seed_motivationalMessage(self):
+        messages = [
+            "Believe in yourself and all that you are.",
+            "Hard work beats talent when talent doesn’t work hard.",
+            "You are capable of more than you know.",
+            "Success is not final, failure is not fatal: It is the courage to continue that counts.",
+            "Don't watch the clock; do what it does. Keep going.",
+            "Difficulties in life are intended to make us better, not bitter.",
+            "You don’t have to be great to start, but you have to start to be great.",
+        ]
+
+        for msg in messages:
+            MotivationalMessage.objects.get_or_create(text=msg)
+
+        self.stdout.write(self.style.SUCCESS(f'Successfully seeded {len(messages)} motivational messages.'))
