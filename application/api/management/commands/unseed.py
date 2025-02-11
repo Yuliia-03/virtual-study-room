@@ -11,11 +11,13 @@ class Command(BaseCommand):
         """Unseed the database."""
         print("Starting database unseeding...")
 
-        # Delete in order to respect foreign key constraints
-        
-
         print("Deleting friends...")
         Friends.objects.all().delete()
 
+        print("Deleting rewards...")
+        Rewards.objects.all().delete()
+
         print("Deleting users...")
         User.objects.all().delete()
+        
+        print("Database successfully unseeded!")
