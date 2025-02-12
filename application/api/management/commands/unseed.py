@@ -11,6 +11,7 @@ class Command(BaseCommand):
         """Unseed the database."""
         print("Starting database unseeding...")
 
+
         # Delete in order to respect foreign key constraints
 
         print("Deleting To Do List Items")
@@ -19,8 +20,16 @@ class Command(BaseCommand):
         print("Deleting all Permission Items")
         Permission.objects.all().delete()
 
+
         print("Deleting friends...")
         Friends.objects.all().delete()
 
+        print("Deleting rewards...")
+        Rewards.objects.all().delete()
+
         print("Deleting users...")
+
         User.objects.all().delete()
+        
+        print("Database successfully unseeded!")
+
