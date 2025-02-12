@@ -874,6 +874,10 @@ local.properties
 
 # Log/OS Files
 
+# Migrations
+application/migrations/*
+**/migrations/
+
 # Android Studio generated files and folders
 captures/
 .externalNativeBuild/

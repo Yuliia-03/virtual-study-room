@@ -1,11 +1,12 @@
 from django.core.management.base import BaseCommand, CommandError
 from api.models.motivational_message import MotivationalMessage
+
 from django.core.management import call_command
-from api.models import Friends, User, Status
+from api.models import Friends, User, Status, Rewards
 
 import pytz
-#from faker import Faker
-from random import choice
+from faker import Faker
+from random import choice, randint
 
 '''
 For a default users we can simply create a json file and upload the data (have a look on tests/fixtures) 
@@ -16,7 +17,14 @@ If we have to use a faker, than simply add function and call in handle function 
 class Command(BaseCommand):
 
     FRIENDS_COUNT = 10
+    USER_COUNT = 300
+    REWARDS_COUNT = 100
+    DEFAULT_PASSWORD = "Password123"
     
+    def __init__(self):
+        super().__init__()
+        self.faker = Faker('en_GB')
+        
     def handle(self, *args, **kwargs):
         print("Starting database seeding...")
 
@@ -25,15 +33,20 @@ class Command(BaseCommand):
             call_command('loaddata', 'api/tests/fixtures/default_friends.json')
         except Exception as e:
             self.stdout.write(self.style.ERROR(f'Error while seeding database: {e}'))
-        
-        #since we don't have a users seeder yet, I created a function, however I can't call it without creating users first
-        #self.generate_random_friendss()
+      
         self.seed_motivationalMessage()
+
+        self.generating_users()
+        self.generate_random_friends()
+        self. generating_rewards()
+        print("Database seeded successfully!")
+        
+
 
     def generate_random_friends(self):
         friends_count = Friends.objects.count()
         while friends_count < self.FRIENDS_COUNT:
-            print(f"Seeding friends {friends_count}/{self.FRIENDS_COUNT}", end='\r')
+            print(f"Seeding friend {friends_count}/{self.FRIENDS_COUNT}", end='\r')
             self.generate_friends()
             friends_count = Friends.objects.count()
         print("Friends seeding complete.")
@@ -66,6 +79,7 @@ class Command(BaseCommand):
             return friends
         except:
             pass
+
     
     def seed_motivationalMessage(self):
         messages = [
@@ -82,3 +96,49 @@ class Command(BaseCommand):
             MotivationalMessage.objects.get_or_create(text=msg)
 
         self.stdout.write(self.style.SUCCESS(f'Successfully seeded {len(messages)} motivational messages.'))
+
+
+    def generating_users(self):
+        for x in range(self.USER_COUNT):
+            print(f"Seeding user {x+1}/{self.USER_COUNT}", end='\r')
+            self.generate_random_user()
+
+    def try_create_user(self, data):
+        try:
+            self.create_user(data)
+        except Exception as e:
+            print(f"Failed to create user: {e}")
+
+    def create_user(self, data):
+        User.objects.create_user(firstname = data['firstName'], lastname = data['lastName'], email = data['email'], username = data['username'], password = self.DEFAULT_PASSWORD, hours_studied = data['hoursStudied'], streaks = data['streak'])
+
+    def generate_random_user(self):
+        firstName = self.faker.first_name()
+        lastName = self.faker.last_name()
+        email = self.create_email(firstName, lastName)
+        username = self.create_username(firstName, lastName)
+        hoursStudied = randint(0, 8760)     # assuming that the hoursStudied reset every year
+        streak = randint(0, 365)            # assuming the streaks reset every year
+
+        self.try_create_user({'firstName': firstName, 'lastName' : lastName, 'email': email, 'username': username, 'hoursStudied': hoursStudied, 'streak': streak})
+
+    def generating_rewards(self):
+        for x in range(self.REWARDS_COUNT):
+            print(f"Seeding user {x+1}/{self.REWARDS_COUNT}", end='\r')
+            self.generate_random_reward()
+
+    def generate_random_reward(self):
+        user = choice(User.objects.all())
+        reward_id = randint(1,100)      # would be linked to firebase but for now is random numbers
+        try:
+            Rewards.objects.create(user = user, reward_number = reward_id)
+        except Exception as e:
+            print(f"Failed to create reward: {e}")
+
+    # Helper functions
+    def create_username(self, first_name, last_name):
+        return '@' + first_name.lower() + last_name.lower()
+
+
+    def create_email(self, first_name, last_name):
+        return first_name.lower() + '.' + last_name.lower() + '@example.org'
