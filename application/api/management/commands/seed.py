@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
+from api.models.motivational_message import MotivationalMessage
 
 from django.core.management import call_command
 from api.models import Friends, User, Status, Rewards
@@ -23,7 +24,7 @@ class Command(BaseCommand):
     def __init__(self):
         super().__init__()
         self.faker = Faker('en_GB')
-
+        
     def handle(self, *args, **kwargs):
         print("Starting database seeding...")
 
@@ -32,12 +33,15 @@ class Command(BaseCommand):
             call_command('loaddata', 'api/tests/fixtures/default_friends.json')
         except Exception as e:
             self.stdout.write(self.style.ERROR(f'Error while seeding database: {e}'))
+      
+        self.seed_motivationalMessage()
 
         self.generating_users()
         self.generate_random_friends()
         self. generating_rewards()
         print("Database seeded successfully!")
         
+
 
     def generate_random_friends(self):
         friends_count = Friends.objects.count()
@@ -75,6 +79,24 @@ class Command(BaseCommand):
             return friends
         except:
             pass
+
+    
+    def seed_motivationalMessage(self):
+        messages = [
+            "Believe in yourself and all that you are.",
+            "Hard work beats talent when talent doesn’t work hard.",
+            "You are capable of more than you know.",
+            "Success is not final, failure is not fatal: It is the courage to continue that counts.",
+            "Don't watch the clock; do what it does. Keep going.",
+            "Difficulties in life are intended to make us better, not bitter.",
+            "You don’t have to be great to start, but you have to start to be great.",
+        ]
+
+        for msg in messages:
+            MotivationalMessage.objects.get_or_create(text=msg)
+
+        self.stdout.write(self.style.SUCCESS(f'Successfully seeded {len(messages)} motivational messages.'))
+
 
     def generating_users(self):
         for x in range(self.USER_COUNT):
