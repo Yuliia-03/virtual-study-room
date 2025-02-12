@@ -12,16 +12,15 @@ class Command(BaseCommand):
         print("Starting database unseeding...")
 
         # Delete in order to respect foreign key constraints
-        
-
-        print("Deleting friends...")
-        Friends.objects.all().delete()
-
-        print("Deleting users...")
-        User.objects.all().delete()
 
         print("Deleting To Do List Items")
         toDoList.objects.all().delete()
 
         print("Deleting all Permission Items")
         Permission.objects.all().delete()
+
+        print("Deleting friends...")
+        Friends.objects.all().delete()
+
+        print("Deleting users...")
+        User.objects.all().delete()

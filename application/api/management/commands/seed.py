@@ -30,8 +30,8 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR(f'Error while seeding database: {e}'))
         
         #since we don't have a users seeder yet, I created a function, however I can't call it without creating users first
-        #self.generate_random_friendss()
-        #self.generate_toDoListUsers()
+        self.generate_random_friends()
+        self.generate_toDoListUsers()
         self.generate_random_toDoLists()
 
 
