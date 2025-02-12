@@ -3,11 +3,11 @@ logging.basicConfig(level=logging.INFO, handlers=[logging.StreamHandler()])
 from django.core.management.base import BaseCommand, CommandError
 
 from django.core.management import call_command
-from api.models import Friends, User, Status
+from api.models import Friends, User, Status, toDoList, Permission, MotivationalMessage, Rewards
 
 import pytz
-#from faker import Faker
-from random import choice
+from faker import Faker
+from random import choice, randint, sample
 
 '''
 For a default users we can simply create a json file and upload the data (have a look on tests/fixtures) 
@@ -18,6 +18,14 @@ If we have to use a faker, than simply add function and call in handle function 
 class Command(BaseCommand):
 
     FRIENDS_COUNT = 10
+    USER_COUNT = 30
+    REWARDS_COUNT = 10
+    DEFAULT_PASSWORD = "Password123"
+    TODOLIST_COUNT = 10
+
+    def __init__(self):
+        super().__init__()
+        self.faker = Faker('en_GB')
     
     def handle(self, *args, **kwargs):
         print("Starting database seeding...")
@@ -29,7 +37,12 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR(f'Error while seeding database: {e}'))
         
         #since we don't have a users seeder yet, I created a function, however I can't call it without creating users first
-        #self.generate_random_friendss()
+        self.seed_motivationalMessage()
+        self.generating_users()
+        self.generate_random_friends()
+        self.generating_rewards()
+        self.generate_random_toDoLists()
+        self.generate_toDoListUsers()
 
     def generate_random_friends(self):
         friends_count = Friends.objects.count()
@@ -67,3 +80,143 @@ class Command(BaseCommand):
             return friends
         except:
             pass
+
+    def seed_motivationalMessage(self):
+        messages = [
+            "Believe in yourself and all that you are.",
+            "Hard work beats talent when talent doesn’t work hard.",
+            "You are capable of more than you know.",
+            "Success is not final, failure is not fatal: It is the courage to continue that counts.",
+            "Don't watch the clock; do what it does. Keep going.",
+            "Difficulties in life are intended to make us better, not bitter.",
+            "You don’t have to be great to start, but you have to start to be great.",
+        ]
+
+        for msg in messages:
+            MotivationalMessage.objects.get_or_create(text=msg)
+
+        self.stdout.write(self.style.SUCCESS(f'Successfully seeded {len(messages)} motivational messages.'))
+
+
+    def generating_users(self):
+        for x in range(self.USER_COUNT):
+            print(f"Seeding user {x+1}/{self.USER_COUNT}", end='\r')
+            self.generate_random_user()
+
+    def try_create_user(self, data):
+        try:
+            self.create_user(data)
+        except Exception as e:
+            print(f"Failed to create user: {e}")
+
+    def create_user(self, data):
+        User.objects.create_user(firstname = data['firstName'], lastname = data['lastName'], email = data['email'], username = data['username'], password = self.DEFAULT_PASSWORD, hours_studied = data['hoursStudied'], streaks = data['streak'])
+
+    def generate_random_user(self):
+        firstName = self.faker.first_name()
+        lastName = self.faker.last_name()
+        email = self.create_email(firstName, lastName)
+        username = self.create_username(firstName, lastName)
+        hoursStudied = randint(0, 8760)     # assuming that the hoursStudied reset every year
+        streak = randint(0, 365)            # assuming the streaks reset every year
+
+        self.try_create_user({'firstName': firstName, 'lastName' : lastName, 'email': email, 'username': username, 'hoursStudied': hoursStudied, 'streak': streak})
+
+    def generating_rewards(self):
+        for x in range(self.REWARDS_COUNT):
+            print(f"Seeding user {x+1}/{self.REWARDS_COUNT}", end='\r')
+            self.generate_random_reward()
+
+    def generate_random_reward(self):
+        user = choice(User.objects.all())
+        reward_id = randint(1,100)      # would be linked to firebase but for now is random numbers
+        try:
+            Rewards.objects.create(user = user, reward_number = reward_id)
+        except Exception as e:
+            print(f"Failed to create reward: {e}")
+
+    # Helper functions
+    def create_username(self, first_name, last_name):
+        return '@' + first_name.lower() + last_name.lower()
+
+
+    def create_email(self, first_name, last_name):
+        return first_name.lower() + '.' + last_name.lower() + '@example.org'
+
+
+    def generate_random_toDoLists(self):
+        toDoList_count = toDoList.objects.count()
+        print(f"Initial ToDoList count: {toDoList_count}, Target: {self.TODOLIST_COUNT}")
+
+        while toDoList_count < self.TODOLIST_COUNT:
+            print(f"Seeding ToDoLists {toDoList_count}/{self.TODOLIST_COUNT}")
+            self.generate_toDoLists()
+            toDoList_count = toDoList.objects.count()
+        
+        print(f"Final ToDoList count: {toDoList_count}, Target: {self.TODOLIST_COUNT}")
+        print("ToDoList seeding complete.")
+
+    def generate_toDoLists(self):
+        titles = ['Finish cw1', 'catch with with week 2', 'Project Task: create a database']
+        contents = ['complete week 2 and week3', 'ask TA for help', 'clone github repo', 'understand travelling salesman problem', '']
+
+        title = choice(titles)
+        content = choice(contents)
+        is_completed = choice([True, False])
+        is_shared = choice([True, False])
+
+        self.create_toDoLists({
+            'title':title,
+            'content':content,
+            'is_completed':is_completed,
+            'is_shared': is_shared
+        })
+
+    def create_toDoLists(self, data):
+        try:
+            toDoLists = toDoList.objects.create(
+                title = data["title"],
+                content = data["content"],
+                is_completed = data["is_completed"],
+                is_shared = data["is_shared"]
+            )
+            return toDoLists
+        except Exception as e:
+            self.stdout.write(self.style.ERROR(f'Error creating ToDoList: {str(e)}'))
+
+
+    def generate_toDoListUsers(self):
+        users = list(User.objects.all())
+        toDoLists = list(toDoList.objects.all())
+        permission_types = [Permission.READ, Permission.WRITE]
+
+        print(f"Starting to seed permissions for {len(toDoLists)} toDoLists and {len(users)} users.")
+
+        for toDo in toDoLists:
+            if toDo.is_shared:
+                num_permissions = randint(2, len(users))
+            else:
+                num_permissions = 1
+            
+            selected_users = sample(users, num_permissions)
+            print(f"{'Shared' if toDo.is_shared else 'Exclusive'} toDoList {toDo.list_id}: Assigning {num_permissions} permissions.")
+
+            for user in selected_users:
+                permission_type = choice(permission_types) if toDo.is_shared else Permission.WRITE
+                print(f"Assigning {permission_type} permission to user {user.user_id} for toDoList {toDo.list_id}.")
+                self.create_toDoListUser({
+                    'user_id': user,
+                    'list_id': toDo,
+                    'permission_type': permission_type
+                })
+        print("toDoListUser seeding complete")
+
+    def create_toDoListUser(self, data):
+        try:
+            Permission.objects.create(
+                user_id = data["user_id"],
+                list_id = data["list_id"],
+                permission_type = data["permission_type"]
+            )
+        except Exception as e:
+            self.stdout.write(self.style.ERROR(f'Error creating ToDoListUser: {str(e)}'))
