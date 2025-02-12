@@ -3,11 +3,11 @@ logging.basicConfig(level=logging.INFO, handlers=[logging.StreamHandler()])
 from django.core.management.base import BaseCommand, CommandError
 
 from django.core.management import call_command
-from api.models import Friends, User, Status, toDoList
+from api.models import Friends, User, Status, toDoList, Permission
 
 import pytz
 #from faker import Faker
-from random import choice
+from random import choice, randint, sample
 
 '''
 For a default users we can simply create a json file and upload the data (have a look on tests/fixtures) 
@@ -31,6 +31,7 @@ class Command(BaseCommand):
         
         #since we don't have a users seeder yet, I created a function, however I can't call it without creating users first
         #self.generate_random_friendss()
+        #self.generate_toDoListUsers()
         self.generate_random_toDoLists()
 
 
@@ -71,6 +72,7 @@ class Command(BaseCommand):
         except:
             pass
 
+
     def generate_random_toDoLists(self):
         toDoList_count = toDoList.objects.count()
         print(f"Initial ToDoList count: {toDoList_count}, Target: {self.TODOLIST_COUNT}")
@@ -99,7 +101,6 @@ class Command(BaseCommand):
             'is_shared': is_shared
         })
 
-
     def create_toDoLists(self, data):
         try:
             toDoLists = toDoList.objects.create(
@@ -111,6 +112,43 @@ class Command(BaseCommand):
             return toDoLists
         except Exception as e:
             self.stdout.write(self.style.ERROR(f'Error creating ToDoList: {str(e)}'))
+
+
+    def generate_toDoListUsers(self):
+        users = User.objects.all()
+        toDoLists = toDoList.objects.all()
+        permission_types = [Permission.READ, Permission.WRITE]
+
+        print(f"Starting to seed permissions for {len(toDoLists)} toDoLists and {len(users)} users.")
+
+        for toDo in toDoLists:
+            if toDo.is_shared:
+                num_permissions = randint(2, len(users))
+            else:
+                num_permissions = 1
+            
+            selected_users = sample(users, num_permissions)
+            print(f"{'Shared' if toDo.is_shared else 'Exclusive'} toDoList {toDo.id}: Assigning {num_permissions} permissions.")
+
+            for user in selected_users:
+                permission_type = choice(permission_types) if toDo.is_shared else Permission.WRITE
+                print(f"Assigning {permission_type} permission to user {user.id} for toDoList {toDo.id}.")
+                self.create_toDoListUser({
+                    'user_id': user,
+                    'list_id': toDo,
+                    'permission_type': permission_type
+                })
+        print("toDoListUser seeding complete")
+
+    def create_toDoListUser(self, data):
+        try:
+            Permission.objects.create(
+                user_id = data["user"],
+                list_id = data["toDo"],
+                permission_type = data["permission_type"]
+            )
+        except Exception as e:
+            self.stdout.write(self.style.ERROR(f'Error creating ToDoListUser: {str(e)}'))
 
         
         

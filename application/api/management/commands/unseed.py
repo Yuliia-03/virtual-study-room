@@ -22,3 +22,6 @@ class Command(BaseCommand):
 
         print("Deleting To Do List Items")
         toDoList.objects.all().delete()
+
+        print("Deleting all Permission Items")
+        Permission.objects.all().delete()
