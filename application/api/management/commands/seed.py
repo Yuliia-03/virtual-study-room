@@ -1,7 +1,9 @@
+import logging
+logging.basicConfig(level=logging.INFO, handlers=[logging.StreamHandler()])
 from django.core.management.base import BaseCommand, CommandError
 
 from django.core.management import call_command
-from api.models import Friends, User, Status
+from api.models import Friends, User, Status, toDoList
 
 import pytz
 #from faker import Faker
@@ -16,6 +18,7 @@ If we have to use a faker, than simply add function and call in handle function 
 class Command(BaseCommand):
 
     FRIENDS_COUNT = 10
+    TODOLIST_COUNT = 20
     
     def handle(self, *args, **kwargs):
         print("Starting database seeding...")
@@ -28,6 +31,8 @@ class Command(BaseCommand):
         
         #since we don't have a users seeder yet, I created a function, however I can't call it without creating users first
         #self.generate_random_friendss()
+        self.generate_random_toDoLists()
+
 
     def generate_random_friends(self):
         friends_count = Friends.objects.count()
@@ -65,3 +70,50 @@ class Command(BaseCommand):
             return friends
         except:
             pass
+
+    def generate_random_toDoLists(self):
+        toDoList_count = toDoList.objects.count()
+        print(f"Initial ToDoList count: {toDoList_count}, Target: {self.TODOLIST_COUNT}")
+
+        while toDoList_count < self.TODOLIST_COUNT:
+            print(f"Seeding ToDoLists {toDoList_count}/{self.TODOLIST_COUNT}")
+            self.generate_toDoLists()
+            toDoList_count = toDoList.objects.count()
+        
+        print(f"Final ToDoList count: {toDoList_count}, Target: {self.TODOLIST_COUNT}")
+        print("ToDoList seeding complete.")
+
+    def generate_toDoLists(self):
+        titles = ['Finish cw1', 'catch with with week 2', 'Project Task: create a database']
+        contents = ['complete week 2 and week3', 'ask TA for help', 'clone github repo', 'understand travelling salesman problem', '']
+
+        title = choice(titles)
+        content = choice(contents)
+        is_completed = choice([True, False])
+        is_shared = choice([True, False])
+
+        self.create_toDoLists({
+            'title':title,
+            'content':content,
+            'is_completed':is_completed,
+            'is_shared': is_shared
+        })
+
+
+    def create_toDoLists(self, data):
+        try:
+            toDoLists = toDoList.objects.create(
+                title = data["title"],
+                content = data["content"],
+                is_completed = data["is_completed"],
+                is_shared = data["is_shared"]
+            )
+            return toDoLists
+        except Exception as e:
+            self.stdout.write(self.style.ERROR(f'Error creating ToDoList: {str(e)}'))
+
+        
+        
+        
+
+    

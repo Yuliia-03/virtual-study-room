@@ -19,3 +19,6 @@ class Command(BaseCommand):
 
         print("Deleting users...")
         User.objects.all().delete()
+
+        print("Deleting To Do List Items")
+        toDoList.objects.all().delete()
