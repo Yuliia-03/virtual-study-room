@@ -1,6 +1,7 @@
 import logging
 logging.basicConfig(level=logging.INFO, handlers=[logging.StreamHandler()])
 from django.core.management.base import BaseCommand, CommandError
+from api.models.motivational_message import MotivationalMessage
 
 from django.core.management import call_command
 from api.models import Friends, User, Status, toDoList, Permission, MotivationalMessage, Rewards
@@ -26,7 +27,7 @@ class Command(BaseCommand):
     def __init__(self):
         super().__init__()
         self.faker = Faker('en_GB')
-    
+
     def handle(self, *args, **kwargs):
         print("Starting database seeding...")
 
@@ -35,14 +36,14 @@ class Command(BaseCommand):
             call_command('loaddata', 'api/tests/fixtures/default_friends.json')
         except Exception as e:
             self.stdout.write(self.style.ERROR(f'Error while seeding database: {e}'))
-        
-        #since we don't have a users seeder yet, I created a function, however I can't call it without creating users first
+      
         self.seed_motivationalMessage()
         self.generating_users()
         self.generate_random_friends()
         self.generating_rewards()
         self.generate_random_toDoLists()
         self.generate_toDoListUsers()
+
 
     def generate_random_friends(self):
         friends_count = Friends.objects.count()
@@ -80,6 +81,7 @@ class Command(BaseCommand):
             return friends
         except:
             pass
+
 
     def seed_motivationalMessage(self):
         messages = [

@@ -10,6 +10,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         """Unseed the database."""
         print("Starting database unseeding...")
+        # Delete in order to respect foreign key constraints
+        print("Deleting Motivational Message...")
+        deleted_count, _ = MotivationalMessage.objects.all().delete()
+        print(self.style.SUCCESS(f'Successfully deleted {deleted_count} motivational messages.'))
 
 
         # Delete in order to respect foreign key constraints
