@@ -7,3 +7,4 @@ from .study_session import StudySession
 from .todo_list import toDoList
 from .user import User
 from .user import UserManager
+from .motivational_message import *
