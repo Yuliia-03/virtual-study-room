@@ -15,6 +15,16 @@ class Command(BaseCommand):
         deleted_count, _ = MotivationalMessage.objects.all().delete()
         print(self.style.SUCCESS(f'Successfully deleted {deleted_count} motivational messages.'))
 
+
+        # Delete in order to respect foreign key constraints
+
+        print("Deleting To Do List Items")
+        toDoList.objects.all().delete()
+
+        print("Deleting all Permission Items")
+        Permission.objects.all().delete()
+
+
         print("Deleting friends...")
         Friends.objects.all().delete()
 
@@ -22,6 +32,7 @@ class Command(BaseCommand):
         Rewards.objects.all().delete()
 
         print("Deleting users...")
+
         User.objects.all().delete()
         
         print("Database successfully unseeded!")
