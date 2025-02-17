@@ -1,38 +1,40 @@
 from django.shortcuts import render
 from rest_framework.response import Response
+from rest_framework import status
 
 # Create your views here.
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-import json
 from api.models import User
+from rest_framework.decorators import api_view
 
-
-@csrf_exempt
+@api_view(["POST"])
 def signup(request):
-    if request.method == "POST":
-        try:
-            data = json.loads(request.body)
-            firstname = data.get("firstname")
-            lastname = data.get("lastname")
-            username = data.get("username")
-            email = data.get("email")
-            password = data.get("password")
-            password_confirmation = data.get("passwordConfirmation")
+    try:
+        data = request.data  # DRF automatically parses JSON data
+        firstname = data.get("firstname")
+        lastname = data.get("lastname")
+        username = data.get("username")
+        email = data.get("email")
+        password = data.get("password")
+        password_confirmation = data.get("passwordConfirmation")
 
-            if password != password_confirmation:
-                return JsonResponse({"error": "Passwords do not match"}, status=400)
-            if User.objects.filter(username=username).exists():
-                return JsonResponse({"error": "Username already taken"}, status=400)
+        # Validate password match
+        if password != password_confirmation:
+            return Response({"error": "Passwords do not match"}, status=status.HTTP_400_BAD_REQUEST)
 
-            user = User.objects.create_user(
-                firstname=firstname, lastname=lastname, username=username, email=email, password=password)
+        # Check if username already exists
+        if User.objects.filter(username=username).exists():
+            return Response({"error": "Username already taken"}, status=status.HTTP_400_BAD_REQUEST)
 
-            user.save()
+        if User.objects.filter(email=email).exists():
+            return Response({"error": "Email already taken"}, status=status.HTTP_400_BAD_REQUEST)
 
-            return JsonResponse({"message": "User registered successfully!"}, status=201)
+        # Create user
+        user = User.objects.create_user(
+            firstname=firstname, lastname=lastname, username=username, email=email, password=password)
 
-        except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid JSON"}, status=400)
+        user.save()
 
-    return JsonResponse({"error": "Invalid request method"}, status=405)
+        return Response({"message": "User registered successfully!"}, status=status.HTTP_201_CREATED)
+
+    except Exception as e:
+        return Response({"error": "Invalid request", "details": str(e)}, status=status.HTTP_400_BAD_REQUEST)

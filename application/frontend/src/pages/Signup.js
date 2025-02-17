@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import "../styles/Signup.css";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
 
@@ -22,23 +24,20 @@ function Signup() {
             alert("You must accept the terms and conditions.");
             return;
         }
+
         try {
-            const response = await fetch("http://127.0.0.1:8000/signup/", {  // Django API endpoint
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
+            const response = await axios.post("http://127.0.0.1:8000/api/signup/", formData, {
+                headers: { "Content-Type": "application/json" }
             });
 
-            const data = await response.json();
-            if (response.ok) {
-                alert("Signup successful!");
-            } else {
-                alert(data.error);
-            }
+            alert(response.data.message); // Show success message
         } catch (error) {
-            console.error("Error:", error);
+            if (error.response) {
+                alert(error.response.data.error); // Show error from backend
+            } else {
+                console.error("Signup error:", error);
+                alert("An error occurred. Please try again.");
+            }
         }
     };
 

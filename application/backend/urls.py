@@ -26,5 +26,5 @@ from api.views import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name='index.html')),
-    path('signup/', views.signup, name='signup'),
+    path('api/signup/', views.signup, name='signup'),
 ] 
