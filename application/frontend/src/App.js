@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import './styles/App.css';
 import Login from "./pages/Login";
 import Welcome from "./pages/Welcome";
