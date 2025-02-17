@@ -39,9 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework_simplejwt'
-    'frontend'
-    'backend'
+    'rest_framework_simplejwt',
+    'frontend',
+    'backend',
     'api.apps.ApplicationConfig',
     'django_seed'
 ]

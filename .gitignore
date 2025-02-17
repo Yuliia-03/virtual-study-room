@@ -1394,8 +1394,8 @@ FodyWeavers.xsd
 *.sln.iml
 
 # Ignore Django migrations whenever you commit
-**/migrations/*.py
-!**/migrations/__init__.py
+#**/migrations/*.py
+#!**/migrations/__init__.py
 
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
