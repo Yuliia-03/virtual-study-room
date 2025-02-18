@@ -9,6 +9,7 @@ function ProfileBox() {
     const [userData, setUserData] = useState({
         username: "N/A",
         // description: "N/A",
+        user_id: null,
         image: mangoCat, //default image
     });
 
@@ -18,7 +19,7 @@ function ProfileBox() {
             //TODO: put error message here
             return;
         }
-        const fileRef = ref(storage, `avatars/${1}`); //userData.user_id
+        const fileRef = ref(storage, `avatars/${userData.user_id}`);
         try 
         {
             //upload file to firebase
@@ -30,6 +31,7 @@ function ProfileBox() {
             //update userData with new imageURL
             setUserData((prevData) => ({
                 ...prevData,
+                user_id: userData.user_id,
                 image: imageUrl,
             }));
 
@@ -67,6 +69,7 @@ function ProfileBox() {
 
                 setUserData({
                     username: data.username || "N/A",
+                    user_id: data.user_id,
                     // description: data.description || "N/A",
                     image: imageUrl,
                 });
