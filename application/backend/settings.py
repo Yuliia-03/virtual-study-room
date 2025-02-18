@@ -26,7 +26,10 @@ SECRET_KEY = 'django-insecure-4@%dj!95ry*b51e+zcg804m3*_t5-=s)+30--c3^66a=+y#l4y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost",  # For local development
+    "127.0.0.1",  # Localhost IP
+]
 
 
 # Application definition
@@ -39,8 +42,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
+    'frontend',
+    'backend',
     'api.apps.ApplicationConfig',
-    'django_seed'
+    'django_seed',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -51,9 +58,20 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
 ROOT_URLCONF = 'backend.urls'
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # React frontend
+]
 
 TEMPLATES = [
     {
@@ -71,6 +89,23 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+
+CORS_ALLOW_HEADERS = [
+    'content-type',
+    'authorization',
+    'accept',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PUT',
+    'DELETE',
+    'OPTIONS',
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'

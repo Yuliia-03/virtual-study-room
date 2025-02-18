@@ -69,7 +69,7 @@ class Command(BaseCommand):
                 'status': status,
                 'created_at': created_at
             })
-    
+
     def create_friends(self, data):
         try:
             friends = Friends.objects.create(
