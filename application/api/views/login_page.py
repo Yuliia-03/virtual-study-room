@@ -1,10 +1,8 @@
-from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
-
 
 # POST method API call to send credentials to database server
 # we do not use GET here because that would send the password details...

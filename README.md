@@ -64,6 +64,11 @@ Run all tests with:
 $ python3 manage.py test
 ```
 
+Run the React Project:
+```
+$ in application/frontend npm start
+```
+
 *The above instructions should work in your version of the application.  If there are deviations, declare those here in bold.  Otherwise, remove this line.*
 
 ## Sources
