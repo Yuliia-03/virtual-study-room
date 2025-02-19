@@ -17,6 +17,7 @@ function ProfileBox() {
         const file = event.target.files[0];
         if (!file || !userData.user_id) {
             //TODO: put error message here
+            console.log("no valid user id");
             return;
         }
         const fileRef = ref(storage, `avatars/${userData.user_id}`);
@@ -52,7 +53,7 @@ function ProfileBox() {
         const fetchUserData = async () => {
             try {
                 const response = await axios.get("http://127.0.0.1:8000/api/profile/", {
-                    withCredentials: true,  //ensures authentication cookies are sent
+                    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
                 });
 
                 const data = response.data;
