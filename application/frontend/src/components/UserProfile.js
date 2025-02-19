@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import UserAvatar from './UserAvatar';
 import UserBadges from './UserBadges';
-import { uploadPlaceholders } from '../utils/uploadImages';
+import { uploadPlaceholders, preloadImages } from '../utils/uploadImages';
 import { getDatabase, ref, set, get } from 'firebase/database';
 
 const UserProfile = ({ userId }) => {
@@ -10,20 +10,33 @@ const UserProfile = ({ userId }) => {
   const [currentAvatar, setCurrentAvatar] = useState(null);
   const [userBadges, setUserBadges] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadingProgress, setLoadingProgress] = useState(0);
   
   useEffect(() => {
     const initializeProfile = async () => {
-      const db = getDatabase();
-      const avatarRef = ref(db, `users/${userId}/avatar`);
-      const avatarSnapshot = await get(avatarRef);
-      setCurrentAvatar(avatarSnapshot.val());
-      
-      const badgesRef = ref(db, `users/${userId}/badges`);
-      const badgesSnapshot = await get(badgesRef);
-      setUserBadges(badgesSnapshot.val() || []);
-      
-      await uploadPlaceholders();
-      setIsLoading(false);
+      try {
+        // Start preloading images
+        setLoadingProgress(0);
+        await preloadImages();
+        setLoadingProgress(50);
+
+        // Load user data
+        const db = getDatabase();
+        const avatarRef = ref(db, `users/${userId}/avatar`);
+        const avatarSnapshot = await get(avatarRef);
+        setCurrentAvatar(avatarSnapshot.val());
+        setLoadingProgress(75);
+        
+        const badgesRef = ref(db, `users/${userId}/badges`);
+        const badgesSnapshot = await get(badgesRef);
+        setUserBadges(badgesSnapshot.val() || []);
+        setLoadingProgress(100);
+        
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error loading profile:', error);
+        // Maybe show error state
+      }
     };
 
     initializeProfile();
@@ -36,7 +49,16 @@ const UserProfile = ({ userId }) => {
     setShowAvatarSelector(false);
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner" />
+        <div className="loading-text">
+          Loading... {loadingProgress}%
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="profile-section">

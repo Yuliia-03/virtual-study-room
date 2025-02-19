@@ -3,6 +3,12 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getDatabase, ref as dbRef, set } from "firebase/database";
 import { getStorage } from 'firebase/storage';
 
+// Cache object to store preloaded images
+const imageCache = {
+  avatars: {},
+  badges: {}
+};
+
 // Function to upload a single image
 export const uploadImage = async (imageFile, folder, filename) => {
   console.log(`Starting upload for ${folder}/${filename}`);
@@ -20,13 +26,60 @@ export const uploadImage = async (imageFile, folder, filename) => {
   }
 };
 
+// Preload all images
+export const preloadImages = async () => {
+  const storage = getStorage();
+  
+  try {
+    // Load avatars (12 total)
+    for (let i = 1; i <= 12; i++) {
+      const avatarRef = ref(storage, `avatars/avatar_${i}.png`);
+      const url = await getDownloadURL(avatarRef);
+      imageCache.avatars[`avatar_${i}`] = url;
+      
+      // Preload image
+      const img = new Image();
+      img.src = url;
+    }
+
+    // Load badges (12 total)
+    for (let i = 1; i <= 12; i++) {
+      const badgeRef = ref(storage, `badges/badge_${i}.png`);
+      const url = await getDownloadURL(badgeRef);
+      imageCache.badges[`badge_${i}`] = url;
+      
+      // Preload image
+      const img = new Image();
+      img.src = url;
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error preloading images:', error);
+    return false;
+  }
+};
+
+// Get image URL from cache or storage
 export const getImageUrl = async (folder, filename) => {
+  const cacheKey = filename.replace('.png', '');
+  
+  // Return from cache if available
+  if (imageCache[folder] && imageCache[folder][cacheKey]) {
+    return imageCache[folder][cacheKey];
+  }
+
+  // Otherwise load from storage
   const storage = getStorage();
   const imageRef = ref(storage, `${folder}/${filename}`);
   try {
-    return await getDownloadURL(imageRef);
+    const url = await getDownloadURL(imageRef);
+    // Add to cache
+    if (!imageCache[folder]) imageCache[folder] = {};
+    imageCache[folder][cacheKey] = url;
+    return url;
   } catch (error) {
-    console.log('Error getting image URL:', error);
+    console.error('Error getting image URL:', error);
     return null;
   }
 };
