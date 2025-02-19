@@ -1,47 +1,50 @@
 import React, { useState, useEffect } from 'react';
-import { getImageUrl } from '../../../../frontend/src/utils/uploadImages';
-import { getDatabase, ref, get } from 'firebase/database';
+import { getImageUrl } from '../utils/uploadImages';
 
-const UserBadges = ({ userId }) => {
-  const [badgeUrls, setBadgeUrls] = useState({});
-  const [earnedBadges, setEarnedBadges] = useState([]);
+const UserBadges = ({ userId, userBadges }) => {
+  const [badgeUrls, setBadgeUrls] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const loadUserBadges = async () => {
-      const db = getDatabase();
-      const userBadgesRef = ref(db, `users/${userId}/badges`);
+    const loadBadges = async () => {
+      const promises = Array.from({ length: 12 }, (_, i) => 
+        getImageUrl('badges', `badge_${i + 1}.png`)
+      );
       
-      try {
-        const snapshot = await get(userBadgesRef);
-        if (snapshot.exists()) {
-          const badges = Object.keys(snapshot.val());
-          setEarnedBadges(badges);
-          
-          // Load badge images
-          const urls = {};
-          for (const badgeId of badges) {
-            const url = await getImageUrl('badges', `badge_${badgeId}`);
-            urls[badgeId] = url;
-          }
-          setBadgeUrls(urls);
-        }
-      } catch (error) {
-        console.error('Error loading user badges:', error);
-      }
+      const loadedUrls = await Promise.all(promises);
+      setBadgeUrls(loadedUrls);
+      setIsLoading(false);
     };
 
-    loadUserBadges();
-  }, [userId]);
+    loadBadges();
+  }, []);
+
+  if (isLoading) return <div>Loading...</div>;
+
+  const rows = [];
+  for (let i = 0; i < badgeUrls.length; i += 4) {
+    rows.push(badgeUrls.slice(i, i + 4));
+  }
 
   return (
-    <div style={{ display: 'flex', gap: '10px' }}>
-      {earnedBadges.map(badgeId => (
-        <img 
-          key={badgeId}
-          src={badgeUrls[badgeId]}
-          alt={`Badge ${badgeId}`}
-          style={{ width: 50, height: 50 }}
-        />
+    <div style={{ width: '440px' }}>
+      {rows.map((row, rowIndex) => (
+        <div key={rowIndex} style={{ display: 'flex' }}>
+          {row.map((url, colIndex) => (
+            <div key={rowIndex * 4 + colIndex} style={{ margin: '10px' }}>
+              <img
+                src={url}
+                alt={`Badge ${rowIndex * 4 + colIndex + 1}`}
+                style={{
+                  width: '80px',
+                  height: '80px',
+                  margin: '5px'
+                }}
+              />
+              <div>Badge {rowIndex * 4 + colIndex + 1}</div>
+            </div>
+          ))}
+        </div>
       ))}
     </div>
   );

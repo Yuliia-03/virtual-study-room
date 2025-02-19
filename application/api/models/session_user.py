@@ -27,12 +27,11 @@ class SessionUser(models.Model):
     focus_target = models.CharField(max_length=255, null=True, blank=True)
     # When the user joined the session
     joined_at = models.DateTimeField(default=now)
+    left_at = models.DateTimeField(null=True, blank=True)
     # All the time spent in FOCUSED status during the session
     focus_time = models.DurationField(default=datetime.timedelta(0))
     # Timestamps the last status change, to calculate focus duration
     last_status_change = models.DateTimeField(default=now)
-    # Track user's last activity in the session
-    last_active = models.DateTimeField(default=now)
 
     class Meta:
         # Sort by newest sessions and joins first
@@ -58,7 +57,6 @@ class SessionUser(models.Model):
             
         self.status = new_status
         self.last_status_change = current_time
-        self.last_active = current_time
         self.save()
 
     def leave_session(self):
@@ -69,6 +67,10 @@ class SessionUser(models.Model):
         if self.status == 'FOCUSED':
             final_time = now() - self.last_status_change
             self.focus_time += final_time
+        
+        # Set left_at time
+        self.left_at = now()
+        self.save()
         
         # Update user's total study statistics
         if self.focus_time.total_seconds() > 0:

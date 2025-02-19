@@ -1,38 +1,53 @@
-import React, { useState } from 'react';
-import { uploadImage, getImageUrl } from '../../../../frontend/src/utils/uploadImages';
+import React, { useState, useEffect } from 'react';
+import { getImageUrl } from '../utils/uploadImages';
 
-const UserAvatar = ({ userId }) => {
-  const [avatarUrl, setAvatarUrl] = useState(null);
+const UserAvatar = ({ userId, onSelect, currentAvatar }) => {
+  const [avatarUrls, setAvatarUrls] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const loadAvatar = async () => {
-    try {
-      const url = await getImageUrl('avatars', `user_${userId}`);
-      setAvatarUrl(url);
-    } catch (error) {
-      console.log('No avatar found for user');
-    }
-  };
+  useEffect(() => {
+    const loadAvatars = async () => {
+      const urls = [];
+      const promises = Array.from({ length: 12 }, (_, i) => 
+        getImageUrl('avatars', `avatar_${i + 1}.png`)
+      );
+      
+      const loadedUrls = await Promise.all(promises);
+      setAvatarUrls(loadedUrls);
+      setIsLoading(false);
+    };
 
-  const handleAvatarUpload = async (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      try {
-        const url = await uploadImage(file, 'avatars', `user_${userId}`);
-        setAvatarUrl(url);
-      } catch (error) {
-        console.error('Error uploading avatar:', error);
-      }
-    }
-  };
+    loadAvatars();
+  }, []);
+
+  if (isLoading) return <div>Loading...</div>;
+
+  const rows = [];
+  for (let i = 0; i < avatarUrls.length; i += 4) {
+    rows.push(avatarUrls.slice(i, i + 4));
+  }
 
   return (
-    <div>
-      {avatarUrl ? (
-        <img src={avatarUrl} alt="User Avatar" style={{ width: 100, height: 100 }} />
-      ) : (
-        <div>No avatar selected</div>
-      )}
-      <input type="file" onChange={handleAvatarUpload} accept="image/*" />
+    <div style={{ width: '440px' }}>
+      {rows.map((row, rowIndex) => (
+        <div key={rowIndex} style={{ display: 'flex' }}>
+          {row.map((url, colIndex) => (
+            <img
+              key={rowIndex * 4 + colIndex}
+              src={url}
+              alt={`Avatar ${rowIndex * 4 + colIndex + 1}`}
+              onClick={() => onSelect(url)}
+              style={{
+                width: '100px',
+                height: '100px',
+                margin: '5px',
+                cursor: 'pointer',
+                border: url === currentAvatar ? '2px solid blue' : '1px solid gray'
+              }}
+            />
+          ))}
+        </div>
+      ))}
     </div>
   );
 };

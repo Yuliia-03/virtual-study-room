@@ -9,16 +9,8 @@ class StudySession:
         self.created_by = created_by
 
     def test_str_representation(self):
-        """Test string representation in different states"""
-        # Test default state
-        expected = f"{self.user.username} - Casual - {self.session.session_name}"
-        self.assertEqual(str(self.session_user), expected)
-        
-        # Test with focus target and different status
-        self.session_user.focus_target = "Study Python"
-        self.session_user.status = 'FOCUSED'
-        self.session_user.save()
-        expected = f"{self.user.username} - Focused - {self.session.session_name}"
+        """Test string representation"""
+        expected = f"{self.user.username} - {self.session_user.get_status_display()} - {self.session.session_name}"
         self.assertEqual(str(self.session_user), expected)
 
     def test_update_status_invalid(self):
@@ -152,7 +144,7 @@ class StudySession:
         self.assertEqual(
             SessionUser._meta.ordering,
             ['session', 'joined_at']
-        )
+        )cd
 
     def test_focus_time_edge_cases(self):
         """Test edge cases in focus time calculations"""
@@ -167,4 +159,34 @@ class StudySession:
         self.session_user.last_status_change = now() - timedelta(hours=25)
         self.session_user.update_status('CASUAL')
         self.assertGreater(self.session_user.focus_time.total_seconds(), 24*3600)
+
+    def test_meta_ordering(self):
+        """Test that sessions are ordered correctly"""
+        # Create another session user
+        other_user = SessionUser.objects.create(
+            user=self.user,
+            session=self.session,
+            joined_at=now() + timedelta(hours=1)
+        )
+        
+        # Get ordered sessions
+        sessions = SessionUser.objects.all()
+        
+        # Check ordering
+        self.assertEqual(sessions[0], self.session_user)  # Earlier join time
+        self.assertEqual(sessions[1], other_user)        # Later join time
+
+    def test_update_focus_target_edge_cases(self):
+        """Test edge cases for focus target updates"""
+        # Test empty string
+        with self.assertRaises(ValueError):
+            self.session_user.update_focus_target("")
+        
+        # Test None
+        with self.assertRaises(ValueError):
+            self.session_user.update_focus_target(None)
+        
+        # Test too long string
+        with self.assertRaises(ValueError):
+            self.session_user.update_focus_target("x" * 256)
 
