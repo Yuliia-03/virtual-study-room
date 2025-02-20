@@ -9,7 +9,6 @@ const imageCache = {
   badges: {}
 };
 
-// Function to upload a single image
 export const uploadImage = async (imageFile, folder, filename) => {
   console.log(`Starting upload for ${folder}/${filename}`);
   try {
@@ -69,7 +68,7 @@ export const getImageUrl = async (folder, filename) => {
     return imageCache[folder][cacheKey];
   }
 
-  // Otherwise load from storage
+  // Else load from storage
   const storage = getStorage();
   const imageRef = ref(storage, `${folder}/${filename}`);
   try {
