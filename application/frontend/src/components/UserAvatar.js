@@ -64,7 +64,7 @@ const UserAvatar = ({ userId, onSelect, currentAvatar }) => {
                 height: '100px',
                 margin: '5px',
                 cursor: 'pointer',
-                border: url === currentAvatar ? '2px solid blue' : '1px solid gray'
+                border: url === currentAvatar ? '2px solid #f2bac9' : '1px solid #bad7f5'
               }}
             />
           ))}

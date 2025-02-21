@@ -30,20 +30,63 @@ const UserBadges = ({ userId, userBadges }) => {
     <div style={{ width: '440px' }}>
       {rows.map((row, rowIndex) => (
         <div key={rowIndex} style={{ display: 'flex' }}>
-          {row.map((url, colIndex) => (
-            <div key={rowIndex * 4 + colIndex} style={{ margin: '10px' }}>
-              <img
-                src={url}
-                alt={`Badge ${rowIndex * 4 + colIndex + 1}`}
-                style={{
-                  width: '80px',
-                  height: '80px',
-                  margin: '5px'
+          {row.map((url, colIndex) => {
+            const badgeIndex = rowIndex * 4 + colIndex + 1;
+            const isEarned = userBadges && userBadges[`badge_${badgeIndex}`];
+
+            return (
+              <div 
+                key={rowIndex * 4 + colIndex} 
+                style={{ 
+                  margin: '10px',
+                  textAlign: 'center',
+                  position: 'relative',
+                  padding: '8px',
+                  backgroundColor: isEarned ? '#fff5f7' : 'transparent',
+                  borderRadius: '8px',
+                  transition: 'all 0.2s ease-in-out'
                 }}
-              />
-              <div>Badge {rowIndex * 4 + colIndex + 1}</div>
-            </div>
-          ))}
+              >
+                <img
+                  src={url}
+                  alt={`Badge ${badgeIndex}`}
+                  style={{
+                    width: '80px',
+                    height: '80px',
+                    margin: '5px',
+                    opacity: isEarned ? '1' : '0.4',
+                    filter: isEarned ? 'drop-shadow(0 0 4px #f2e2ba)' : 'grayscale(100%)',
+                    transition: 'all 0.2s ease-in-out'
+                  }}
+                />
+                <div style={{ 
+                  fontSize: '14px',
+                  fontWeight: isEarned ? 'bold' : 'normal',
+                  color: isEarned ? '#000' : '#666'
+                }}>
+                  Badge {badgeIndex}
+                </div>
+                {isEarned && (
+                  <div style={{ 
+                    fontSize: '12px', 
+                    color: '#666',
+                    marginTop: '2px'
+                  }}>
+                    Earned: {new Date(userBadges[`badge_${badgeIndex}`].dateAwarded).toLocaleDateString()}
+                  </div>
+                )}
+                {!isEarned && (
+                  <div style={{ 
+                    fontSize: '12px', 
+                    color: '#666',
+                    marginTop: '2px'
+                  }}>
+                    Not yet earned
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       ))}
     </div>

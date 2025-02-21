@@ -49,6 +49,22 @@ const UserProfile = ({ userId }) => {
     setShowAvatarSelector(false);
   };
 
+  // Test data for badges
+  const testBadges = {
+    'badge_1': {
+      dateAwarded: new Date().toISOString(),
+      badgeId: 'badge_1'
+    },
+    'badge_4': {
+      dateAwarded: new Date().toISOString(),
+      badgeId: 'badge_4'
+    },
+    'badge_7': {
+      dateAwarded: new Date().toISOString(),
+      badgeId: 'badge_7'
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="loading-container">
@@ -84,7 +100,6 @@ const UserProfile = ({ userId }) => {
           {showAvatarSelector && (
             <div style={{ marginTop: '10px' }}>
               <h3>Choose Your Avatar</h3>
-              <div>This avatar will represent you in study rooms</div>
               <UserAvatar 
                 userId={userId} 
                 onSelect={handleAvatarSelect}
@@ -97,8 +112,25 @@ const UserProfile = ({ userId }) => {
 
       {/* Inventory Section */}
       <div style={{ marginTop: '20px' }}>
-        <button onClick={() => setShowInventory(!showInventory)}>
-          {showInventory ? 'Hide Your Inventory' : 'View Your Inventory'}
+        <button 
+          onClick={() => setShowInventory(!showInventory)}
+          style={{
+            width: '45px',
+            height: '45px',
+            borderRadius: '50%',
+            backgroundColor: showInventory ? '#b0f2b4' : '#bad7f5',
+            border: 'none',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '24px',
+            transition: 'all 0.2s ease-in-out',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+          }}
+          aria-label={showInventory ? 'Hide Badge Collection' : 'View Badge Collection'}
+        >
+          🏆
         </button>
 
         {showInventory && (
@@ -106,7 +138,7 @@ const UserProfile = ({ userId }) => {
             <h2>Your Badge Collection</h2>
             <UserBadges 
               userId={userId} 
-              userBadges={userBadges}
+              userBadges={testBadges}
             />
           </div>
         )}
