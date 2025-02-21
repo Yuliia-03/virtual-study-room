@@ -2,9 +2,8 @@ from django.db import models
 from .user import User
 from .todo_list import toDoList
 
-
 class List(models.Model):
-    name = models.CharField(max_length=255)  # Example field
+    name = models.CharField(max_length=255)  #this contains all lists created
 
 class Permission(models.Model):
     READ = 'read'
