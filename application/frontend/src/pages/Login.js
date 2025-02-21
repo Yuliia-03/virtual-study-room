@@ -22,29 +22,29 @@ function Login() {
 
     // when the login button is clicked - send form data to backend django form
     const handleLogin = async () => {
-    setError("");
-    try {
-        const response = await axios.post(
-            "http://127.0.0.1:8000/api/login/",
-            formData,
-            { headers: { "Content-Type": "application/json" } }  // ✅ Explicit JSON
-        );
-        // store tokens in localStorage
-        localStorage.setItem("access_token", response.data.access);
-        localStorage.setItem("refresh_token", response.data.refresh);
+        setError("");
+        try {
+            const response = await axios.post(
+                "http://127.0.0.1:8000/api/login/",
+                formData,  // Contains email and password
+                { headers: { "Content-Type": "application/json" } }  // No Authorization header here
+            );
 
-        alert("Login successful!")
-        navigate('/dashboard'); // redirect to the dashboard after login
-    } catch (error) {
-        if (error.response) {
-            alert(error.response.data.error);
-        } else {
-            //console.error("Signup error:", error);
-            alert("An error occurred. Please try again.");
+            // Store tokens in localStorage
+            localStorage.setItem("access_token", response.data.access);
+            localStorage.setItem("refresh_token", response.data.refresh);
+
+            alert("Login successful!");
+            navigate('/dashboard');  // Redirect to dashboard after login
+        } catch (error) {
+            if (error.response) {
+                alert(error.response.data.error);
+            } else {
+                alert("An error occurred. Please try again.");
+            }
         }
-    }
-        console.log(formData);
-    }
+    };
+
 
     return (
         <div className="login-container">
