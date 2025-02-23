@@ -1,9 +1,8 @@
-import React from 'react';
-import "../styles/Welcome.css";
+import React from "react"
 import { useNavigate } from "react-router-dom";
 import mangoCat from "../assets/mango_cat.png";
 
-function Welcome() {
+function Dashboard() {
     const navigate = useNavigate();
 
     return (
@@ -24,4 +23,4 @@ function Welcome() {
 
 }
 
-export default Welcome;
+export default Dashboard;
