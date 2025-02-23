@@ -12,10 +12,11 @@ function App() {
     <Router>
       <Routes>
         // temporary change ok
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={<Welcome />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/group-study" element={<GroupStudyPage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
   );

@@ -1,20 +1,3 @@
-.dashboard-heading {
-    position: fixed;
-    border: 3px solid #BAD7F2;
-    padding: 40px;
-    text-align: center;
-    font-family: 'Impact', sans-serif;
-    font-size: 50px;
-    font-weight: 100;
-    background-color: #BAD7F2;
-    top: 0;
-    left: 0;
-    width: 100%;
-    margin: 0;
-    box-sizing: border-box; /* ensures padding doesn't push it down */
-    z-index: 1000;
-}
-
 .dashboard-container{
     /* Flex to store components in the dashboard */
     display: flex;
@@ -27,8 +10,27 @@
     width: 100vw; /* Ensures it takes up the full width */
     box-sizing: border-box; /* Ensure padding/border don't increase its size */
     background-color: #F6F0F0;
-    padding-top: 140px;
+    padding-top: 100px;
 }
+
+.dashboard-heading {
+    position: fixed;
+    border: 3px solid #BAD7F2;
+    padding: 15px;
+    text-align: center;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    background-color: #BAD7F2;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box; /* ensures padding doesn't push it down */
+    z-index: 1000;
+}
+
 
 .dashboard-content {
     display: flex;
@@ -76,10 +78,10 @@
    flex-grow: 1; /* Panels will grow to fill available space */
    box-sizing: border-box; /* Include padding and borders in width/height calculations */
    text-align: center;
-   font-family: 'Arial', sans-serif;
+   font-family: 'Inter', sans-serif;
    color: black;
    font-size: 20px;
-   font-weight: 100;
+   font-weight: 600;
 }
 
 /*Customising one specific panel example*/
@@ -88,11 +90,11 @@
 
 .dashboard-main-panel .dashboard-panel:first-child {
    height: 300px; /* Set a larger height for the profile panel */
-   color: red;
+   color: purple;
 }
 .dashboard-right-panel .dashboard-panel:last-child {
    height: 400px; /* Set a larger height for the to do list panel */
-   color: blue;
+   color: red;
 }
 /*There is a minimum size, after which it cannot get any smaller because as of now*/
 .dashboard-left-panel .dashboard-panel:last-child {

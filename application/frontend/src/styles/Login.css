@@ -13,9 +13,10 @@
     border: 3px solid #F2BAC9;
     padding: 10px;
     text-align: center;
-    font-family: 'Impact', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 50px;
-    font-weight: 100;
+    font-weight: 700;
+    color: white;
     background-color: #F2BAC9;
     top: 0;
     left: 0;
@@ -42,8 +43,8 @@
     width: 100%;                  
     text-align: center;
     margin-bottom: 10px;
-    font-family: 'Impact', sans-serif;
-    font-weight: 100;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
 
 }
 .username-text, .password-text {
@@ -53,7 +54,7 @@
     font-weight: 500;
     margin-top: 10px;
     margin-left: 50px;
-    font-family: 'Arial Narrow', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-weight: 800;
 }
 .username-field, .password-field {
@@ -79,5 +80,5 @@
     cursor: pointer;
     text-align: center;
     font-weight: 900;
-    font-family: 'Arial Narrow', sans-serif;
+    font-family: 'Inter', sans-serif;
 }
