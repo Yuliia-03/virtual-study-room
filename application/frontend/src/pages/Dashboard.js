@@ -1,26 +1,32 @@
-import React from "react"
-import { useNavigate } from "react-router-dom";
-import mangoCat from "../assets/mango_cat.png";
+import React, { useState } from 'react';
+import "../styles/Dashboard.css";
 
-function Dashboard() {
-    const navigate = useNavigate();
+function Dashboard(){
 
     return (
-        <div className="welcome-container">
-            <h1 className="welcome-heading">The Study Spot</h1>
-            <img src={mangoCat} alt="logo" className="welcome-image" />
-            <div className="button-container">
-                <button className="login-button" onClick={() => navigate("/login")}>
-                    LOGIN
-                </button>
-                {/* change this to create account page URL */}
-                <button className="create-account-button" onClick={() => navigate("/signup")}>
-                    CREATE ACCOUNT
-                </button>
+        <div className='dashboard-container'>
+            <h1 className="dashboard-heading">Dashboard</h1> {/* A simple heading */}
+
+            {/* This is where all the main components will go*/}
+            {/* Left panel - main panel - right panel*/}
+            <div class = "dashboard-content">
+                <div class = "dashboard-left-panel">
+                    <div class="dashboard-panel">Analytics</div>
+                    <div class="dashboard-panel">Calendar</div>
+                    <div class="dashboard-panel">Invites</div>
+                </div>
+                <div class = "dashboard-main-panel">
+                    <div class="dashboard-panel">Profile</div>
+                    <div class="dashboard-panel">Friends List</div>
+                    <div class="dashboard-panel">Add Friends</div>
+                </div>
+                <div class = "dashboard-right-panel">
+                    <div class="dashboard-panel">Generate Group Study Room</div>
+                    <div class="dashboard-panel">To Do List</div>
+                </div>
             </div>
         </div>
     );
-
 }
 
 export default Dashboard;
