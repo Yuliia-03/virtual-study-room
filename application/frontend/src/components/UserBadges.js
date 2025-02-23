@@ -1,36 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { getImageUrl } from '../utils/uploadImages';
+import React from 'react';
+// Import badge images
+import badge1 from '../assets/badges/badge_1.png';  // Trophy
+import badge2 from '../assets/badges/badge_2.png';  // Star
+import badge3 from '../assets/badges/badge_3.png';  // Glowing star
+import badge4 from '../assets/badges/badge_4.png';  // 1st place medal
+import badge5 from '../assets/badges/badge_5.png';  // 2nd place medal
+import badge6 from '../assets/badges/badge_6.png';  // 3rd place medal
+import badge7 from '../assets/badges/badge_7.png';  // Crown
+import badge8 from '../assets/badges/badge_8.png';  // Fire
+
+const badges = [
+  badge1, badge2, badge3, badge4,
+  badge5, badge6, badge7, badge8 
+];
 
 const UserBadges = ({ userId, userBadges }) => {
-  const [badgeUrls, setBadgeUrls] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const loadBadges = async () => {
-      const promises = Array.from({ length: 12 }, (_, i) => 
-        getImageUrl('badges', `badge_${i + 1}.png`)
-      );
-      
-      const loadedUrls = await Promise.all(promises);
-      setBadgeUrls(loadedUrls);
-      setIsLoading(false);
-    };
-
-    loadBadges();
-  }, []);
-
-  if (isLoading) return <div>Loading...</div>;
-
   const rows = [];
-  for (let i = 0; i < badgeUrls.length; i += 4) {
-    rows.push(badgeUrls.slice(i, i + 4));
+  for (let i = 0; i < badges.length; i += 4) {
+    rows.push(badges.slice(i, i + 4));
   }
 
   return (
     <div style={{ width: '440px' }}>
       {rows.map((row, rowIndex) => (
         <div key={rowIndex} style={{ display: 'flex' }}>
-          {row.map((url, colIndex) => {
+          {row.map((badgeUrl, colIndex) => {
             const badgeIndex = rowIndex * 4 + colIndex + 1;
             const isEarned = userBadges && userBadges[`badge_${badgeIndex}`];
 
@@ -48,7 +42,7 @@ const UserBadges = ({ userId, userBadges }) => {
                 }}
               >
                 <img
-                  src={url}
+                  src={badgeUrl}
                   alt={`Badge ${badgeIndex}`}
                   style={{
                     width: '80px',
