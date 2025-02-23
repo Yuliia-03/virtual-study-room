@@ -9,6 +9,6 @@ def get_logged_in_user(request):
 
     return Response({
         "username": user.username,
-        # "description": user.description, # the user doesn't have a description
+        "description": user.description, # the user doesn't have a description
         "user_id": user.id,  # needed for firebase image retrieval
     })
