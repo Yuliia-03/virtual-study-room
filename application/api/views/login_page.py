@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.views.decorators.csrf import csrf_exempt
 
+
 # POST method API call to send credentials to database server
 # we do not use GET here because that would send the password details...
 # ...to the frontend which is less secure!
