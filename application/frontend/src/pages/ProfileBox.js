@@ -7,20 +7,19 @@ import axios from 'axios';
 function ProfileBox() {
 
     const [userData, setUserData] = useState({
-        username: "N/A",
+        username: null,
         description: "",
-        user_id: null,
         image: mangoCat, //default image
     });
 
     const handleChangeAvatar = async (event) => {
         const file = event.target.files[0];
-        if (!file || !userData.user_id) {
+        if (!file || !userData.username) {
             //TODO: put error message here
             console.log("no valid user id");
             return;
         }
-        const fileRef = ref(storage, `avatars/${userData.user_id}`);
+        const fileRef = ref(storage, `avatars/${userData.username}`);
         try 
         {
             //upload file to firebase
@@ -32,8 +31,6 @@ function ProfileBox() {
             //update userData with new imageURL
             setUserData((prevData) => ({
                 ...prevData,
-                user_id: userData.user_id,
-                description: userData.description,
                 image: imageUrl,
             }));
 
@@ -76,16 +73,14 @@ function ProfileBox() {
                 const data = {
                     username : "alice123",
                     description : "HELLO WORLD",
-                    user_id : "1",
                 };
 
                 //fetch profile picture from firebase using user_id
-                const imageRef = ref(storage, `avatars/${data.user_id}`);
+                const imageRef = ref(storage, `avatars/${data.username}`);
                 const imageUrl = await getDownloadURL(imageRef).catch(() => mangoCat); //default image if not found
 
                 setUserData({
                     username: data.username || "N/A",
-                    user_id: data.user_id,
                     description: data.description || "",
                     image: imageUrl,
                 });
@@ -105,11 +100,8 @@ function ProfileBox() {
                 <h1 className='profile-title'>Profile</h1>
                 <img src={userData.image} alt="logo" className="profile-pic" />
                 <input type="file" accept="image/*" id='change-avatar' onChange={handleChangeAvatar} className="change-avatar-button" style={{ display: 'none' }} />
-                <label htmlFor="change-avatar" className="upload-button">
-                    Change Avatar
-                </label>
+                <label htmlFor="change-avatar" className="upload-button" style={{ color: 'black' }}>Change Avatar</label>
                 <h1 className='profile-username'>{userData.username}</h1>
-                {/* <p className='profile-description'>{userData.description}</p> */}
                 <textarea
                     className="profile-description"
                     value={userData.description}
