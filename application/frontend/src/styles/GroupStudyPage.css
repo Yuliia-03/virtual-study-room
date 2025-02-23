@@ -7,6 +7,7 @@
     width: 100vw;
     padding: 20px;
     background-color: #F6F0F0;
+    box-sizing: border-box;
 }
 
 .column {
@@ -95,6 +96,7 @@
     border-radius: 5px;
     position: relative;
     cursor: pointer;
+    margin-left: 10px;
 }
 
 .checkbox:checked {
