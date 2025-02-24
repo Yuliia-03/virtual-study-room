@@ -3,10 +3,12 @@
     display: flex;
     justify-content: space-between; 
     align-items: flex-start;
-    min-height: 100vh;
-    width: 100vw;
-    padding: 20px;
+    max-height: 100vh;
+    max-width: 100vw;
+    padding-left: 25px;
     background-color: #F6F0F0;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .column {
@@ -15,6 +17,9 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    max-height: 100vh;
+    max-width: 100vw;
+    box-sizing: border-box;
 }
 
 .todo-list-container, .user-list-container, .sharedMaterials-container, .motivationMessage-container, .timer-container, .custom-container, .chatBox-container {
@@ -95,6 +100,7 @@
     border-radius: 5px;
     position: relative;
     cursor: pointer;
+    margin-left: 10px;
 }
 
 .checkbox:checked {
@@ -267,6 +273,7 @@ label {
     border-radius: 40px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     font-size: 16px;
+    margin-bottom: 10%;
 }
 
 .user-list-container{
@@ -353,7 +360,8 @@ label {
     width: 600px;
     border-radius: 40px;
     background-color: #FFFFFF;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin-bottom: 10%;
 }
 
 .timer-container{
@@ -431,5 +439,6 @@ label {
     width: 320px;
     border-radius: 40px;
     background-color: #FFFFFF;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin-bottom: 10%;
 }
