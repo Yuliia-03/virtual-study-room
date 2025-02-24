@@ -57,6 +57,7 @@ function GroupStudyPage(){
     //First Column: todoList, shared materials 
     //Second Column: users listes, motivational message
     //Third Column: Timer, customisation, chatbox
+    
     return (
         <div className='groupStudyRoom-container'>
             {/*1st Column */}
