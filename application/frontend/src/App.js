@@ -13,7 +13,7 @@ function App() {
     <Router>
       <Routes>
         // temporary change ok
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={<Welcome />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 

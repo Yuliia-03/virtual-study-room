@@ -12,6 +12,7 @@ class SignupTestCase(APITestCase):
             'lastname': 'Doe',
             'username': 'johndoe',
             'email': 'johndoe@example.com',
+            'description': '',
             'password': 'password123',
             'passwordConfirmation': 'password123'
         }
@@ -31,6 +32,7 @@ class SignupTestCase(APITestCase):
             'lastname': 'Doe',
             'username': 'johndoe',
             'email': 'johndoe@example.com',
+            'description': '',
             'password': 'password123',
             'passwordConfirmation': 'wrongpassword123'
         }
@@ -42,7 +44,7 @@ class SignupTestCase(APITestCase):
     def test_signup_username_taken(self):
         """Test if signup fails when the username is already taken."""
         User.objects.create_user(
-            firstname='Jane', lastname='Doe', username='johndoe', email='janedoe@example.com', password='password123'
+            firstname='Jane', lastname='Doe', username='johndoe', email='janedoe@example.com', description = '', password='password123'
         )
 
         data = {
@@ -50,6 +52,7 @@ class SignupTestCase(APITestCase):
             'lastname': 'Doe',
             'username': 'johndoe',
             'email': 'johndoe@example.com',
+            'description': '',
             'password': 'password123',
             'passwordConfirmation': 'password123'
         }
@@ -62,7 +65,7 @@ class SignupTestCase(APITestCase):
         """Test if signup fails when the email is already taken."""
         # Create a user to have the email taken
         User.objects.create_user(
-            firstname='Jane', lastname='Doe', username='janedoe', email='johndoe@example.com', password='password123'
+            firstname='Jane', lastname='Doe', username='janedoe', email='johndoe@example.com', description='', password='password123'
         )
 
         data = {
@@ -70,6 +73,7 @@ class SignupTestCase(APITestCase):
             'lastname': 'Doe',
             'username': 'johndoe',
             'email': 'johndoe@example.com',
+            'description': '',
             'password': 'password123',
             'passwordConfirmation': 'password123'
         }
@@ -85,6 +89,7 @@ class SignupTestCase(APITestCase):
             'lastname': 'Doe',
             'username': '',
             'email': 'johndoe@example.com',
+            'description': '',
             'password': 'password123',
             'passwordConfirmation': 'password123'
         }

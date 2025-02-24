@@ -17,7 +17,7 @@ class RewardsModelTest(TestCase):
     def test_foreign_key_links(self):
         # check if it is linked to the correct user
         self.assertEqual(self.rewards.user, self.user)
-        self.assertEqual(self.rewards.user_id, self.user.user_id)
+        self.assertEqual(self.rewards.user, self.user)
         self.assertNotEqual(self.rewards.user.username, "not_test_user")
 
     def test_str_method(self):

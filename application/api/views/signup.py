@@ -13,6 +13,7 @@ def signup(request):
         lastname = data.get("lastname")
         username = data.get("username")
         email = data.get("email")
+        description = data.get("description")
         password = data.get("password")
         password_confirmation = data.get("passwordConfirmation")
 
@@ -25,7 +26,7 @@ def signup(request):
             return Response({"error": "Email already taken"}, status=status.HTTP_400_BAD_REQUEST)
 
         user = User.objects.create_user(
-            firstname=firstname, lastname=lastname, username=username, email=email, password=password)
+            firstname=firstname, lastname=lastname, username=username, email=email, description=description, password=password)
 
         user.save()
 

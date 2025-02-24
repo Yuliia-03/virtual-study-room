@@ -5,6 +5,9 @@ class List(models.Model):
     name = models.CharField(max_length=255)  # Example field
     is_shared = models.BooleanField(default=False)
 
+    def __str__(self):
+        return f"{self.pk}"
+
 class Permission(models.Model):
     READ = 'read'
     WRITE = 'write'
