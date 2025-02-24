@@ -32,4 +32,5 @@ urlpatterns = [
     path('api/todolists/<str:is_shared>/', views.ViewToDoList.as_view(), name='toDoList'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/motivational-message/', views.motivationalMessage, name='motivation')
 ] 
