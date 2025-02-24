@@ -45,8 +45,32 @@ class ViewToDoList(APIView):
 
         return Response(response_data, status=status.HTTP_200_OK)
     
-    def post(self, is_shared="false"):
-        pass
+    def post(self, request):
+        # Define the action type in request body
+        action = request.data.get("action")
+
+        if action == "create_new_task":
+            self.create_task()
+        elif action == "create_new_list":
+            pass
+
+
+    def create_task(self, request):
+        try:
+            data = request.data
+            title = data.get("taskTitle")
+            list_id = data.get("list_id")
+            content = data.get("taskContent")
+
+            if List.objects.filter(pk=list_id).exists():
+                list = List.objects.get(pk=list_id)
+                task = toDoList.objects.create(
+                    title=title, content=content, list=list)
+            else:
+                return Response({"error": "List doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Task added successfully!"}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({"error": "Invalid request", "details": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request, task_id):
         print(f"Received PATCH request for task_id: {task_id}")
