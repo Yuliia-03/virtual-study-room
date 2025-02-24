@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getDatabase, ref, set, onValue } from 'firebase/database';
+import "../styles/Timer.css";
 
 const StudyTimer = ({ roomId, isHost, onClose }) => {
   const [position, setPosition] = useState({ x: 100, y: 100 });
@@ -99,7 +100,6 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
         setTimeLeft((prevTime) => prevTime - 1);
       }, 1000);
     } else if (timeLeft === 0) {
-      // Handle timer completion (e.g., switch to break)
       setIsBreak(!isBreak);
       setCurrentRound((prevRound) => (prevRound < rounds ? prevRound + 1 : 1));
       setTimeLeft(isBreak ? breakLength * 60 : studyLength * 60);
@@ -109,120 +109,71 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
   }, [isRunning, timeLeft, isBreak, studyLength, breakLength, rounds]);
 
   const renderContent = () => {
-    if (isMinimized) {
-      return null;
-    }
-
-    switch (currentPage) {
-      case 'welcome':
-        return (
-          <div className="timer-page">
-            <h3>Let's time your study!</h3>
-            {isHost && (
-              <button onClick={() => setCurrentPage('setup')}>
-                Start
+    if (!isRunning) {
+      return (
+        <>
+          <div className="status-text">Set Your Study Timer</div>
+          {isHost && (
+            <>
+              <div className="timer-input">
+                <label>Study (mins)</label>
+                <input
+                  type="number"
+                  value={studyLength}
+                  onChange={(e) => setStudyLength(parseInt(e.target.value))}
+                  min="1"
+                />
+              </div>
+              <div className="timer-input">
+                <label>Break (mins)</label>
+                <input
+                  type="number"
+                  value={breakLength}
+                  onChange={(e) => setBreakLength(parseInt(e.target.value))}
+                  min="1"
+                />
+              </div>
+              <div className="timer-input">
+                <label>Rounds</label>
+                <input
+                  type="number"
+                  value={rounds}
+                  onChange={(e) => setRounds(parseInt(e.target.value))}
+                  min="1"
+                />
+              </div>
+              <button className="start-button" onClick={startTimer}>
+                Start Timer
               </button>
-            )}
-          </div>
-        );
-
-      case 'setup':
-        return (
-          <div className="timer-page">
-            <h3>Set your timer</h3>
-            {isHost && (
-              <>
-                <div className="timer-input">
-                  <label>Study time (minutes):</label>
-                  <input
-                    type="number"
-                    value={studyLength}
-                    onChange={(e) => setStudyLength(parseInt(e.target.value))}
-                    min="1"
-                  />
-                </div>
-                <div className="timer-input">
-                  <label>Break time (minutes):</label>
-                  <input
-                    type="number"
-                    value={breakLength}
-                    onChange={(e) => setBreakLength(parseInt(e.target.value))}
-                    min="1"
-                  />
-                </div>
-                <div className="timer-input">
-                  <label>Number of rounds:</label>
-                  <input
-                    type="number"
-                    value={rounds}
-                    onChange={(e) => setRounds(parseInt(e.target.value))}
-                    min="1"
-                  />
-                </div>
-                <button onClick={() => setCurrentPage('confirm')}>
-                  Next
-                </button>
-              </>
-            )}
-          </div>
-        );
-
-      case 'confirm':
-        return (
-          <div className="timer-page">
-            <h3>Confirm settings</h3>
-            <div>Study time: {studyLength} minutes</div>
-            <div>Break time: {breakLength} minutes</div>
-            <div>Rounds: {rounds}</div>
-            {isHost && (
-              <div>
-                <button onClick={() => setCurrentPage('setup')}>
-                  Back
-                </button>
-                <button onClick={startTimer}>
-                  Start Timer
-                </button>
-                <button onClick={handleExit}>
-                  Exit
-                </button>
-                <button onClick={handleMinimize}>
-                  Minimize
-                </button>
-              </div>
-            )}
-          </div>
-        );
-
-      case 'timer':
-        return (
-          <div className="timer-page">
-            <div className="timer-display">
-              <h3>{isBreak ? 'Break Time!' : 'Study Time!'}</h3>
-              <div className="time">{formatTime(timeLeft)}</div>
-              <div className="round">Round {currentRound} of {rounds}</div>
-            </div>
-            {isHost && (
-              <div className="timer-controls">
-                <button onClick={() => setIsRunning(!isRunning)}>
-                  {isRunning ? 'Pause' : 'Resume'}
-                </button>
-                <button onClick={() => setCurrentPage('setup')}>
-                  Reset
-                </button>
-                <button onClick={handleMinimize}>
-                  Minimize
-                </button>
-                <button onClick={handleExit}>
-                  Exit
-                </button>
-              </div>
-            )}
-          </div>
-        );
-
-      default:
-        return null;
+            </>
+          )}
+        </>
+      );
     }
+
+    return (
+      <>
+        <div className="status-text">
+          {isBreak ? 'Break Time!' : 'Study Time!'}
+        </div>
+        <div className="timer-display">
+          {formatTime(timeLeft)}
+        </div>
+        <div className="round-display">
+          Round {currentRound} of {rounds}
+        </div>
+        {isHost && (
+          <div className="timer-controls">
+            <button onClick={() => setIsRunning(!isRunning)}>
+              {isRunning ? 'Pause' : 'Resume'}
+            </button>
+            <button onClick={() => setTimeLeft(studyLength * 60)}>
+              Reset
+            </button>
+          </div>
+        )}
+      </>
+    );
   };
 
   const formatTime = (seconds) => {
@@ -241,40 +192,61 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
   });
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        left: `${position.x}px`,
-        top: `${position.y}px`,
-        background: 'white',
-        border: '2px solid #ccc',
-        padding: '10px',
-        cursor: dragging ? 'grabbing' : 'default',
-        zIndex: 1000,
-        width: '300px',
-        height: '400px',
-        boxSizing: 'border-box',
-        display: isMinimized ? 'none' : 'block'
-      }}
-      onMouseDown={onMouseDown}
-    >
-      <div 
-        className="timer-handle"
-        style={{
-          padding: '5px',
-          cursor: isHost ? 'grab' : 'default',
-          borderBottom: '1px solid #ccc',
-          textAlign: 'center',
-          position: 'relative'
-        }}
-      >
-        <div style={{ position: 'absolute', right: '5px', top: '5px' }}>
-          <button onClick={handleMinimize} style={{ fontSize: '12px' }}>-</button>
-          <button onClick={handleExit} style={{ fontSize: '12px' }}>X</button>
+    <div className="flex flex-col items-center justify-center p-6 bg-pink-50 border-2 border-pink-300 rounded-lg shadow-lg">
+      <h1 className="text-3xl font-bold text-pink-600">Let's time your study!</h1>
+      <div className="mt-4">
+        <div className="flex flex-col items-center">
+          <label className="text-pink-500">Study (mins)</label>
+          <input
+            type="number"
+            value={studyLength}
+            onChange={(e) => setStudyLength(parseInt(e.target.value))}
+            className="w-16 p-2 border-2 border-pink-300 rounded-md text-center"
+            min="1"
+          />
         </div>
-        <h4 style={{ margin: 0 }}>Egg Timer</h4>
+        <div className="flex flex-col items-center mt-2">
+          <label className="text-pink-500">Break (mins)</label>
+          <input
+            type="number"
+            value={breakLength}
+            onChange={(e) => setBreakLength(parseInt(e.target.value))}
+            className="w-16 p-2 border-2 border-pink-300 rounded-md text-center"
+            min="1"
+          />
+        </div>
+        <div className="flex flex-col items-center mt-2">
+          <label className="text-pink-500">Rounds</label>
+          <input
+            type="number"
+            value={rounds}
+            onChange={(e) => setRounds(parseInt(e.target.value))}
+            className="w-16 p-2 border-2 border-pink-300 rounded-md text-center"
+            min="1"
+          />
+        </div>
+        <button
+          onClick={startTimer}
+          className="mt-4 bg-pink-400 text-white py-2 px-4 rounded-lg hover:bg-pink-500 transition"
+        >
+          Start Timer
+        </button>
       </div>
-      {renderContent()}
+      <div className="mt-6">
+        {isRunning && (
+          <div className="text-xl text-pink-600">
+            {isBreak ? 'Break Time!' : 'Study Time!'} <br />
+            <span className="text-4xl">{formatTime(timeLeft)}</span>
+          </div>
+        )}
+      </div>
+      <div className="mt-6">
+        {/* Placeholder for animation */}
+        <div className="w-32 h-32 bg-blue-200 rounded-full flex items-center justify-center">
+          {/* Animation will go here */}
+          <span className="text-lg text-blue-600">Animation</span>
+        </div>
+      </div>
     </div>
   );
 };
