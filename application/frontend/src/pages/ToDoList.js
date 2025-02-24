@@ -2,79 +2,27 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"
 import axios from "axios";
 import { jwtDecode } from 'jwt-decode';
+import { getAuthenticatedRequest } from "../utils/authService";
 
 
 const ToDoList = () => {
     const [lists, setLists] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const refreshToken = async () => {
-        const refreshToken = localStorage.getItem("refresh_token");
-        if (!refreshToken) return;
-
-        try {
-            const response = await axios.post(
-                "http://127.0.0.1:8000/api/token/refresh/", // This is the endpoint for refreshing tokens
-                { refresh: refreshToken }
-            );
-
-            // Update tokens in localStorage
-            localStorage.setItem("access_token", response.data.access);
-            localStorage.setItem("refresh_token", response.data.refresh);
-
-            return response.data.access; // Return the new access token
-        } catch (error) {
-            console.error("Error refreshing token", error);
-            return null;
-        }
-    };
-
-    const isTokenExpired = (token) => {
-        if (!token) return true;
-        const decoded = jwtDecode(token); // Decode JWT token
-        const currentTime = Date.now() / 1000; // Current time in seconds
-        return decoded.exp < currentTime;
-    };
-
     useEffect(() => {
         const fetchData = async () => {
-            const isShared = "false";
-            const token = localStorage.getItem('access_token');
-
-            if (token && isTokenExpired(token)) {
-                // Refresh token if expired
-                const refreshedToken = await refreshToken();
-                if (refreshedToken) {
-                    // Retry the request with the new token
-                    try {
-                        const response = await axios.get(`http://127.0.0.1:8000/api/todolists/${isShared}/`, {
-                            headers: { Authorization: `Bearer ${refreshedToken}` }
-                        });
-                        setLists(response.data);
-                        setLoading(false);
-                    } catch (error) {
-                        console.error("Error fetching data:", error);
-                        setLoading(false);
-                    }
-                }
-            } else {
-                // Use the original token
-                try {
-                    const response = await axios.get(`http://127.0.0.1:8000/api/todolists/${isShared}/`, {
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
-                    setLists(response.data);
-                    setLoading(false);
-                } catch (error) {
-                    console.error("Error fetching data:", error);
-                    setLoading(false);
-                }
+            try {
+                const data = await getAuthenticatedRequest("/todolists/false/");
+                setLists(data);
+            } catch (error) {
+                console.error("Error fetching to-do lists:", error);
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchData();
-    }, []); // The empty dependency array means this runs only once when the component mounts
-
+    }, []);
 
 
     const toggleTaskCompletion = (listId, taskId, currentStatus) => {
