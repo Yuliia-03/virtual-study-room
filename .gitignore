@@ -1397,6 +1397,10 @@ FodyWeavers.xsd
 **/migrations/*.py
 !**/migrations/__init__.py
 
+# Ignore package-lock, must be manually added
+package-lock.json
+package-lock
+
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 

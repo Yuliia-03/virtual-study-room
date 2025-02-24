@@ -52,11 +52,12 @@ function GroupStudyPage(){
         });
         setTodos(newTodos);
     };
-    
+
     //page is designed in columns
     //First Column: todoList, shared materials 
     //Second Column: users listes, motivational message
     //Third Column: Timer, customisation, chatbox
+    
     return (
         <div className='groupStudyRoom-container'>
             {/*1st Column */}
