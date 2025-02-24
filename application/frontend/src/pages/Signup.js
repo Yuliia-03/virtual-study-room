@@ -20,7 +20,7 @@ function Signup() {
     };
 
     //when the signup button is clicked - send form data to backend django form
-    const handleSignup = async () => {
+const handleSignup = async () => {
         if (!formData.acceptTerms) {
             alert("You must accept the terms and conditions.");
             return;
