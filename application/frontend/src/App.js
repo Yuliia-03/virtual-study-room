@@ -4,18 +4,22 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Welcome from "./pages/Welcome";
 import Dashboard from "./pages/Dashboard";
+import GroupStudyPage from './pages/GroupStudyPage';
 import UserProfile from "./components/UserProfile";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+//import ToDoList from './pages/ToDoList';
 
 function App() {
   return (
     <Router>
       <Routes>
         // temporary change ok
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={<Welcome />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/profile" element={<UserProfile userId="test-user-1" />} />
+
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/group-study" element={<GroupStudyPage />} />
       </Routes>
     </Router>
   );
