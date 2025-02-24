@@ -5,6 +5,7 @@ import Signup from "./pages/Signup";
 import Welcome from "./pages/Welcome";
 import Dashboard from "./pages/Dashboard";
 import GroupStudyPage from './pages/GroupStudyPage';
+import UserProfile from "./components/UserProfile";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 //import ToDoList from './pages/ToDoList';
 
