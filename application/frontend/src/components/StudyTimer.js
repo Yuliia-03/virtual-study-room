@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getDatabase, ref, set, onValue } from 'firebase/database';
-import "../styles/Timer.css";
+import 'tailwindcss';
+import '@fontsource/vt323';
 
 const StudyTimer = ({ roomId, isHost, onClose }) => {
   const [position, setPosition] = useState({ x: 100, y: 100 });
@@ -16,6 +17,10 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
   const [isRunning, setIsRunning] = useState(false);
   const [currentPage, setCurrentPage] = useState('welcome');
   const [isMinimized, setIsMinimized] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [playSound, setPlaySound] = useState(true);
+  const [studyTime, setStudyTime] = useState({ hours: 0, minutes: 25, seconds: 0 });
+  const [breakTime, setBreakTime] = useState({ hours: 0, minutes: 5, seconds: 0 });
 
   useEffect(() => {
     const savedStudyLength = localStorage.getItem('studyLength');
@@ -50,8 +55,22 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
   };
 
   const startTimer = () => {
-    saveSettings();
-    setTimeLeft(studyLength * 60);
+    // Convert hours, minutes, seconds to total seconds
+    const totalStudySeconds = (
+      studyTime.hours * 3600 + 
+      studyTime.minutes * 60 + 
+      studyTime.seconds
+    );
+    
+    const totalBreakSeconds = (
+      breakTime.hours * 3600 + 
+      breakTime.minutes * 60 + 
+      breakTime.seconds
+    );
+
+    setTimeLeft(totalStudySeconds);
+    setStudyLength(totalStudySeconds);
+    setBreakLength(totalBreakSeconds);
     setCurrentRound(1);
     setIsBreak(false);
     setIsRunning(true);
@@ -59,7 +78,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
   };
 
   const onMouseDown = (e) => {
-    if (isHost && e.target.className.includes('timer-handle')) {
+    if (e.target.className.includes('timer-handle')) {
       setDragging(true);
       setDragOffset({
         x: e.clientX - position.x,
@@ -69,7 +88,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
   };
 
   const onMouseMove = (e) => {
-    if (dragging && isHost) {
+    if (dragging) {
       setPosition({
         x: e.clientX - dragOffset.x,
         y: e.clientY - dragOffset.y
@@ -82,104 +101,186 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
   };
 
   useEffect(() => {
-    if (isHost) {
-      window.addEventListener('mousemove', onMouseMove);
-      window.addEventListener('mouseup', onMouseUp);
-      
-      return () => {
-        window.removeEventListener('mousemove', onMouseMove);
-        window.removeEventListener('mouseup', onMouseUp);
-      };
-    }
-  }, [dragging, dragOffset, isHost]);
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+    
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+  }, [dragging, dragOffset]);
 
   useEffect(() => {
     let timer;
-    if (isRunning && timeLeft > 0) {
+    if (isRunning && !isPaused && timeLeft > 0) {
       timer = setInterval(() => {
         setTimeLeft((prevTime) => prevTime - 1);
       }, 1000);
     } else if (timeLeft === 0) {
+      if (playSound) {
+        // Add your sound playing logic here
+      }
       setIsBreak(!isBreak);
-      setCurrentRound((prevRound) => (prevRound < rounds ? prevRound + 1 : 1));
-      setTimeLeft(isBreak ? breakLength * 60 : studyLength * 60);
+      setTimeLeft(isBreak ? studyLength : breakLength);
+      if (!isBreak) {
+        setCurrentRound((prevRound) => (prevRound < rounds ? prevRound + 1 : 1));
+      }
     }
 
     return () => clearInterval(timer);
-  }, [isRunning, timeLeft, isBreak, studyLength, breakLength, rounds]);
+  }, [isRunning, isPaused, timeLeft, isBreak, studyLength, breakLength, rounds, playSound]);
 
   const renderContent = () => {
     if (!isRunning) {
       return (
-        <>
-          <div className="status-text">Set Your Study Timer</div>
-          {isHost && (
-            <>
-              <div className="timer-input">
-                <label>Study (mins)</label>
+        <div className="flex flex-col items-center space-y-4">
+          <div className="text-2xl text-pink-300">Set Your Study Timer</div>
+          
+          <div className="w-full space-y-6">
+            <div className="flex flex-col items-center">
+              <label className="text-pink-300 mb-2">Study Time</label>
+              <div className="flex gap-2">
                 <input
                   type="number"
-                  value={studyLength}
-                  onChange={(e) => setStudyLength(parseInt(e.target.value))}
-                  min="1"
+                  value={studyTime.hours}
+                  onChange={(e) => setStudyTime({...studyTime, hours: parseInt(e.target.value) || 0})}
+                  className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                  min="0"
+                  placeholder="HH"
                 />
-              </div>
-              <div className="timer-input">
-                <label>Break (mins)</label>
+                <span className="text-pink-300 self-center">:</span>
                 <input
                   type="number"
-                  value={breakLength}
-                  onChange={(e) => setBreakLength(parseInt(e.target.value))}
-                  min="1"
+                  value={studyTime.minutes}
+                  onChange={(e) => setStudyTime({...studyTime, minutes: parseInt(e.target.value) || 0})}
+                  className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                  min="0"
+                  max="59"
+                  placeholder="MM"
                 />
-              </div>
-              <div className="timer-input">
-                <label>Rounds</label>
+                <span className="text-pink-300 self-center">:</span>
                 <input
                   type="number"
-                  value={rounds}
-                  onChange={(e) => setRounds(parseInt(e.target.value))}
-                  min="1"
+                  value={studyTime.seconds}
+                  onChange={(e) => setStudyTime({...studyTime, seconds: parseInt(e.target.value) || 0})}
+                  className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                  min="0"
+                  max="59"
+                  placeholder="SS"
                 />
               </div>
-              <button className="start-button" onClick={startTimer}>
-                Start Timer
-              </button>
-            </>
-          )}
-        </>
+            </div>
+
+            <div className="flex flex-col items-center">
+              <label className="text-pink-300 mb-2">Break Time</label>
+              <div className="flex gap-2">
+                <input
+                  type="number"
+                  value={breakTime.hours}
+                  onChange={(e) => setBreakTime({...breakTime, hours: parseInt(e.target.value) || 0})}
+                  className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                  min="0"
+                  placeholder="HH"
+                />
+                <span className="text-pink-300 self-center">:</span>
+                <input
+                  type="number"
+                  value={breakTime.minutes}
+                  onChange={(e) => setBreakTime({...breakTime, minutes: parseInt(e.target.value) || 0})}
+                  className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                  min="0"
+                  max="59"
+                  placeholder="MM"
+                />
+                <span className="text-pink-300 self-center">:</span>
+                <input
+                  type="number"
+                  value={breakTime.seconds}
+                  onChange={(e) => setBreakTime({...breakTime, seconds: parseInt(e.target.value) || 0})}
+                  className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                  min="0"
+                  max="59"
+                  placeholder="SS"
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col items-center">
+              <label className="text-pink-300 mb-2">Rounds</label>
+              <input
+                type="number"
+                value={rounds}
+                onChange={(e) => setRounds(parseInt(e.target.value))}
+                className="w-20 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                min="1"
+              />
+            </div>
+
+            <div className="flex items-center justify-center gap-2">
+              <input
+                type="checkbox"
+                id="soundToggle"
+                checked={playSound}
+                onChange={(e) => setPlaySound(e.target.checked)}
+                className="w-4 h-4 text-pink-300 border-pink-200 rounded focus:ring-pink-300"
+              />
+              <label htmlFor="soundToggle" className="text-pink-300">
+                Play sound when timer ends
+              </label>
+            </div>
+          </div>
+
+          <button
+            onClick={startTimer}
+            className="mt-6 px-8 py-3 bg-pink-200 text-white rounded-full hover:bg-pink-300 transition-colors duration-200"
+          >
+            Start Timer
+          </button>
+        </div>
       );
     }
 
     return (
       <>
-        <div className="status-text">
+        <div className="text-[#FFB5C5] text-2xl mb-4">
           {isBreak ? 'Break Time!' : 'Study Time!'}
         </div>
-        <div className="timer-display">
+
+        <div className="text-[48px] font-bold text-[#FFB5C5] my-4">
           {formatTime(timeLeft)}
         </div>
-        <div className="round-display">
+
+        <div className="text-sm text-gray-600 text-center mt-2">
           Round {currentRound} of {rounds}
         </div>
-        {isHost && (
-          <div className="timer-controls">
-            <button onClick={() => setIsRunning(!isRunning)}>
-              {isRunning ? 'Pause' : 'Resume'}
-            </button>
-            <button onClick={() => setTimeLeft(studyLength * 60)}>
-              Reset
-            </button>
-          </div>
-        )}
+
+        <div className="flex justify-between gap-2.5 mt-2.5">
+          <button 
+            onClick={toggleTimer}
+            className="flex-1 bg-[#E6E6FA] border border-[#FFB5C5] rounded px-4 py-1.5 text-gray-600 text-sm hover:bg-[#FFB5C5] hover:text-white cursor-pointer"
+          >
+            {isPaused ? 'Resume' : 'Pause'}
+          </button>
+          <button 
+            onClick={resetTimer}
+            className="flex-1 bg-[#E6E6FA] border border-[#FFB5C5] rounded px-4 py-1.5 text-gray-600 text-sm hover:bg-[#FFB5C5] hover:text-white cursor-pointer"
+          >
+            Reset
+          </button>
+        </div>
       </>
     );
   };
 
   const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+    return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
   const unsubscribe = onValue(ref(getDatabase(), `rooms/${roomId}/timer`), (snapshot) => {
@@ -191,61 +292,231 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
     }
   });
 
+  const toggleTimer = () => {
+    setIsPaused(!isPaused);
+  };
+
+  const resetTimer = () => {
+    setTimeLeft(studyLength);
+    setCurrentRound(1);
+    setIsBreak(false);
+    setIsRunning(true);
+    setCurrentPage('timer');
+  };
+
+  const handleBack = () => {
+    setIsRunning(false);
+    setIsPaused(false);
+    setTimeLeft(studyLength * 60);
+    setCurrentRound(1);
+    setIsBreak(false);
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center p-6 bg-pink-50 border-2 border-pink-300 rounded-lg shadow-lg">
-      <h1 className="text-3xl font-bold text-pink-600">Let's time your study!</h1>
-      <div className="mt-4">
-        <div className="flex flex-col items-center">
-          <label className="text-pink-500">Study (mins)</label>
-          <input
-            type="number"
-            value={studyLength}
-            onChange={(e) => setStudyLength(parseInt(e.target.value))}
-            className="w-16 p-2 border-2 border-pink-300 rounded-md text-center"
-            min="1"
-          />
-        </div>
-        <div className="flex flex-col items-center mt-2">
-          <label className="text-pink-500">Break (mins)</label>
-          <input
-            type="number"
-            value={breakLength}
-            onChange={(e) => setBreakLength(parseInt(e.target.value))}
-            className="w-16 p-2 border-2 border-pink-300 rounded-md text-center"
-            min="1"
-          />
-        </div>
-        <div className="flex flex-col items-center mt-2">
-          <label className="text-pink-500">Rounds</label>
-          <input
-            type="number"
-            value={rounds}
-            onChange={(e) => setRounds(parseInt(e.target.value))}
-            className="w-16 p-2 border-2 border-pink-300 rounded-md text-center"
-            min="1"
-          />
-        </div>
-        <button
-          onClick={startTimer}
-          className="mt-4 bg-pink-400 text-white py-2 px-4 rounded-lg hover:bg-pink-500 transition"
-        >
-          Start Timer
-        </button>
-      </div>
-      <div className="mt-6">
-        {isRunning && (
-          <div className="text-xl text-pink-600">
-            {isBreak ? 'Break Time!' : 'Study Time!'} <br />
-            <span className="text-4xl">{formatTime(timeLeft)}</span>
+    <div className="fixed inset-0 flex items-center justify-center">
+      <div 
+        style={{ 
+          position: 'absolute',
+          left: `${position.x}px`,
+          top: `${position.y}px`,
+          cursor: dragging ? 'grabbing' : 'grab'
+        }}
+      >
+        {!isRunning ? (
+          <div 
+            className="p-8 bg-white rounded-3xl shadow-lg w-80 h-[600px] flex flex-col"
+            onMouseDown={onMouseDown}
+            style={{ fontFamily: 'VT323, monospace' }}
+          >
+            <div className="flex justify-between items-center mb-8 timer-handle">
+              <h1 className="text-2xl font-semibold text-gray-800">Study Timer</h1>
+              <div className="flex gap-4">
+                <button 
+                  onClick={() => setIsMinimized(!isMinimized)}
+                  className="text-gray-400 hover:text-gray-600 transition-colors duration-200 text-xl"
+                >
+                  —
+                </button>
+                <button 
+                  onClick={onClose}
+                  className="text-gray-400 hover:text-gray-600 transition-colors duration-200 text-xl"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+            
+            <div className="flex flex-col items-center space-y-6 flex-grow">
+              <div className="text-2xl text-pink-300">Set Your Study Timer</div>
+              
+              <div className="w-full space-y-8">
+                <div className="flex flex-col items-center">
+                  <label className="text-pink-300 mb-2">Study Time</label>
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      value={studyTime.hours}
+                      onChange={(e) => setStudyTime({...studyTime, hours: parseInt(e.target.value) || 0})}
+                      className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                      min="0"
+                      placeholder="HH"
+                    />
+                    <span className="text-pink-300 self-center">:</span>
+                    <input
+                      type="number"
+                      value={studyTime.minutes}
+                      onChange={(e) => setStudyTime({...studyTime, minutes: parseInt(e.target.value) || 0})}
+                      className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                      min="0"
+                      max="59"
+                      placeholder="MM"
+                    />
+                    <span className="text-pink-300 self-center">:</span>
+                    <input
+                      type="number"
+                      value={studyTime.seconds}
+                      onChange={(e) => setStudyTime({...studyTime, seconds: parseInt(e.target.value) || 0})}
+                      className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                      min="0"
+                      max="59"
+                      placeholder="SS"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col items-center">
+                  <label className="text-pink-300 mb-2">Break Time</label>
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      value={breakTime.hours}
+                      onChange={(e) => setBreakTime({...breakTime, hours: parseInt(e.target.value) || 0})}
+                      className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                      min="0"
+                      placeholder="HH"
+                    />
+                    <span className="text-pink-300 self-center">:</span>
+                    <input
+                      type="number"
+                      value={breakTime.minutes}
+                      onChange={(e) => setBreakTime({...breakTime, minutes: parseInt(e.target.value) || 0})}
+                      className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                      min="0"
+                      max="59"
+                      placeholder="MM"
+                    />
+                    <span className="text-pink-300 self-center">:</span>
+                    <input
+                      type="number"
+                      value={breakTime.seconds}
+                      onChange={(e) => setBreakTime({...breakTime, seconds: parseInt(e.target.value) || 0})}
+                      className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                      min="0"
+                      max="59"
+                      placeholder="SS"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col items-center">
+                  <label className="text-pink-300 mb-2">Rounds</label>
+                  <input
+                    type="number"
+                    value={rounds}
+                    onChange={(e) => setRounds(parseInt(e.target.value))}
+                    className="w-20 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                    min="1"
+                  />
+                </div>
+
+                <div className="flex items-center justify-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="soundToggle"
+                    checked={playSound}
+                    onChange={(e) => setPlaySound(e.target.checked)}
+                    className="w-4 h-4 text-pink-300 border-pink-200 rounded focus:ring-pink-300"
+                  />
+                  <label htmlFor="soundToggle" className="text-pink-300">
+                    Play sound when timer ends
+                  </label>
+                </div>
+              </div>
+
+              <button 
+                onClick={startTimer}
+                className="mt-auto mb-8 px-8 py-3 bg-pink-200 text-white rounded-full hover:bg-pink-300 transition-colors duration-200"
+              >
+                Start Timer
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div 
+            className="p-8 bg-white rounded-3xl shadow-lg w-80 h-[600px] flex flex-col"
+            onMouseDown={onMouseDown}
+            style={{ fontFamily: 'VT323, monospace' }}
+          >
+            <div className="flex justify-between items-center timer-handle">
+              <div className="flex items-center gap-3">
+                <button 
+                  onClick={handleBack}
+                  className="text-[#FFB5C5] hover:text-pink-400 transition-colors duration-200"
+                >
+                  ←
+                </button>
+                <h1 className="text-2xl font-semibold text-gray-800">Study Timer</h1>
+              </div>
+              <div className="flex gap-4">
+                <button 
+                  onClick={() => setIsMinimized(!isMinimized)}
+                  className="text-gray-400 hover:text-gray-600 transition-colors duration-200 text-xl"
+                >
+                  —
+                </button>
+                <button 
+                  onClick={onClose}
+                  className="text-gray-400 hover:text-gray-600 transition-colors duration-200 text-xl"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+
+            <div className="text-[#FFB5C5] text-2xl mt-8">
+              {isBreak ? 'Break Time!' : 'Study Time!'}
+            </div>
+
+            <div className="flex-grow flex items-center justify-center">
+              {/* Your animation will go here */}
+            </div>
+
+            <div className="flex flex-col items-center mb-8">
+              <div className="text-[48px] font-bold text-[#FFB5C5] mb-2">
+                {formatTime(timeLeft)}
+              </div>
+
+              <div className="text-sm text-gray-600 mb-4">
+                Round {currentRound} of {rounds}
+              </div>
+
+              <div className="flex justify-between gap-2.5 w-full">
+                <button 
+                  onClick={toggleTimer}
+                  className="flex-1 bg-[#E6E6FA] border border-[#FFB5C5] rounded px-4 py-1.5 text-gray-600 text-sm hover:bg-[#FFB5C5] hover:text-white cursor-pointer"
+                >
+                  {isPaused ? 'Resume' : 'Pause'}
+                </button>
+                <button 
+                  onClick={resetTimer}
+                  className="flex-1 bg-[#E6E6FA] border border-[#FFB5C5] rounded px-4 py-1.5 text-gray-600 text-sm hover:bg-[#FFB5C5] hover:text-white cursor-pointer"
+                >
+                  Reset
+                </button>
+              </div>
+            </div>
           </div>
         )}
-      </div>
-      <div className="mt-6">
-        {/* Placeholder for animation */}
-        <div className="w-32 h-32 bg-blue-200 rounded-full flex items-center justify-center">
-          {/* Animation will go here */}
-          <span className="text-lg text-blue-600">Animation</span>
-        </div>
       </div>
     </div>
   );
