@@ -24,6 +24,8 @@ class Command(BaseCommand):
         print("Deleting all Permission Items")
         Permission.objects.all().delete()
 
+        List.objects.all().delete()
+
         print("Deleting Session Users...")  # Add this line
         SessionUser.objects.all().delete()
 

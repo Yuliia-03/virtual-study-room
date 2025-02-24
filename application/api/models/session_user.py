@@ -3,6 +3,7 @@ from django.utils.timezone import now
 import datetime
 from .user import User
 from .study_session import StudySession
+from django.db import connection
 
 class SessionUser(models.Model):
     """
@@ -11,7 +12,8 @@ class SessionUser(models.Model):
     # Foreign keys
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='session_users')
     session = models.ForeignKey(StudySession, on_delete=models.CASCADE, related_name='session_users')
-    # Some extra fields
+    # Track which join this is (first join = 1, second = 2, etc.)
+    join_sequence = models.PositiveIntegerField(default=1)
     # Current status in the session - determines availability and focus state
     status = models.CharField(
         max_length=20,
@@ -36,22 +38,21 @@ class SessionUser(models.Model):
 
     def update_status(self, new_status):
         """
-        Update user's status and track-focused study time.
+        Update user's status and track focused study time.
         If user was in FOCUSED status, adds the elapsed time
         to their total focus time before changing status.
         """
-        if new_status not in dict(self.status.choices).keys():
+        valid_statuses = ['FOCUSED', 'CASUAL']
+        if new_status not in valid_statuses:
             raise ValueError("Invalid status")
             
         current_time = now()
-        time_diff = current_time - self.last_status_change
         
         if self.status == 'FOCUSED':
+            time_diff = current_time - self.joined_at
             self.focus_time += time_diff
             
         self.status = new_status
-        self.last_status_change = current_time
-        self.last_active = current_time
         self.save()
 
     def leave_session(self):
@@ -82,4 +83,28 @@ class SessionUser(models.Model):
             raise ValueError("Goal shouldn't be empty and must have 255 characters or less!")
         self.focus_target = new_goal
         self.save()
+
+    @classmethod
+    def rejoin_session(cls, user, session):
+        """
+        Creates a new SessionUser entry for a user rejoining a session.
+        First ensures any existing session entry is properly closed out.
+        Increments the join_sequence field based on previous joins.
+        """
+        # Close any existing active sessions
+        for existing_session in cls.objects.filter(user=user, left_at__isnull=True):
+            existing_session.leave_session()
+        
+        # Get next sequence number by counting ALL previous joins (including left sessions)
+        next_sequence = cls.objects.filter(
+            user=user, 
+            session=session
+        ).count() + 1
+        
+        # Create and return new session
+        return cls.objects.create(
+            user=user,
+            session=session,
+            join_sequence=next_sequence
+        )
 

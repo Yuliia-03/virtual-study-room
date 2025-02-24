@@ -20,7 +20,7 @@ from django.views.generic import TemplateView
 
 from django.conf import settings
 from django.conf.urls.static import static
-
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from api import views
 
 from api.views.analytics import get_analytics
@@ -32,5 +32,9 @@ urlpatterns = [
     path('api/signup/', views.signup, name='signup'),
     path("api/analytics/", get_analytics, name="analytics"),  # Default for logged-in user
     path("api/analytics/<str:user_identifier>/", get_analytics, name="analytics_by_user"),  # Fetch by user_id
-
+    path('api/login/', views.login, name='login'),
+    path('api/todolists/<str:is_shared>/', views.ViewToDoList.as_view(), name='toDoList'),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/motivational-message/', views.motivationalMessage, name='motivation')
 ] 
