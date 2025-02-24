@@ -18,7 +18,9 @@ export const refreshToken = async () => {
     if (!refresh) return null;
 
     try {
-        const response = await axios.post(`${API_BASE_URL}/token/refresh/`, { refresh });
+        const response = await axios.post(`${API_BASE_URL}/token/refresh/`, {
+            refresh: refresh,  // Sending the refresh token in the body
+        });
 
         // Store new tokens
         localStorage.setItem("access_token", response.data.access);
@@ -30,6 +32,7 @@ export const refreshToken = async () => {
         return null;
     }
 };
+
 
 // Function to get an authenticated request
 export const getAuthenticatedRequest = async (url, method = "GET", data = null) => {

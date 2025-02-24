@@ -120,3 +120,32 @@ input[type="checkbox"] {
 input[type="checkbox"]:checked {
     background-color: #2ecc71;
 }
+
+.todo-card-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.todo-card-header button,
+.task-item button {
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.task-item button {
+    background-color: #007bff;
+    
+}
+.task-item button:hover {
+    background-color: #0056b3;
+}
+
+.todo-card-header button:hover {
+    background-color: #7f0000;
+}

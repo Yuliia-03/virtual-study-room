@@ -1,0 +1,65 @@
+/* Modal overlay background */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent dark background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    /* Ensure the modal is on top of other elements */
+}
+
+/* Modal content box */
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    /* You can adjust the size of the modal here */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+/* Modal header */
+.modal-content h4 {
+    margin-bottom: 15px;
+}
+
+/* Form inputs */
+.modal-content input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Buttons */
+.modal-content button {
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.modal-content button[type="submit"] {
+    background-color: #28a745;
+    /* Green for Save */
+    color: white;
+}
+
+.modal-content button[type="button"] {
+    background-color: #6c757d;
+    /* Gray for Cancel */
+    color: white;
+}
+
+.modal-content button:hover {
+    opacity: 0.9;
+}

@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"
 import axios from "axios";
-import { jwtDecode } from 'jwt-decode';
 import { getAuthenticatedRequest } from "../utils/authService";
 import "../styles/ToDoList.css";
-
+import AddTaskModal from "./CreateNewTask";
 
 const ToDoList = () => {
     const [lists, setLists] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    const [showModal, setShowModal] = useState(false);
+    const [selectedListId, setSelectedListId] = useState(null);
 
     const fetchData = async () => {
         try {
@@ -52,14 +53,34 @@ const ToDoList = () => {
             .catch((error) => console.error("Error updating task:", error));
     };
 
+    const handleAddTask = (listId) => {
+        setSelectedListId(listId); // Set the selected list id
+        setShowModal(true); // Open the modal
+    };
+
+
     if (loading) return <div>Loading To-Do Lists...</div>;
 
     return (
         <div className="todo-container">
             <h3>To-Do Lists</h3>
+            <button onClick={() => {/*handleAddList(list.id)*/ }} className="btn btn-success btn-sm">
+                <i className="bi bi-plus-circle"></i> {/* Plus Icon from Bootstrap Icons */}
+            </button>
             <div className="todo-list">
                 {lists.map((list) => (
                     <div className="todo-card" key={list.id}>
+                        {/* Buttons for Add Task and Delete List */}
+                        <div className="todo-card-header">
+                            <button onClick={() => handleAddTask(list.id)} className="btn btn-success btn-sm">
+                                <i className="bi bi-plus-circle"></i> {/* Plus Icon from Bootstrap Icons */}
+                            </button>
+                            
+                            <button onClick={() => {/* handleDeleteList(list.id) */}} className="btn btn-danger btn-sm">
+                                <i className="bi bi-trash"></i> {/* Trash Icon from Bootstrap Icons */}
+                            </button>
+                        </div>
+
                         <h4>{list.name}</h4>
                         <ul>
                             {list.tasks.map((task) => (
@@ -74,13 +95,22 @@ const ToDoList = () => {
                                     <span className={task.is_completed ? "completed" : ""}>
                                         {task.title}
                                     </span>
+                                    <button onClick={() => {/* handleDeleteTask(task.id) */ }} className="btn btn-danger btn-sm">
+                                        <i className="bi bi-trash"></i> {/* Trash Icon from Bootstrap Icons */}
+                                    </button>
                                 </li>
                             ))}
                         </ul>
                     </div>
                 ))}
             </div>
+            <AddTaskModal
+                showModal={showModal}
+                setShowModal={setShowModal}
+                listId={selectedListId}
+            />
         </div>
+        
     );
 
 };
