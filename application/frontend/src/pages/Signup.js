@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 function Signup() {
 
     //fields that the user will input
-    const [formData, setFormData] = useState({ firstname: "", lastname: "", email: "", username: "", password: "", passwordConfirmation: "", acceptTerms: false });
+    const [formData, setFormData] = useState({ firstname: "", lastname: "", email: "", username: "", description:"", password: "", passwordConfirmation: "", acceptTerms: false });
     const navigate = useNavigate();
 
     //when the fields are edited, update form data
@@ -85,6 +85,16 @@ function Signup() {
                     name="email"
                     className="input-field"
                     value={formData.email}
+                    onChange={handleChange}
+                />
+
+                <label htmlFor="details" className="label-text">Your motto in life :):</label>
+                <input
+                    id="details"
+                    type="text"
+                    name="description"
+                    className="input-field"
+                    value={formData.description}
                     onChange={handleChange}
                 />
 
