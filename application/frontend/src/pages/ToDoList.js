@@ -23,16 +23,6 @@ const ToDoList = () => {
     };
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await getAuthenticatedRequest("/todolists/false/");
-                setLists(data);
-            } catch (error) {
-                console.error("Error fetching to-do lists:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
 
         fetchData();
     }, []);

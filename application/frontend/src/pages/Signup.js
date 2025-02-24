@@ -92,7 +92,7 @@ function Signup() {
                 <input
                     id="details"
                     type="text"
-                    name="lastname"
+                    name="details"
                     className="input-field"
                     value={formData.description}
                     onChange={handleChange}

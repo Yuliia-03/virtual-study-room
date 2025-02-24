@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import "../styles/CreateNewTask.css";
+import axios from "axios";
+
+import { getAuthenticatedRequest } from "../utils/authService";
 
 const AddTaskModal = ({ showModal, setShowModal, listId }) => {
     // State to manage form data
@@ -34,25 +37,25 @@ const AddTaskModal = ({ showModal, setShowModal, listId }) => {
     const handleSaveTask = async (newTask) => {
         console.log("Saving task to list", newTask.listId, "Task:", newTask.title, "Content:", newTask.content);
 
-            
         try {
-            const response = await axios.post("http://127.0.0.1:8000/api/new_task/", formData, {
-                headers: { "Content-Type": "application/json" }
+            const response = await getAuthenticatedRequest("/new_task/", "POST", {
+                list_id: newTask.listId,
+                title: newTask.title,
+                content: newTask.content
             });
 
-            alert(response.data.message); // Show success message
-            navigate('/dashboard');
+            alert(response.message); // Show success message
+            setShowModal(false); // Close modal after saving
         } catch (error) {
             if (error.response) {
                 alert(error.response.data.error);
             } else {
                 //console.error("Signup error:", error);
                 alert("An error occurred. Please try again.");
-            }
+            }   
         }
-
-        setShowModal(false); 
     };
+
 
     // Cancel the action and close the modal
     const handleCancel = () => {

@@ -47,28 +47,33 @@ class ViewToDoList(APIView):
     
     def post(self, request):
         # Define the action type in request body
-        action = request.data.get("action")
 
-        if action == "create_new_task":
-            self.create_task()
-        elif action == "create_new_list":
+        url_name = request.resolver_match.view_name
+
+        if url_name == "create_new_task":
+            return self.create_task(request)
+        elif url_name == "create_new_list":
             pass
+        return Response({"error": "Invalid action"}, status=status.HTTP_400_BAD_REQUEST)
 
 
     def create_task(self, request):
         try:
             data = request.data
-            title = data.get("taskTitle")
+            title = data.get("title")
             list_id = data.get("list_id")
-            content = data.get("taskContent")
+            content = data.get("content")
 
             if List.objects.filter(pk=list_id).exists():
                 list = List.objects.get(pk=list_id)
                 task = toDoList.objects.create(
                     title=title, content=content, list=list)
+                task.save()
+
+                return Response({"message": "User registered successfully!"}, status=status.HTTP_201_CREATED)
             else:
                 return Response({"error": "List doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)
-            return Response({"message": "Task added successfully!"}, status=status.HTTP_201_CREATED)
+                
         except Exception as e:
             return Response({"error": "Invalid request", "details": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
