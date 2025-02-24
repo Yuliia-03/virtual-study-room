@@ -48,6 +48,16 @@ const ToDoList = () => {
         setShowModal(true); // Open the modal
     };
 
+    const addTaskToList = (newTask) => {
+        setLists((prevLists) =>
+            prevLists.map((list) =>
+                list.id === newTask.listId
+                    ? { ...list, tasks: [...list.tasks, newTask] }
+                    : list
+            )
+        );
+    };
+
 
     if (loading) return <div>Loading To-Do Lists...</div>;
 
@@ -98,6 +108,7 @@ const ToDoList = () => {
                 showModal={showModal}
                 setShowModal={setShowModal}
                 listId={selectedListId}
+                addTaskToList={addTaskToList}
             />
         </div>
         

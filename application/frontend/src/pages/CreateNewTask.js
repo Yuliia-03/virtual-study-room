@@ -4,7 +4,7 @@ import axios from "axios";
 
 import { getAuthenticatedRequest } from "../utils/authService";
 
-const AddTaskModal = ({ showModal, setShowModal, listId }) => {
+const AddTaskModal = ({ showModal, setShowModal, listId, addTaskToList }) => {
     // State to manage form data
     const [formData, setFormData] = useState({ list_id: listId, taskTitle: "", taskContent: "" });
 
@@ -19,12 +19,9 @@ const AddTaskModal = ({ showModal, setShowModal, listId }) => {
 
         // Call the passed function to save task
         handleSaveTask(newTask);
-
-        // Reset form data
         setFormData({ taskTitle: "", taskContent: "" });
     };
 
-    // Handle input field changes
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -32,6 +29,7 @@ const AddTaskModal = ({ showModal, setShowModal, listId }) => {
             [name]: value
         });
     };
+
 
     // Save task function
     const handleSaveTask = async (newTask) => {
@@ -44,28 +42,23 @@ const AddTaskModal = ({ showModal, setShowModal, listId }) => {
                 content: newTask.content
             });
 
-            alert(response.message); // Show success message
-            setShowModal(false); // Close modal after saving
+            addTaskToList(newTask);
+            setShowModal(false);
         } catch (error) {
             if (error.response) {
                 alert(error.response.data.error);
             } else {
-                //console.error("Signup error:", error);
                 alert("An error occurred. Please try again.");
             }   
         }
     };
 
-
-    // Cancel the action and close the modal
     const handleCancel = () => {
         setFormData({ taskTitle: "", taskContent: "" });
         setShowModal(false);
     };
 
-    // If showModal is false, don't render the modal
     if (!showModal) return null;
-
     return (
         <div className="modal-overlay">
             <div className="modal-content">
@@ -89,7 +82,7 @@ const AddTaskModal = ({ showModal, setShowModal, listId }) => {
                     ></textarea>
 
                     <div>
-                        <button type="submit" className="btn btn-primary">Save</button>
+                        <button type="submit" className="btn btn-primary" onClick={handleChange}>Save</button>
                         <button type="button" className="btn btn-secondary" onClick={handleCancel}>Cancel</button>
                     </div>
                 </form>
