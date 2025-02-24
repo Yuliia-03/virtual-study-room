@@ -3,6 +3,7 @@ from django.utils.timezone import now
 import datetime
 from .user import User
 from .study_session import StudySession
+from django.db import connection
 
 class SessionUser(models.Model):
     """
@@ -58,7 +59,7 @@ class SessionUser(models.Model):
 
     def leave_session(self):
         """
-        Calculate final focus time, update user's study statistics, and remove session entry.
+        Calculate final focus time, update user's study statistics, and mark session as left.
         """
         # Calculate final focus time
         if self.status == 'FOCUSED':
@@ -74,9 +75,6 @@ class SessionUser(models.Model):
             hours_studied = self.focus_time.total_seconds() / 3600
             self.user.hours_studied += int(hours_studied)
             self.user.save()
-        
-        # Delete the session user entry
-        self.delete()
 
     def update_focus_target(self, new_goal):
         """
@@ -94,26 +92,20 @@ class SessionUser(models.Model):
         First ensures any existing session entry is properly closed out.
         Increments the join_sequence field based on previous joins.
         """
-        # Check for and handle ANY existing active sessions for this user
-        existing_sessions = cls.objects.filter(
-            user=user,
-            left_at__isnull=True  # Only get active sessions
-        )
-        
-        for existing_session in existing_sessions:
+        # Close any existing active sessions
+        for existing_session in cls.objects.filter(user=user, left_at__isnull=True):
             existing_session.leave_session()
         
-        # Get the highest join sequence for this user in this session
-        # Include historical (deleted) sessions in the count
-        from django.db.models import Max
-        last_sequence = cls.objects.filter(
-            user=user,
+        # Get next sequence number by counting ALL previous joins (including left sessions)
+        next_sequence = cls.objects.filter(
+            user=user, 
             session=session
-        ).aggregate(Max('join_sequence'))['join_sequence__max'] or 0
+        ).count() + 1
         
+        # Create and return new session
         return cls.objects.create(
             user=user,
             session=session,
-            join_sequence=last_sequence + 1
+            join_sequence=next_sequence
         )
 

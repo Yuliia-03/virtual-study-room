@@ -2,6 +2,8 @@ from django.test import TestCase
 from django.utils.timezone import now
 from datetime import timedelta, time
 from api.models import User, StudySession, SessionUser
+from django.db import connection
+from django.test.utils import CaptureQueriesContext
 
 class SessionUserTest(TestCase):
     def setUp(self):
@@ -51,27 +53,29 @@ class SessionUserTest(TestCase):
 
     def test_leave_session_from_casual(self):
         """Test leaving session from casual status"""
-        initial_hours = self.user.hours_studied  # Changed from hoursStudied
+        initial_hours = self.user.hours_studied
         self.session_user.status = 'CASUAL'
         
         self.session_user.leave_session()
         
-        with self.assertRaises(SessionUser.DoesNotExist):
-            SessionUser.objects.get(pk=self.session_user.pk)
-        self.assertEqual(self.user.hours_studied, initial_hours)  # Changed from hoursStudied
+        # Instead of checking for deletion, verify left_at is set
+        session_user = SessionUser.objects.get(pk=self.session_user.pk)
+        self.assertIsNotNone(session_user.left_at)
+        self.assertEqual(self.user.hours_studied, initial_hours)
 
     def test_leave_session_from_focused(self):
         """Test leaving session from focused status"""
-        initial_hours = self.user.hours_studied  # Changed from hoursStudied
+        initial_hours = self.user.hours_studied
         self.session_user.status = 'FOCUSED'
         self.session_user.joined_at = now() - timedelta(hours=2)
         
         self.session_user.leave_session()
         
-        with self.assertRaises(SessionUser.DoesNotExist):
-            SessionUser.objects.get(pk=self.session_user.pk)
+        # Instead of checking for deletion, verify left_at is set
+        session_user = SessionUser.objects.get(pk=self.session_user.pk)
+        self.assertIsNotNone(session_user.left_at)
         self.user.refresh_from_db()
-        self.assertEqual(self.user.hours_studied, initial_hours + 2)  # Changed from hoursStudied
+        self.assertEqual(self.user.hours_studied, initial_hours + 2)
 
     def test_update_focus_target(self):
         """Test focus target updates"""
@@ -86,32 +90,61 @@ class SessionUserTest(TestCase):
 
     def test_rejoin_session_sequence(self):
         """Test session joining sequence"""
-        # First join
+        # First join - already created in setUp
+        print(f"\nInitial session sequence: {self.session_user.join_sequence}")
         self.assertEqual(self.session_user.join_sequence, 1)
         
-        # Store sequence and session info before leaving
-        first_sequence = self.session_user.join_sequence
-        session_id = self.session_user.session.id
-        user_id = self.session_user.user.id
+        # Store session info before leaving
+        session = self.session_user.session
+        user = self.session_user.user
         
-        # Leave and verify it's gone
+        # Print all SessionUser objects before leaving
+        print("\nBefore leaving:")
+        for su in SessionUser.objects.all():
+            print(f"SessionUser {su.pk}: sequence={su.join_sequence}")
+        
+        # Leave first session
         self.session_user.leave_session()
-        with self.assertRaises(SessionUser.DoesNotExist):
-            SessionUser.objects.get(pk=self.session_user.pk)
         
-        # Rejoin and verify sequence incremented
-        new_session = SessionUser.rejoin_session(
-            User.objects.get(pk=user_id),
-            StudySession.objects.get(pk=session_id)
-        )
-        self.assertEqual(new_session.join_sequence, first_sequence + 1)
+        # Verify deletion
+        print("\nAfter leaving:")
+        for su in SessionUser.objects.all():
+            print(f"SessionUser {su.pk}: sequence={su.join_sequence}")
+        
+        # Second join - with query logging
+        with CaptureQueriesContext(connection) as queries:
+            second_session = SessionUser.rejoin_session(user, session)
+            print("\nQueries executed during rejoin:")
+            for query in queries.captured_queries:
+                print(query['sql'])
+        
+        print(f"\nSecond session sequence: {second_session.join_sequence}")
+        self.assertEqual(second_session.join_sequence, 2)
+        
+        # Print all SessionUser objects after second join
+        print("\nAfter second join:")
+        for su in SessionUser.objects.all():
+            print(f"SessionUser {su.pk}: sequence={su.join_sequence}")
+        
+        # Leave second session
+        second_session.leave_session()
+        
+        # Third join
+        third_session = SessionUser.rejoin_session(user, session)
+        print(f"\nThird session sequence: {third_session.join_sequence}")
+        self.assertEqual(third_session.join_sequence, 3)
+        
+        # Final state
+        print("\nFinal state:")
+        for su in SessionUser.objects.all():
+            print(f"SessionUser {su.pk}: sequence={su.join_sequence}")
 
     def test_concurrent_session_handling(self):
         """Test handling of concurrent sessions"""
         other_session = StudySession.objects.create(
             sessionName='Other Session',
             createdBy=self.user,
-            endTime=time(hour=23, minute=59)  # Added required field
+            endTime=time(hour=23, minute=59)
         )
         
         self.session_user.status = 'FOCUSED'
@@ -120,11 +153,12 @@ class SessionUserTest(TestCase):
         
         new_session = SessionUser.rejoin_session(self.user, other_session)
         
-        with self.assertRaises(SessionUser.DoesNotExist):
-            SessionUser.objects.get(pk=self.session_user.pk)
+        # Instead of checking for deletion, verify left_at is set
+        old_session = SessionUser.objects.get(pk=self.session_user.pk)
+        self.assertIsNotNone(old_session.left_at)
         
         self.user.refresh_from_db()
-        self.assertGreater(self.user.hours_studied, 0)  # Changed from hoursStudied
+        self.assertGreater(self.user.hours_studied, 0)
         self.assertEqual(new_session.focus_time, timedelta(0))
 
     def test_meta_ordering(self):
