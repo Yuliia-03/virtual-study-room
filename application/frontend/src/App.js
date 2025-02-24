@@ -22,7 +22,7 @@ function App() {
         <Route path="/motivational-message" element={<MotivationalMessage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/group-study" element={<GroupStudyPage />} />
-        <Route path="/analytics/:userId" element={<Analytics />} />
+        <Route path="/analytics/:username" element={<Analytics />} />
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>

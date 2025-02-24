@@ -4,12 +4,12 @@ import axios from "axios";
 import "../styles/Analytics.css";
 
 const Analytics = () => {
-    const { userId } = useParams();
+    const { username } = useParams();
     const [analytics, setAnalytics] = useState({ streaks: 0, average_study_hours: 0 });
 
     useEffect(() => {
-        const url = userId
-            ? `http://127.0.0.1:8000/api/analytics/${userId}/`
+        const url = username
+            ? `http://127.0.0.1:8000/api/analytics/${username}/`
             : `http://127.0.0.1:8000/api/analytics/`;
 
         axios.get(url, { withCredentials: true })
@@ -17,7 +17,7 @@ const Analytics = () => {
             .catch(error => console.error(
                 "Error fetching analytics:", error.response ? error.response.status : error.message
             ));
-    }, [userId]);
+    }, [username]);
 
     return (
         <div className="analytics-box">

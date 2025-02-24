@@ -7,15 +7,15 @@ from api.models import SessionUser, User
 from django.db import models
 
 @api_view(['GET'])
-def get_analytics(request, user_identifier=None):
+def get_analytics(request, username=None):
     """
     Get analytics for a specific user (by ID or username).
     If no user_identifier is given, return the logged-in user's data.
     """
 
-    if user_identifier:  
-        # Try to get the user by ID or username
-        user = get_object_or_404(User, models.Q(user_id=user_identifier) | models.Q(username=user_identifier))
+    if username:  
+        # Try to get the user by username
+        user = get_object_or_404(User, models.Q(username=username))
     else:
         # Default to logged-in user
         user = request.user
@@ -23,7 +23,6 @@ def get_analytics(request, user_identifier=None):
             return Response({"error": "You must be logged in to view analytics."}, status=401)
 
     # Calculate average study hours
-    total_sessions = SessionUser.objects.filter(user=user).count()
     avg_study_hours = user.hours_studied / user.total_sessions if user.total_sessions > 0 else 0
 
     return Response({
