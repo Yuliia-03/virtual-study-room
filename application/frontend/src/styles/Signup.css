@@ -13,9 +13,11 @@
     border: 3px solid #F2BAC9;
     padding: 15px;
     text-align: center;
-    font-family: 'Impact', sans-serif;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
     font-size: 48px;
     background-color: #F2BAC9;
+    color: white;
     width: 100%;
     position: fixed;
     top: 0;
@@ -47,7 +49,8 @@
 .heading2 {
     text-align: center;
     font-size: 26px;
-    font-family: 'Impact', sans-serif;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
     margin-bottom: 20px;
 }
 
@@ -55,9 +58,9 @@
     width: 90%;
     text-align: left;
     font-size: 18px;
-    font-weight: bold;
-    margin-top: 20px;
-    font-family: 'Arial', sans-serif;
+    font-weight: 500;
+    margin-top: 10px;
+    font-family: 'Inter', sans-serif;
 }
 
 .input-field {
@@ -88,8 +91,8 @@
     color: black;
     cursor: pointer;
     font-size: 16px;
-    font-weight: bold;
-    font-family: 'Arial', sans-serif;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
     transition: 0.3s ease-in-out;
 }
 
@@ -114,7 +117,8 @@
 }
 
 .checkbox-label {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
     font-size: 14px;
     cursor: pointer;
 }

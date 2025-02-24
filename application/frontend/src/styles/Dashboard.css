@@ -1,44 +1,103 @@
-/* Dashboard Container */
-.dashboard-container {
+.dashboard-container{
+    /* Flex to store components in the dashboard */
     display: flex;
     flex-direction: column;
     padding: 20px;
-    background-color: #f4f6f9;
-    min-height: 100vh;
+    overflow: hidden;
+    justify-content: center;
+    margin: 0;
+    height: 100vh; /* Ensures it fits within the viewport */
+    width: 100vw; /* Ensures it takes up the full width */
+    box-sizing: border-box; /* Ensure padding/border don't increase its size */
+    background-color: #F6F0F0;
+    padding-top: 100px;
 }
 
-/* Header Styles */
-.dashboard-container h1 {
-    margin-bottom: 20px;
+.dashboard-heading {
+    position: fixed;
+    border: 3px solid #BAD7F2;
+    padding: 15px;
+    text-align: center;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    background-color: #BAD7F2;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box; /* ensures padding doesn't push it down */
+    z-index: 1000;
 }
 
-/* Grid Container */
-.grid-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    /* 3 equal-width columns */
-    grid-template-rows: repeat(2, 1fr);
-    /* 2 equal-height rows */
-    gap: 20px;
-    /* Space between grid items */
-    padding: 20px;
-    /* Padding around the grid container */
+
+.dashboard-content {
+    display: flex;
+    flex-grow: 1;
+    gap: 10px;
 }
 
-/* Grid Item (Each Section) */
-.grid-item {
-    background-color: #f0f0f0;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+.dashboard-left-panel, .dashboard-right-panel {
+    flex: 1; /* 1 part */
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    gap: 30px;
+    height: 100%; /* Ensure panels stretch to fill the full height of their container */
+    box-sizing: border-box; /* Ensure padding/border don't increase its size */
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .grid-container {
-        grid-template-columns: 1fr;
-        /* Stack columns into a single column on small screens */
-        grid-template-rows: repeat(6, 1fr);
-        /* Stack all sections vertically */
-    }
+.dashboard-main-panel {
+    flex: 2; /* 2 parts */
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    gap: 30px;
+    height: 100%; /* Ensure panels stretch to fill the full height of their container */
+    box-sizing: border-box; /* Ensure padding/border don't increase its size */
+}
+
+.dashboard-panel{
+   background: #FFFFFF;
+   border-radius: 36px;
+   padding: 20px;
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+   display: flex;
+   align-items: center;
+   flex-direction: column;
+   justify-content: flex-start; /* Align content to the top */
+   text-align: center;
+   width: 100%; /* Make panels fill the width of the container */
+   height: auto; /* Allow height to adjust based on content */
+   transition: all 0.3s ease; /* Smooth transition for changes */
+   flex-grow: 1; /* Panels will grow to fill available space */
+   box-sizing: border-box; /* Include padding and borders in width/height calculations */
+   text-align: center;
+   font-family: 'Inter', sans-serif;
+   color: black;
+   font-size: 20px;
+   font-weight: 600;
+}
+
+/*Customising one specific panel example*/
+/*First target the location of that specific panel, then change the attributes*/
+/*All of the other panels will auto resize :D*/
+
+.dashboard-main-panel .dashboard-panel:first-child {
+   height: 300px; /* Set a larger height for the profile panel */
+   color: purple;
+}
+.dashboard-right-panel .dashboard-panel:last-child {
+   height: 400px; /* Set a larger height for the to do list panel */
+   color: red;
+}
+/*There is a minimum size, after which it cannot get any smaller because as of now*/
+.dashboard-left-panel .dashboard-panel:last-child {
+   height: 40px; /* Set a larger height for the invites panel*/
+   color: purple;
 }

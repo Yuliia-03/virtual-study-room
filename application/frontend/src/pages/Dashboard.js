@@ -1,44 +1,30 @@
-
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import "../styles/Dashboard.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ToDoList from '../pages/ToDoList';
-import "../styles/Dashboard.css";
-
 
 function Dashboard() {
     return (
-        <div >
-            {/* Header */}
-            <h1 className="text-2xl font-bold">Welcome to the Dashboard</h1>
+        <div className='dashboard-container'>
+            <h1 className="dashboard-heading">Dashboard</h1> {/* A simple heading */}
 
-            {/* Dashboard Layout */}
-            <div className="grid-container">
-                {/* Left Column */}
-                <div className="grid-item  left-column">
-                    <ToDoList />
+            {/* This is where all the main components will go*/}
+            {/* Left panel - main panel - right panel*/}
+            <div class = "dashboard-content">
+                <div class = "dashboard-left-panel">
+                    <div class="dashboard-panel">Analytics</div>
+                    <div class="dashboard-panel">Calendar</div>
+                    <div class="dashboard-panel">Invites</div>
                 </div>
-
-                {/* Middle Column */}
-                <div className="grid-item">
-                    <ToDoList />
+                <div class = "dashboard-main-panel">
+                    <div class="dashboard-panel">Profile</div>
+                    <div class="dashboard-panel">Friends List</div>
+                    <div class="dashboard-panel">Add Friends</div>
                 </div>
-                {/* Middle Column */}
-                <div className="grid-item">
-                    <ToDoList />
-                </div>
-                {/* Middle Column */}
-                <div className="grid-item">
-                    <ToDoList />
-                </div>
-                {/* Middle Column */}
-                <div className="grid-item">
-                    <ToDoList />
-                </div>
-
-                {/* Right Column */}
-                <div className="grid-item">
-                    <ToDoList />
+                <div class = "dashboard-right-panel">
+                    <div class="dashboard-panel">Generate Group Study Room</div>
+                    <div class="dashboard-panel">To Do List</div>
                 </div>
             </div>
         </div>

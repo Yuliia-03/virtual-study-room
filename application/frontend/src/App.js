@@ -21,6 +21,7 @@ function App() {
         <Route path="/motivational-message" element={<MotivationalMessage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/group-study" element={<GroupStudyPage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
   );

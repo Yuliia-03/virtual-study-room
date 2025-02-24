@@ -54,7 +54,7 @@ function Login() {
 
             {error && <p className="error-message">{error}</p>} {/* Show error if login fails */}
 
-            <label className="username-text">Username:</label>
+            <label className="username-text">Email:</label>
             <input
             type="text"
             name="email"

@@ -105,7 +105,7 @@ function GroupStudyPage(){
             <div className="column">
                 <div className="user-list-container">
                     <h2 className="heading"> Study Room: </h2>
-                    <h3 className='heading2'> Code: </h3>
+                    <h3 className='gs-heading2'> Code: </h3>
                     <div className='users'>
                         {/*These are examples of how the user profiles are displayed. 
                         user-image has the white circle, user-name is for the name at the bottom of the user. Can be changed, this is just an example.*/}
