@@ -21,24 +21,24 @@ function Dashboard() {
 
                 {/* Middle Column */}
                 <div className="grid-item">
-                    <ToDoList />
+                    
                 </div>
                 {/* Middle Column */}
                 <div className="grid-item">
-                    <ToDoList />
+                    
                 </div>
                 {/* Middle Column */}
                 <div className="grid-item">
-                    <ToDoList />
+                    
                 </div>
                 {/* Middle Column */}
                 <div className="grid-item">
-                    <ToDoList />
+                    
                 </div>
 
                 {/* Right Column */}
                 <div className="grid-item">
-                    <ToDoList />
+                    
                 </div>
             </div>
         </div>

@@ -3,11 +3,23 @@ import { useNavigate } from "react-router-dom"
 import axios from "axios";
 import { jwtDecode } from 'jwt-decode';
 import { getAuthenticatedRequest } from "../utils/authService";
+import "../styles/ToDoList.css";
 
 
 const ToDoList = () => {
     const [lists, setLists] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    const fetchData = async () => {
+        try {
+            const data = await getAuthenticatedRequest("/todolists/false/");
+            setLists(data);
+        } catch (error) {
+            console.error("Error fetching to-do lists:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -27,28 +39,17 @@ const ToDoList = () => {
 
     const toggleTaskCompletion = (listId, taskId, currentStatus) => {
         // Update task completion status
-        /*axios
-            .patch(`http://127.0.0.1:8000/api/tasks/${taskId}/`, {
-                is_finished: !currentStatus,
+        const token = localStorage.getItem('access_token');
+        axios
+            .patch(`http://127.0.0.1:8000/api/update_task/${taskId}/`, null, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
             })
             .then(() => {
-                // Update UI after successful API call
-                setLists((prevLists) =>
-                    prevLists.map((list) =>
-                        list.id === listId
-                            ? {
-                                ...list,
-                                tasks: list.tasks.map((task) =>
-                                    task.id === taskId
-                                        ? { ...task, is_finished: !currentStatus }
-                                        : task
-                                ),
-                            }
-                            : list
-                    )
-                );
+                fetchData();
             })
-            .catch((error) => console.error("Error updating task:", error));*/
+            .catch((error) => console.error("Error updating task:", error));
     };
 
     if (loading) return <div>Loading To-Do Lists...</div>;
@@ -65,12 +66,12 @@ const ToDoList = () => {
                                 <li key={task.id} className="task-item">
                                     <input
                                         type="checkbox"
-                                        checked={task.is_finished}
+                                        checked={task.is_completed}
                                         onChange={() =>
-                                            toggleTaskCompletion(list.id, task.id, task.is_finished)
+                                            toggleTaskCompletion(list.id, task.id, task.is_completed)
                                         }
                                     />
-                                    <span className={task.is_finished ? "completed" : ""}>
+                                    <span className={task.is_completed ? "completed" : ""}>
                                         {task.title}
                                     </span>
                                 </li>

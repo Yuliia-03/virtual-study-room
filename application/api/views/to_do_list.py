@@ -45,5 +45,15 @@ class ViewToDoList(APIView):
 
         return Response(response_data, status=status.HTTP_200_OK)
     
-    def post(self):
+    def post(self, is_shared="false"):
         pass
+
+    def patch(self, request, task_id):
+        print(f"Received PATCH request for task_id: {task_id}")
+        task = toDoList.objects.get(id=task_id)  # Get the task by its ID
+        # Only update fields provided
+        if task:
+            new_task_status = not task.is_completed
+            toDoList.objects.filter(id=task_id).update(is_completed=new_task_status)
+            return Response(status=status.HTTP_200_OK)
+        return Response('Task not found', status=status.HTTP_400_BAD_REQUEST)
