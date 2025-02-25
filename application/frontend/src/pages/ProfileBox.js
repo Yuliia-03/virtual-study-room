@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import mangoCat from "../assets/mango_cat.png";
 import { storage } from "../firebase-config";
+import { Navigate, useNavigate } from 'react-router-dom';
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import axios from 'axios';
+import { getAuthenticatedRequest, getAccessToken } from "./utils/authService";
 
 function ProfileBox() {
+    const navigate = useNavigate();
 
     const [userData, setUserData] = useState({
         username: null,
@@ -44,12 +47,15 @@ function ProfileBox() {
     }
 
     const handleLogOff = async () => {
-        console.log("log off");
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+
+        navigate("/login");
+        console.log("logged off");
     }
 
     const handleChangeDescription = (event) => {
         const newDescription = event.target.value;
-        console.log(newDescription);
         setUserData((prevData) => ({
             ...prevData,
             description: newDescription,
@@ -57,23 +63,28 @@ function ProfileBox() {
     }
 
     const handleSaveDescription = async () => {
-        // put axios call here
+        try {
+            const data = await getAuthenticatedRequest("/description/", "PUT", {
+                description: userData.description,
+            });
+
+            setUserData((prevData) => ({
+                ...prevData,
+                description: data.description,
+            }));
+
+            //TODO: put success message here
+        }
+        catch (error) {
+            console.error("Error Updating Description:", error);
+        }
+        
     }
 
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                // const response = await axios.get("http://127.0.0.1:8000/api/profile/", {
-                //     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-                // });
-
-                // const data = response.data;
-
-                //test data
-                const data = {
-                    username : "alice123",
-                    description : "HELLO WORLD",
-                };
+                const data = await getAuthenticatedRequest("/profile/", "GET");
 
                 //fetch profile picture from firebase using user_id
                 const imageRef = ref(storage, `avatars/${data.username}`);
