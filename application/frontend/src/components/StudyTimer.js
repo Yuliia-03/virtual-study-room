@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getDatabase, ref, set, onValue } from 'firebase/database';
 import 'tailwindcss';
 import '@fontsource/vt323';
+import '@fontsource/press-start-2p';
 
 const StudyTimer = ({ roomId, isHost, onClose }) => {
   const [position, setPosition] = useState({ x: 100, y: 100 });
@@ -134,7 +135,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
     if (!isRunning) {
       return (
         <div className="flex flex-col items-center space-y-4">
-          <div className="text-2xl text-pink-300">Set Your Study Timer</div>
+          <div className="text-2xl text-pink-300" style={{ fontFamily: '"Press Start 2P", monospace' }}>Set Your Study Timer</div>
           
           <div className="w-full space-y-6">
             <div className="flex flex-col items-center">
@@ -242,11 +243,11 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
 
     return (
       <>
-        <div className="text-[#FFB5C5] text-2xl mb-4">
-          {isBreak ? 'Break Time!' : 'Study Time!'}
+        <div className="text-[#FFB5C5] text-2xl mt-8" style={{ fontFamily: '"Press Start 2P", monospace' }}>
+          {isBreak ? 'Break Time!' : 'Lock in or else!'}
         </div>
 
-        <div className="text-[48px] font-bold text-[#FFB5C5] my-4">
+        <div className="text-[48px] font-bold text-[#FFB5C5] mb-2" style={{ fontFamily: '"Press Start 2P", monospace' }}>
           {formatTime(timeLeft)}
         </div>
 
@@ -347,7 +348,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
             </div>
             
             <div className="flex flex-col items-center space-y-6 flex-grow">
-              <div className="text-2xl text-pink-300">Set Your Study Timer</div>
+              <div className="text-2xl text-pink-300" style={{ fontFamily: '"Press Start 2P", monospace' }}>Set Your Study Timer</div>
               
               <div className="w-full space-y-8">
                 <div className="flex flex-col items-center">
@@ -483,8 +484,8 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
               </div>
             </div>
 
-            <div className="text-[#FFB5C5] text-2xl mt-8">
-              {isBreak ? 'Break Time!' : 'Study Time!'}
+            <div className="text-[#FFB5C5] text-2xl mt-8" style={{ fontFamily: '"Press Start 2P", monospace' }}>
+              {isBreak ? 'Break Time!' : 'Lock in or else!'}
             </div>
 
             <div className="flex-grow flex items-center justify-center">
@@ -492,7 +493,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
             </div>
 
             <div className="flex flex-col items-center mb-8">
-              <div className="text-[48px] font-bold text-[#FFB5C5] mb-2">
+              <div className="text-[48px] font-bold text-[#FFB5C5] mb-2" style={{ fontFamily: '"Press Start 2P", monospace' }}>
                 {formatTime(timeLeft)}
               </div>
 
