@@ -328,13 +328,18 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
           position: 'absolute',
           left: `${position.x}px`,
           top: `${position.y}px`,
-          cursor: dragging ? 'grabbing' : 'grab'
+          cursor: dragging ? 'grabbing' : 'grab',
+          backgroundColor: '#FEF9EC',
+          border: '4px solid #FFC5D0',
+          boxShadow: '0 0 10px #FFC5D0',
+          filter: 'blur(0.3px)'
         }}
+        className="timer-handle"
+        onMouseDown={onMouseDown}
       >
         {!isRunning ? (
           <div 
-            className="p-8 bg-white rounded-3xl shadow-lg w-80 h-[600px] flex flex-col"
-            onMouseDown={onMouseDown}
+            className="p-8 w-80 h-[600px] flex flex-col bg-[#FEF9EC]"
             style={{ fontFamily: 'VT323, monospace' }}
           >
             <div className="flex justify-between items-center mb-4 timer-handle">
@@ -470,8 +475,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
           </div>
         ) : (
           <div 
-            className="p-8 bg-white rounded-3xl shadow-lg w-80 h-[600px] flex flex-col"
-            onMouseDown={onMouseDown}
+            className="p-8 w-80 h-[600px] flex flex-col bg-[#FEF9EC]"
             style={{ fontFamily: 'VT323, monospace' }}
           >
             <div className="flex justify-between items-center timer-handle mb-2">
