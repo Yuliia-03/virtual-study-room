@@ -335,11 +335,15 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
           filter: 'blur(0.3px)'
         }}
         className="timer-handle"
-        onMouseDown={onMouseDown}
+        onMouseDown={(e) => {
+          if (e.target.classList.contains('timer-handle')) {
+            onMouseDown(e);
+          }
+        }}
       >
         {!isRunning ? (
           <div 
-            className="p-8 w-80 h-[600px] flex flex-col bg-[#FEF9EC]"
+            className="p-8 w-80 h-[600px] flex flex-col bg-[#FEF9EC] timer-handle"
             style={{ fontFamily: 'VT323, monospace' }}
           >
             <div className="flex justify-between items-center mb-4 timer-handle">
@@ -475,7 +479,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
           </div>
         ) : (
           <div 
-            className="p-8 w-80 h-[600px] flex flex-col bg-[#FEF9EC]"
+            className="p-8 w-80 h-[600px] flex flex-col bg-[#FEF9EC] timer-handle"
             style={{ fontFamily: 'VT323, monospace' }}
           >
             <div className="flex justify-between items-center timer-handle mb-2">
