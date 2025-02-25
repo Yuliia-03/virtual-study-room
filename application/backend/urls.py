@@ -21,7 +21,7 @@ from api.views.profile_view import get_logged_in_user
 
 from django.conf import settings
 from django.conf.urls.static import static
-
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from api import views
 
 urlpatterns = [
@@ -30,5 +30,10 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='index.html')),
     path('api/profile/', get_logged_in_user, name='get_logged_in_user'),
     path('api/signup/', views.signup, name='signup'),
+    path('api/login/', views.login, name='login'),
+    path('api/todolists/<str:is_shared>/', views.ViewToDoList.as_view(), name='toDoList'),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/motivational-message/', views.motivationalMessage, name='motivation')
 ] 
 
