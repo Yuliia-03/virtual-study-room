@@ -330,8 +330,6 @@ class Command(BaseCommand):
                 focus_target=self.faker.sentence(nb_words=6) if randint(0, 1) else None,
                 joined_at=now(),
                 focus_time=datetime.timedelta(minutes=randint(0, 300)),
-                last_status_change=now(),
-                last_active=now()
             )
         except Exception as e:
             print(f"Failed to create session user: {e}")
