@@ -146,6 +146,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                   value={studyTime.hours}
                   onChange={(e) => setStudyTime({...studyTime, hours: parseInt(e.target.value) || 0})}
                   className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                  style={{ fontFamily: '"Press Start 2P", monospace' }}
                   min="0"
                   placeholder="HH"
                 />
@@ -155,6 +156,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                   value={studyTime.minutes}
                   onChange={(e) => setStudyTime({...studyTime, minutes: parseInt(e.target.value) || 0})}
                   className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                  style={{ fontFamily: '"Press Start 2P", monospace' }}
                   min="0"
                   max="59"
                   placeholder="MM"
@@ -165,6 +167,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                   value={studyTime.seconds}
                   onChange={(e) => setStudyTime({...studyTime, seconds: parseInt(e.target.value) || 0})}
                   className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                  style={{ fontFamily: '"Press Start 2P", monospace' }}
                   min="0"
                   max="59"
                   placeholder="SS"
@@ -180,6 +183,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                   value={breakTime.hours}
                   onChange={(e) => setBreakTime({...breakTime, hours: parseInt(e.target.value) || 0})}
                   className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                  style={{ fontFamily: '"Press Start 2P", monospace' }}
                   min="0"
                   placeholder="HH"
                 />
@@ -189,6 +193,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                   value={breakTime.minutes}
                   onChange={(e) => setBreakTime({...breakTime, minutes: parseInt(e.target.value) || 0})}
                   className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                  style={{ fontFamily: '"Press Start 2P", monospace' }}
                   min="0"
                   max="59"
                   placeholder="MM"
@@ -199,6 +204,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                   value={breakTime.seconds}
                   onChange={(e) => setBreakTime({...breakTime, seconds: parseInt(e.target.value) || 0})}
                   className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                  style={{ fontFamily: '"Press Start 2P", monospace' }}
                   min="0"
                   max="59"
                   placeholder="SS"
@@ -213,6 +219,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                 value={rounds}
                 onChange={(e) => setRounds(parseInt(e.target.value))}
                 className="w-20 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                style={{ fontFamily: '"Press Start 2P", monospace' }}
                 min="1"
               />
             </div>
@@ -233,7 +240,8 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
 
           <button
             onClick={startTimer}
-            className="mt-6 px-8 py-3 bg-pink-200 text-white rounded-full hover:bg-pink-300 transition-colors duration-200"
+            className="mt-auto mb-4 px-8 py-3 bg-pink-200 text-white rounded-full hover:bg-pink-300 transition-colors duration-200"
+            style={{ fontFamily: '"Press Start 2P", monospace' }}
           >
             Start Timer
           </button>
@@ -329,7 +337,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
             onMouseDown={onMouseDown}
             style={{ fontFamily: 'VT323, monospace' }}
           >
-            <div className="flex justify-between items-center mb-8 timer-handle">
+            <div className="flex justify-between items-center mb-4 timer-handle">
               <h1 className="text-2xl font-semibold text-gray-800">Study Timer</h1>
               <div className="flex gap-4">
                 <button 
@@ -347,10 +355,10 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
               </div>
             </div>
             
-            <div className="flex flex-col items-center space-y-6 flex-grow">
+            <div className="flex flex-col items-center space-y-4 -mt-2">
               <div className="text-2xl text-pink-300" style={{ fontFamily: '"Press Start 2P", monospace' }}>Set Your Study Timer</div>
               
-              <div className="w-full space-y-8">
+              <div className="w-full space-y-6">
                 <div className="flex flex-col items-center">
                   <label className="text-pink-300 mb-2">Study Time</label>
                   <div className="flex gap-2">
@@ -359,6 +367,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                       value={studyTime.hours}
                       onChange={(e) => setStudyTime({...studyTime, hours: parseInt(e.target.value) || 0})}
                       className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                      style={{ fontFamily: '"Press Start 2P", monospace' }}
                       min="0"
                       placeholder="HH"
                     />
@@ -368,6 +377,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                       value={studyTime.minutes}
                       onChange={(e) => setStudyTime({...studyTime, minutes: parseInt(e.target.value) || 0})}
                       className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                      style={{ fontFamily: '"Press Start 2P", monospace' }}
                       min="0"
                       max="59"
                       placeholder="MM"
@@ -378,6 +388,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                       value={studyTime.seconds}
                       onChange={(e) => setStudyTime({...studyTime, seconds: parseInt(e.target.value) || 0})}
                       className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                      style={{ fontFamily: '"Press Start 2P", monospace' }}
                       min="0"
                       max="59"
                       placeholder="SS"
@@ -393,6 +404,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                       value={breakTime.hours}
                       onChange={(e) => setBreakTime({...breakTime, hours: parseInt(e.target.value) || 0})}
                       className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                      style={{ fontFamily: '"Press Start 2P", monospace' }}
                       min="0"
                       placeholder="HH"
                     />
@@ -402,6 +414,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                       value={breakTime.minutes}
                       onChange={(e) => setBreakTime({...breakTime, minutes: parseInt(e.target.value) || 0})}
                       className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                      style={{ fontFamily: '"Press Start 2P", monospace' }}
                       min="0"
                       max="59"
                       placeholder="MM"
@@ -412,6 +425,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                       value={breakTime.seconds}
                       onChange={(e) => setBreakTime({...breakTime, seconds: parseInt(e.target.value) || 0})}
                       className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                      style={{ fontFamily: '"Press Start 2P", monospace' }}
                       min="0"
                       max="59"
                       placeholder="SS"
@@ -426,6 +440,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                     value={rounds}
                     onChange={(e) => setRounds(parseInt(e.target.value))}
                     className="w-20 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
+                    style={{ fontFamily: '"Press Start 2P", monospace' }}
                     min="1"
                   />
                 </div>
@@ -446,7 +461,8 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
 
               <button 
                 onClick={startTimer}
-                className="mt-auto mb-8 px-8 py-3 bg-pink-200 text-white rounded-full hover:bg-pink-300 transition-colors duration-200"
+                className="mt-auto mb-4 px-8 py-3 bg-pink-200 text-white rounded-full hover:bg-pink-300 transition-colors duration-200"
+                style={{ fontFamily: '"Press Start 2P", monospace' }}
               >
                 Start Timer
               </button>
@@ -458,7 +474,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
             onMouseDown={onMouseDown}
             style={{ fontFamily: 'VT323, monospace' }}
           >
-            <div className="flex justify-between items-center timer-handle">
+            <div className="flex justify-between items-center timer-handle mb-2">
               <div className="flex items-center gap-3">
                 <button 
                   onClick={handleBack}
@@ -484,37 +500,42 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
               </div>
             </div>
 
-            <div className="text-[#FFB5C5] text-2xl mt-8" style={{ fontFamily: '"Press Start 2P", monospace' }}>
+            <div className="text-[#FFB5C5] text-2xl mt-2" style={{ fontFamily: '"Press Start 2P", monospace' }}>
               {isBreak ? 'Break Time!' : 'Lock in or else!'}
             </div>
 
-            <div className="flex-grow flex items-center justify-center">
-              {/* Your animation will go here */}
-            </div>
-
-            <div className="flex flex-col items-center mb-8">
-              <div className="text-[48px] font-bold text-[#FFB5C5] mb-2" style={{ fontFamily: '"Press Start 2P", monospace' }}>
-                {formatTime(timeLeft)}
+            <div className="flex-grow flex flex-col justify-between">
+              <div className="flex-grow">
+                {/* Your animation space */}
               </div>
 
-              <div className="text-sm text-gray-600 mb-4">
-                Round {currentRound} of {rounds}
-              </div>
+                <div className="flex flex-col items-center mb-4">
+                  <div 
+                    className="text-[48px] font-bold text-[#FFB5C5] mb-2" 
+                    style={{ fontFamily: '"Press Start 2P", monospace' }}
+                  >
+                    {formatTime(timeLeft)}
+                  </div>
 
-              <div className="flex justify-between gap-2.5 w-full">
-                <button 
-                  onClick={toggleTimer}
-                  className="flex-1 bg-[#E6E6FA] border border-[#FFB5C5] rounded px-4 py-1.5 text-gray-600 text-sm hover:bg-[#FFB5C5] hover:text-white cursor-pointer"
-                >
-                  {isPaused ? 'Resume' : 'Pause'}
-                </button>
-                <button 
-                  onClick={resetTimer}
-                  className="flex-1 bg-[#E6E6FA] border border-[#FFB5C5] rounded px-4 py-1.5 text-gray-600 text-sm hover:bg-[#FFB5C5] hover:text-white cursor-pointer"
-                >
-                  Reset
-                </button>
-              </div>
+                  <div className="text-sm text-gray-600 mb-4">
+                    Round {currentRound} of {rounds}
+                  </div>
+
+                  <div className="flex justify-between gap-2.5 w-full">
+                    <button 
+                      onClick={toggleTimer}
+                      className="flex-1 bg-[#E6E6FA] border border-[#FFB5C5] rounded px-4 py-1.5 text-gray-600 text-sm hover:bg-[#FFB5C5] hover:text-white cursor-pointer"
+                    >
+                      {isPaused ? 'Resume' : 'Pause'}
+                    </button>
+                    <button 
+                      onClick={resetTimer}
+                      className="flex-1 bg-[#E6E6FA] border border-[#FFB5C5] rounded px-4 py-1.5 text-gray-600 text-sm hover:bg-[#FFB5C5] hover:text-white cursor-pointer"
+                    >
+                      Reset
+                    </button>
+                  </div>
+                </div>
             </div>
           </div>
         )}
