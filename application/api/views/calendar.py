@@ -25,3 +25,4 @@ class AppointmentViewset(viewsets.ViewSet):
         queryset = self.queryset.get(pk=pk)
         serializer = self.serializer_class(queryset)
         return Response(serializer.data)
+

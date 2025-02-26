@@ -1,27 +1,37 @@
-import {React} from 'react'
-import { Calendar } from '@fullcalendar/core';
-//import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
-import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
-import timeGridPlugin from '@fullcalendar/timegrid'
-const MyCal = ({myEvents}) => {
+// MyCal.js
+import React, { useRef } from 'react';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+
+const MyCal = ({ myEvents }) => {
+    const calendarRef = useRef(null);
+
+    // Handle dropping an event onto the calendar
+    const handleEventReceive = (info) => {
+        const task = JSON.parse(info.draggedEl.getAttribute('data-task'));
+        const newEvent = {
+            ...task,
+            start: info.dateStr,
+            allDay: true,
+        };
+
+        console.log('Event dropped:', newEvent);
+        // Here, you could make an API call to update the event's start date in your backend
+    };
+
     return (
         <FullCalendar
-            plugins={[ dayGridPlugin, timeGridPlugin ]}
-            initialView="timeGridWeek"
+            ref={calendarRef}
+            plugins={[dayGridPlugin, interactionPlugin]}
+            initialView="dayGridMonth"
+            editable={true}
+            droppable={true}
             events={myEvents}
-        
-            headerToolbar = {{
-                left: 'prev,today,next',
-                center: 'title',
-                right: 'timeGridWeek,dayGridMonth,dayGridYear'
-
-            }}
-        
-
-
+            eventReceive={handleEventReceive}
         />
-    )
-    
-}
-export default MyCal
+    );
+};
+
+export default MyCal;
+

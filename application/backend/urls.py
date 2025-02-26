@@ -28,8 +28,10 @@ router.register('appointments', AppointmentViewset, basename='appointments')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
+    # path('api/events/', get_events),
+    # path('api/events/', create_event, name='create_event'),
     path('', TemplateView.as_view(template_name='index.html')),
-    #path('calendar/', AppointmentViewset.as_view({'get': 'list'}), name='calendar'), 
+    path('calendar/', AppointmentViewset.as_view({'get': 'list'}), name='calendar'), 
     path('api/signup/', views.signup, name='signup'),
 ] 
 
