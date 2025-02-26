@@ -1,12 +1,12 @@
-from rest_framework.serializers import ModelSerializer
-from .models.events import Event
 from rest_framework import serializers
+from .models import * 
 
+class AppointmentSerializer(serializers.ModelSerializer):
+    title = serializers.CharField(source='name')
+    start = serializers.DateTimeField(source='start_date')
+    end = serializers.DateTimeField(source='end_date')
+    classNames = serializers.CharField(source='status')
 
-class EventSerializer(serializers.ModelSerializer):
-    # title = serializers.CharField(source='title')
-    # start = serializers.DateField(source='start_time')
-    # end = serializers.DateField(source='end_time')
-    class Meta:
-        model = Event
-        fields = ['id', 'title', 'description', 'start_time', 'end_time', 'user']
+    class Meta: 
+        model = events.Appointments
+        fields = ('id','start','classNames', 'end','title')
