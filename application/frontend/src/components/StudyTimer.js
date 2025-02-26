@@ -135,39 +135,41 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
     if (!isRunning) {
       return (
         <div className="flex flex-col items-center space-y-4">
-          <div className="text-2xl text-pink-300" style={{ fontFamily: '"Press Start 2P", monospace' }}>Set Your Study Timer</div>
+          <div className="text-2xl" style={{ color: '#bac6f1', fontFamily: '"Press Start 2P", monospace' }}>
+            Set Your Study Timer
+          </div>
           
           <div className="w-full space-y-6">
             <div className="flex flex-col items-center">
-              <label className="text-pink-300 mb-2">Study Time</label>
+              <label style={{ color: '#d1cbed' }} className="mb-2 text-sm">Study Time</label>
               <div className="flex gap-2">
                 <input
                   type="number"
                   value={studyTime.hours}
                   onChange={(e) => setStudyTime({...studyTime, hours: parseInt(e.target.value) || 0})}
-                  className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
-                  style={{ fontFamily: '"Press Start 2P", monospace' }}
+                  className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
+                  style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                   min="0"
                   placeholder="HH"
                 />
-                <span className="text-pink-300 self-center">:</span>
+                <span style={{ color: '#d1cbed' }} className="self-center">:</span>
                 <input
                   type="number"
                   value={studyTime.minutes}
                   onChange={(e) => setStudyTime({...studyTime, minutes: parseInt(e.target.value) || 0})}
-                  className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
-                  style={{ fontFamily: '"Press Start 2P", monospace' }}
+                  className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
+                  style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                   min="0"
                   max="59"
                   placeholder="MM"
                 />
-                <span className="text-pink-300 self-center">:</span>
+                <span style={{ color: '#d1cbed' }} className="self-center">:</span>
                 <input
                   type="number"
                   value={studyTime.seconds}
                   onChange={(e) => setStudyTime({...studyTime, seconds: parseInt(e.target.value) || 0})}
-                  className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
-                  style={{ fontFamily: '"Press Start 2P", monospace' }}
+                  className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
+                  style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                   min="0"
                   max="59"
                   placeholder="SS"
@@ -176,35 +178,35 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
             </div>
 
             <div className="flex flex-col items-center">
-              <label className="text-pink-300 mb-2">Break Time</label>
+              <label style={{ color: '#d1cbed' }} className="mb-2 text-sm">Break Time</label>
               <div className="flex gap-2">
                 <input
                   type="number"
                   value={breakTime.hours}
                   onChange={(e) => setBreakTime({...breakTime, hours: parseInt(e.target.value) || 0})}
-                  className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
-                  style={{ fontFamily: '"Press Start 2P", monospace' }}
+                  className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
+                  style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                   min="0"
                   placeholder="HH"
                 />
-                <span className="text-pink-300 self-center">:</span>
+                <span style={{ color: '#d1cbed' }} className="self-center">:</span>
                 <input
                   type="number"
                   value={breakTime.minutes}
                   onChange={(e) => setBreakTime({...breakTime, minutes: parseInt(e.target.value) || 0})}
-                  className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
-                  style={{ fontFamily: '"Press Start 2P", monospace' }}
+                  className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
+                  style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                   min="0"
                   max="59"
                   placeholder="MM"
                 />
-                <span className="text-pink-300 self-center">:</span>
+                <span style={{ color: '#d1cbed' }} className="self-center">:</span>
                 <input
                   type="number"
                   value={breakTime.seconds}
                   onChange={(e) => setBreakTime({...breakTime, seconds: parseInt(e.target.value) || 0})}
-                  className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
-                  style={{ fontFamily: '"Press Start 2P", monospace' }}
+                  className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
+                  style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                   min="0"
                   max="59"
                   placeholder="SS"
@@ -213,13 +215,17 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
             </div>
 
             <div className="flex flex-col items-center">
-              <label className="text-pink-300 mb-2">Rounds</label>
+              <label style={{ color: '#d1cbed' }} className="mb-2 text-sm">Rounds</label>
               <input
                 type="number"
                 value={rounds}
                 onChange={(e) => setRounds(parseInt(e.target.value))}
-                className="w-20 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
-                style={{ fontFamily: '"Press Start 2P", monospace' }}
+                className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
+                style={{ 
+                  borderColor: '#d1cbed', 
+                  color: '#b2b2b2', 
+                  fontFamily: '"Press Start 2P", monospace'
+                }}
                 min="1"
               />
             </div>
@@ -230,9 +236,10 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                 id="soundToggle"
                 checked={playSound}
                 onChange={(e) => setPlaySound(e.target.checked)}
-                className="w-4 h-4 text-pink-300 border-pink-200 rounded focus:ring-pink-300"
+                className="w-4 h-4 border rounded focus:ring-[#d1cbed]"
+                style={{ borderColor: '#d1cbed' }}
               />
-              <label htmlFor="soundToggle" className="text-pink-300">
+              <label htmlFor="soundToggle" style={{ color: '#d1cbed' }}>
                 Play sound when timer ends
               </label>
             </div>
@@ -240,8 +247,8 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
 
           <button
             onClick={startTimer}
-            className="mt-auto mb-4 px-8 py-3 bg-pink-200 text-white rounded-full hover:bg-pink-300 transition-colors duration-200"
-            style={{ fontFamily: '"Press Start 2P", monospace' }}
+            className="mt-auto mb-4 px-8 py-3 text-white rounded-lg transition-colors duration-200"
+            style={{ backgroundColor: '#d1cbed', fontFamily: '"Press Start 2P", monospace' }}
           >
             Start Timer
           </button>
@@ -295,7 +302,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
   const unsubscribe = onValue(ref(getDatabase(), `rooms/${roomId}/timer`), (snapshot) => {
     const data = snapshot.val();
     if (!data && isHost) {
-      // Initialiise data if it doesn't exist
+      // Initialise data if it doesn't exist
     } else if (data) {
       // Update local state with Firebase data
     }
@@ -329,10 +336,13 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
           left: `${position.x}px`,
           top: `${position.y}px`,
           cursor: dragging ? 'grabbing' : 'grab',
-          backgroundColor: '#FEF9EC',
-          border: '4px solid #FFC5D0',
-          boxShadow: '0 0 10px #FFC5D0',
-          filter: 'blur(0.3px)'
+          backgroundColor: '#F0F3FC',
+          border: '4px solid #E2E8FF',
+          boxShadow: '0 0 10px #E2E8FF, inset 0 0 10px #E2E8FF, 0 0 20px rgba(226, 232, 255, 0.4), 0 0 30px rgba(186, 198, 241, 0.2)',
+          filter: 'blur(0.3px)',
+          outline: '4px solid rgba(186, 198, 241, 0.3)',
+          outlineOffset: '4px',
+          WebkitFilter: 'drop-shadow(0 0 40px rgba(186, 198, 241, 0.4))'
         }}
         className="timer-handle"
         onMouseDown={(e) => {
@@ -343,61 +353,49 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
       >
         {!isRunning ? (
           <div 
-            className="p-8 w-80 h-[600px] flex flex-col bg-[#FEF9EC] timer-handle"
+            className="p-4 w-80 h-[600px] flex flex-col bg-[#F0F3FC] timer-handle"
             style={{ fontFamily: 'VT323, monospace' }}
           >
-            <div className="flex justify-between items-center mb-4 timer-handle">
-              <h1 className="text-2xl font-semibold text-gray-800">Study Timer</h1>
-              <div className="flex gap-4">
-                <button 
-                  onClick={() => setIsMinimized(!isMinimized)}
-                  className="text-gray-400 hover:text-gray-600 transition-colors duration-200 text-xl"
-                >
-                  —
-                </button>
-                <button 
-                  onClick={onClose}
-                  className="text-gray-400 hover:text-gray-600 transition-colors duration-200 text-xl"
-                >
-                  ×
-                </button>
-              </div>
+            <div className="timer-handle mb-8 pl-2">
+              <h1 className="text-2xl" style={{ color: '#b2b2b2' }}>Study Timer</h1>
             </div>
             
             <div className="flex flex-col items-center space-y-4 -mt-2">
-              <div className="text-2xl text-pink-300" style={{ fontFamily: '"Press Start 2P", monospace' }}>Set Your Study Timer</div>
+              <div className="text-2xl" style={{ color: '#bac6f1', fontFamily: '"Press Start 2P", monospace' }}>
+                Set Your Study Timer
+              </div>
               
               <div className="w-full space-y-6">
                 <div className="flex flex-col items-center">
-                  <label className="text-pink-300 mb-2">Study Time</label>
+                  <label style={{ color: '#d1cbed' }} className="mb-2 text-sm">Study Time</label>
                   <div className="flex gap-2">
                     <input
                       type="number"
                       value={studyTime.hours}
                       onChange={(e) => setStudyTime({...studyTime, hours: parseInt(e.target.value) || 0})}
-                      className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
-                      style={{ fontFamily: '"Press Start 2P", monospace' }}
+                      className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
+                      style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                       min="0"
                       placeholder="HH"
                     />
-                    <span className="text-pink-300 self-center">:</span>
+                    <span style={{ color: '#d1cbed' }} className="self-center">:</span>
                     <input
                       type="number"
                       value={studyTime.minutes}
                       onChange={(e) => setStudyTime({...studyTime, minutes: parseInt(e.target.value) || 0})}
-                      className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
-                      style={{ fontFamily: '"Press Start 2P", monospace' }}
+                      className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
+                      style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                       min="0"
                       max="59"
                       placeholder="MM"
                     />
-                    <span className="text-pink-300 self-center">:</span>
+                    <span style={{ color: '#d1cbed' }} className="self-center">:</span>
                     <input
                       type="number"
                       value={studyTime.seconds}
                       onChange={(e) => setStudyTime({...studyTime, seconds: parseInt(e.target.value) || 0})}
-                      className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
-                      style={{ fontFamily: '"Press Start 2P", monospace' }}
+                      className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
+                      style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                       min="0"
                       max="59"
                       placeholder="SS"
@@ -406,35 +404,35 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                 </div>
 
                 <div className="flex flex-col items-center">
-                  <label className="text-pink-300 mb-2">Break Time</label>
+                  <label style={{ color: '#d1cbed' }} className="mb-2 text-sm">Break Time</label>
                   <div className="flex gap-2">
                     <input
                       type="number"
                       value={breakTime.hours}
                       onChange={(e) => setBreakTime({...breakTime, hours: parseInt(e.target.value) || 0})}
-                      className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
-                      style={{ fontFamily: '"Press Start 2P", monospace' }}
+                      className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
+                      style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                       min="0"
                       placeholder="HH"
                     />
-                    <span className="text-pink-300 self-center">:</span>
+                    <span style={{ color: '#d1cbed' }} className="self-center">:</span>
                     <input
                       type="number"
                       value={breakTime.minutes}
                       onChange={(e) => setBreakTime({...breakTime, minutes: parseInt(e.target.value) || 0})}
-                      className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
-                      style={{ fontFamily: '"Press Start 2P", monospace' }}
+                      className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
+                      style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                       min="0"
                       max="59"
                       placeholder="MM"
                     />
-                    <span className="text-pink-300 self-center">:</span>
+                    <span style={{ color: '#d1cbed' }} className="self-center">:</span>
                     <input
                       type="number"
                       value={breakTime.seconds}
                       onChange={(e) => setBreakTime({...breakTime, seconds: parseInt(e.target.value) || 0})}
-                      className="w-16 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
-                      style={{ fontFamily: '"Press Start 2P", monospace' }}
+                      className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
+                      style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                       min="0"
                       max="59"
                       placeholder="SS"
@@ -443,13 +441,17 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                 </div>
 
                 <div className="flex flex-col items-center">
-                  <label className="text-pink-300 mb-2">Rounds</label>
+                  <label style={{ color: '#d1cbed' }} className="mb-2 text-sm">Rounds</label>
                   <input
                     type="number"
                     value={rounds}
                     onChange={(e) => setRounds(parseInt(e.target.value))}
-                    className="w-20 h-10 text-center border-2 border-pink-200 rounded-lg focus:outline-none focus:border-pink-300"
-                    style={{ fontFamily: '"Press Start 2P", monospace' }}
+                    className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
+                    style={{ 
+                      borderColor: '#d1cbed', 
+                      color: '#b2b2b2', 
+                      fontFamily: '"Press Start 2P", monospace'
+                    }}
                     min="1"
                   />
                 </div>
@@ -460,9 +462,10 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                     id="soundToggle"
                     checked={playSound}
                     onChange={(e) => setPlaySound(e.target.checked)}
-                    className="w-4 h-4 text-pink-300 border-pink-200 rounded focus:ring-pink-300"
+                    className="w-4 h-4 border rounded focus:ring-[#d1cbed]"
+                    style={{ borderColor: '#d1cbed' }}
                   />
-                  <label htmlFor="soundToggle" className="text-pink-300">
+                  <label htmlFor="soundToggle" style={{ color: '#d1cbed' }}>
                     Play sound when timer ends
                   </label>
                 </div>
@@ -470,8 +473,8 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
 
               <button 
                 onClick={startTimer}
-                className="mt-auto mb-4 px-8 py-3 bg-pink-200 text-white rounded-full hover:bg-pink-300 transition-colors duration-200"
-                style={{ fontFamily: '"Press Start 2P", monospace' }}
+                className="mt-auto mb-4 px-8 py-3 text-white rounded-lg transition-colors duration-200"
+                style={{ backgroundColor: '#d1cbed', fontFamily: '"Press Start 2P", monospace' }}
               >
                 Start Timer
               </button>
@@ -479,33 +482,17 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
           </div>
         ) : (
           <div 
-            className="p-8 w-80 h-[600px] flex flex-col bg-[#FEF9EC] timer-handle"
+            className="p-4 w-80 h-[600px] flex flex-col bg-[#F0F3FC] timer-handle"
             style={{ fontFamily: 'VT323, monospace' }}
           >
-            <div className="flex justify-between items-center timer-handle mb-2">
-              <div className="flex items-center gap-3">
-                <button 
-                  onClick={handleBack}
-                  className="text-[#FFB5C5] hover:text-pink-400 transition-colors duration-200"
-                >
-                  ←
-                </button>
-                <h1 className="text-2xl font-semibold text-gray-800">Study Timer</h1>
-              </div>
-              <div className="flex gap-4">
-                <button 
-                  onClick={() => setIsMinimized(!isMinimized)}
-                  className="text-gray-400 hover:text-gray-600 transition-colors duration-200 text-xl"
-                >
-                  —
-                </button>
-                <button 
-                  onClick={onClose}
-                  className="text-gray-400 hover:text-gray-600 transition-colors duration-200 text-xl"
-                >
-                  ×
-                </button>
-              </div>
+            <div className="flex items-center timer-handle mb-8 pl-2">
+              <button 
+                onClick={handleBack}
+                className="text-[#d1cbed] hover:text-pink-400 transition-colors duration-200 mr-3"
+              >
+                ←
+              </button>
+              <h1 className="text-2xl" style={{ color: '#b2b2b2' }}>Study Timer</h1>
             </div>
 
             <div className="text-[#FFB5C5] text-2xl mt-2" style={{ fontFamily: '"Press Start 2P", monospace' }}>
@@ -532,7 +519,8 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                   <div className="flex justify-between gap-2.5 w-full">
                     <button 
                       onClick={toggleTimer}
-                      className="flex-1 bg-[#E6E6FA] border border-[#FFB5C5] rounded px-4 py-1.5 text-gray-600 text-sm hover:bg-[#FFB5C5] hover:text-white cursor-pointer"
+                      className="flex-1 bg-[#E6E6FA] border border-[#FFB5C5] rounded px-4 py-1.5 text-sm hover:bg-[#FFB5C5] hover:text-white cursor-pointer"
+                      style={{ color: '#b2b2b2' }}
                     >
                       {isPaused ? 'Resume' : 'Pause'}
                     </button>
