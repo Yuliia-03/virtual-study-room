@@ -119,19 +119,64 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
       }, 1000);
     } else if (timeLeft === 0) {
       if (playSound) {
-        // Add your sound playing logic here
+        // Sound effect
       }
-      setIsBreak(!isBreak);
-      setTimeLeft(isBreak ? studyLength : breakLength);
+      
+      if (!isBreak && currentRound >= rounds) {
+        // All rounds completed - including the current one
+        setIsRunning(false);
+        setCurrentPage('completed'); // Transition to the "completed" page
+        return;
+      }
+      
       if (!isBreak) {
-        setCurrentRound((prevRound) => (prevRound < rounds ? prevRound + 1 : 1));
+        // If not on break, switch to break
+        setIsBreak(true);
+        setTimeLeft(breakLength);
+        setCurrentRound((prevRound) => prevRound + 1);
+      } else {
+        // If on break, switch back to study
+        setIsBreak(false);
+        setTimeLeft(studyLength);
       }
     }
-
+  
     return () => clearInterval(timer);
-  }, [isRunning, isPaused, timeLeft, isBreak, studyLength, breakLength, rounds, playSound]);
+  }, [isRunning, isPaused, timeLeft, isBreak, studyLength, breakLength, rounds, playSound, currentRound]);
 
   const renderContent = () => {
+    if (currentPage === 'completed') {
+      return (
+        <div className="p-4 w-80 h-[500px] flex flex-col bg-[#F0F3FC] timer-handle">
+          <div className="flex-grow flex flex-col items-center px-8">
+            <div className="text-2xl mt-8 text-center" style={{ color: '#bac6f1', fontFamily: '"Press Start 2P", monospace' }}>
+              Well done!
+              <br />
+              Here, have a blueberry
+            </div>
+            
+            <div className="flex-grow"></div>
+            
+            <div className="w-full mb-4">
+              <button
+                onClick={() => {
+                  setCurrentPage('welcome');
+                  setCurrentRound(1);
+                  setIsBreak(false);
+                  setTimeLeft(studyLength);
+                  setIsRunning(false);
+                }}
+                className="w-full px-4 py-2 text-white rounded-lg transition-colors duration-200 text-sm"
+                style={{ backgroundColor: '#d1cbed', fontFamily: '"Press Start 2P", monospace' }}
+              >
+                Start New Session
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     if (!isRunning) {
       return (
         <div className="flex flex-col items-center space-y-4">
@@ -142,7 +187,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
           <div className="w-full space-y-4">
             <div className="flex flex-col items-center">
               <label style={{ color: '#d1cbed', fontFamily: 'VT323, monospace' }} className="mb-2 text-sm">Study Time</label>
-              <div className="flex gap-2">
+              <div className="flex gap-2 mt-1">
                 <input
                   type="number"
                   value={studyTime.hours}
@@ -179,7 +224,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
 
             <div className="flex flex-col items-center">
               <label style={{ color: '#d1cbed', fontFamily: 'VT323, monospace' }} className="mb-2 text-sm">Break Time</label>
-              <div className="flex gap-2">
+              <div className="flex gap-2 mt-1">
                 <input
                   type="number"
                   value={breakTime.hours}
@@ -216,38 +261,75 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
 
             <div className="flex flex-col items-center">
               <label style={{ color: '#d1cbed', fontFamily: 'VT323, monospace' }} className="mb-2 text-sm">Rounds</label>
-              <input
-                type="number"
-                value={rounds}
-                onChange={(e) => setRounds(parseInt(e.target.value))}
-                className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
-                style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
-                min="1"
-              />
+              <div className="mt-1">
+                <input
+                  type="number"
+                  value={rounds}
+                  onChange={(e) => setRounds(parseInt(e.target.value))}
+                  className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
+                  style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
+                  min="1"
+                />
+              </div>
             </div>
 
             <div className="flex items-center justify-center gap-2 mt-2">
-              <input
-                type="checkbox"
-                id="soundToggle"
-                checked={playSound}
-                onChange={(e) => setPlaySound(e.target.checked)}
-                className="w-4 h-4 border rounded focus:ring-[#d1cbed]"
-                style={{ borderColor: '#d1cbed' }}
-              />
-              <label htmlFor="soundToggle" style={{ color: '#d1cbed', fontFamily: 'VT323, monospace' }}>
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  id="soundToggle"
+                  checked={playSound}
+                  onChange={(e) => setPlaySound(e.target.checked)}
+                  className="sr-only"
+                />
+                <div 
+                  onClick={() => setPlaySound(!playSound)}
+                  className="w-6 h-6 border-2 rounded-lg flex items-center justify-center cursor-pointer"
+                  style={{ 
+                    borderColor: '#d1cbed', 
+                    backgroundColor: '#F0F3FC',
+                    boxShadow: playSound ? 'inset 0 0 5px rgba(209, 203, 237, 0.5)' : 'none',
+                    width: '24px',
+                    height: '24px',
+                    minWidth: '24px',
+                    minHeight: '24px'
+                  }}
+                >
+                  {playSound && (
+                    <span 
+                      role="img" 
+                      aria-label="lavender" 
+                      style={{ 
+                        fontSize: '20px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}
+                    >
+                      💜
+                    </span>
+                  )}
+                </div>
+              </div>
+              <label 
+                htmlFor="soundToggle" 
+                style={{ color: '#d1cbed', fontFamily: 'VT323, monospace' }}
+                className="cursor-pointer"
+              >
                 Play sound when timer ends
               </label>
             </div>
           </div>
 
-          <button
-            onClick={startTimer}
-            className="mt-4 px-8 py-3 text-white rounded-lg transition-colors duration-200"
-            style={{ backgroundColor: '#d1cbed', fontFamily: '"Press Start 2P", monospace' }}
-          >
-            Start Timer
-          </button>
+          <div className="w-full px-4">
+            <button
+              onClick={startTimer}
+              className="w-full mt-2 px-4 py-2 text-white rounded-lg transition-colors duration-200 text-sm"
+              style={{ backgroundColor: '#d1cbed', fontFamily: '"Press Start 2P", monospace' }}
+            >
+              Start Timer
+            </button>
+          </div>
         </div>
       );
     }
@@ -354,13 +436,41 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
           }
         }}
       >
-        {!isRunning ? (
-          <div className="p-6 w-80 h-[500px] flex flex-col bg-[#F0F3FC] timer-handle">
-            <div className="timer-handle mb-4 pl-3">
+        {currentPage === 'completed' ? (
+          <div className="p-4 w-80 h-[500px] flex flex-col bg-[#F0F3FC] timer-handle">
+            <div className="flex-grow flex flex-col items-center px-8">
+              <div className="text-2xl mt-8 text-center" style={{ color: '#bac6f1', fontFamily: '"Press Start 2P", monospace' }}>
+                Well done!
+                <br />
+                Here, have a blueberry
+              </div>
+              
+              <div className="flex-grow"></div>
+              
+              <div className="w-full mb-4">
+                <button
+                  onClick={() => {
+                    setCurrentPage('welcome');
+                    setCurrentRound(1);
+                    setIsBreak(false);
+                    setTimeLeft(studyLength);
+                    setIsRunning(false);
+                  }}
+                  className="w-full px-4 py-2 text-white rounded-lg transition-colors duration-200 text-sm"
+                  style={{ backgroundColor: '#d1cbed', fontFamily: '"Press Start 2P", monospace' }}
+                >
+                  Start New Session
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : !isRunning ? (
+          <div className="p-4 w-80 h-[500px] flex flex-col bg-[#F0F3FC] timer-handle">
+            <div className="timer-handle mb-2 px-8 mt-2">
               <h1 className="text-2xl" style={{ color: '#b2b2b2', fontFamily: 'VT323, monospace' }}>Study Timer</h1>
             </div>
             
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center px-8">
               <div className="text-2xl mb-4" style={{ color: '#bac6f1', fontFamily: '"Press Start 2P", monospace' }}>
                 Set Your Study Timer
               </div>
@@ -368,7 +478,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
               <div className="w-full space-y-4">
                 <div className="flex flex-col items-center">
                   <label style={{ color: '#d1cbed', fontFamily: 'VT323, monospace' }} className="mb-2 text-sm">Study Time</label>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 mt-1">
                     <input
                       type="number"
                       value={studyTime.hours}
@@ -405,7 +515,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
 
                 <div className="flex flex-col items-center">
                   <label style={{ color: '#d1cbed', fontFamily: 'VT323, monospace' }} className="mb-2 text-sm">Break Time</label>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 mt-1">
                     <input
                       type="number"
                       value={breakTime.hours}
@@ -442,82 +552,120 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
 
                 <div className="flex flex-col items-center">
                   <label style={{ color: '#d1cbed', fontFamily: 'VT323, monospace' }} className="mb-2 text-sm">Rounds</label>
-                  <input
-                    type="number"
-                    value={rounds}
-                    onChange={(e) => setRounds(parseInt(e.target.value))}
-                    className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
-                    style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
-                    min="1"
-                  />
+                  <div className="mt-1">
+                    <input
+                      type="number"
+                      value={rounds}
+                      onChange={(e) => setRounds(parseInt(e.target.value))}
+                      className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
+                      style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
+                      min="1"
+                    />
+                  </div>
                 </div>
 
-                <div className="flex items-center justify-center gap-2">
-                  <input
-                    type="checkbox"
-                    id="soundToggle"
-                    checked={playSound}
-                    onChange={(e) => setPlaySound(e.target.checked)}
-                    className="w-4 h-4 border rounded focus:ring-[#d1cbed]"
-                    style={{ borderColor: '#d1cbed' }}
-                  />
-                  <label htmlFor="soundToggle" style={{ color: '#d1cbed', fontFamily: 'VT323, monospace' }}>
+                <div className="flex items-center justify-center gap-2 mt-2">
+                  <div className="relative">
+                    <input
+                      type="checkbox"
+                      id="soundToggle"
+                      checked={playSound}
+                      onChange={(e) => setPlaySound(e.target.checked)}
+                      className="sr-only"
+                    />
+                    <div 
+                      onClick={() => setPlaySound(!playSound)}
+                      className="w-6 h-6 border-2 rounded-lg flex items-center justify-center cursor-pointer"
+                      style={{ 
+                        borderColor: '#d1cbed', 
+                        backgroundColor: '#F0F3FC',
+                        boxShadow: playSound ? 'inset 0 0 5px rgba(209, 203, 237, 0.5)' : 'none',
+                        width: '24px',
+                        height: '24px',
+                        minWidth: '24px',
+                        minHeight: '24px'
+                      }}
+                    >
+                      {playSound && (
+                        <span 
+                          role="img" 
+                          aria-label="lavender" 
+                          style={{ 
+                            fontSize: '20px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                        >
+                          💜
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <label 
+                    htmlFor="soundToggle" 
+                    style={{ color: '#d1cbed', fontFamily: 'VT323, monospace' }}
+                    className="cursor-pointer"
+                  >
                     Play sound when timer ends
                   </label>
                 </div>
               </div>
 
-              <button
-                onClick={startTimer}
-                className="mt-4 px-8 py-2 text-white rounded-lg transition-colors duration-200"
-                style={{ backgroundColor: '#d1cbed', fontFamily: '"Press Start 2P", monospace' }}
-              >
-                Start Timer
-              </button>
+              <div className="w-full px-4">
+                <button
+                  onClick={startTimer}
+                  className="w-full mt-2 px-4 py-2 text-white rounded-lg transition-colors duration-200 text-sm"
+                  style={{ backgroundColor: '#d1cbed', fontFamily: '"Press Start 2P", monospace' }}
+                >
+                  Start Timer
+                </button>
+              </div>
             </div>
           </div>
         ) : (
-          <div className="p-6 w-80 h-[500px] flex flex-col bg-[#F0F3FC] timer-handle">
-            <div className="timer-handle mb-4 pl-3 flex justify-between items-center">
+          <div className="p-4 w-80 h-[500px] flex flex-col bg-[#F0F3FC] timer-handle">
+            <div className="timer-handle mb-6 px-8 mt-2">
               <h1 className="text-2xl" style={{ color: '#b2b2b2', fontFamily: 'VT323, monospace' }}>Study Timer</h1>
-              <div style={{ color: '#b2b2b2', fontFamily: 'VT323, monospace' }}>
-                Round {currentRound} of {rounds}
-              </div>
             </div>
             
-            <div className="flex-grow flex flex-col items-center">
-              <div className="text-2xl mb-4" style={{ color: '#bac6f1', fontFamily: '"Press Start 2P", monospace' }}>
+            <div className="flex-grow flex flex-col items-center px-8">
+              <div className="text-2xl mb-6" style={{ color: '#bac6f1', fontFamily: '"Press Start 2P", monospace' }}>
                 {isBreak ? 'Break Time!' : 'Lock in or else!'}
               </div>
               
-              <div className="text-[48px] font-bold mb-2" style={{ color: '#bac6f1', fontFamily: '"Press Start 2P", monospace' }}>
+              <div className="text-[48px] font-bold mb-6" style={{ color: '#bac6f1', fontFamily: '"Press Start 2P", monospace' }}>
                 {formatTime(timeLeft)}
               </div>
-            </div>
 
-            <div className="flex justify-between items-center">
-              <button 
-                onClick={handleBack}
-                className="hover:text-[#bac6f1] transition-colors duration-200 pl-3"
-                style={{ fontFamily: 'VT323, monospace', fontSize: '24px', color: '#e4d1f1' }}
-              >
-                ⬅
-              </button>
-              <div className="flex gap-4">
-                <button 
-                  onClick={toggleTimer}
-                  className="px-4 py-1 text-sm rounded-lg transition-colors duration-200"
-                  style={{ backgroundColor: '#d1cbed', color: 'white', fontFamily: 'VT323, monospace' }}
-                >
-                  {isPaused ? 'Resume' : 'Pause'}
-                </button>
-                <button 
-                  onClick={resetTimer}
-                  className="px-4 py-1 text-sm rounded-lg transition-colors duration-200"
-                  style={{ backgroundColor: '#d1cbed', color: 'white', fontFamily: 'VT323, monospace' }}
-                >
-                  Reset
-                </button>
+              <div className="flex-grow"></div>
+
+              <div className="w-full flex flex-col gap-4 mb-4">
+                <div className="flex justify-between items-center">
+                  <button 
+                    onClick={handleBack}
+                    className="hover:text-[#bac6f1] transition-colors duration-200"
+                    style={{ fontFamily: 'VT323, monospace', fontSize: '24px', color: '#e4d1f1' }}
+                  >
+                    ⬅
+                  </button>
+                  <div className="flex gap-4">
+                    <button 
+                      onClick={toggleTimer}
+                      className="px-4 py-1 text-sm rounded-lg transition-colors duration-200"
+                      style={{ backgroundColor: '#d1cbed', color: 'white', fontFamily: 'VT323, monospace' }}
+                    >
+                      {isPaused ? 'Resume' : 'Pause'}
+                    </button>
+                    <button 
+                      onClick={resetTimer}
+                      className="px-4 py-1 text-sm rounded-lg transition-colors duration-200"
+                      style={{ backgroundColor: '#d1cbed', color: 'white', fontFamily: 'VT323, monospace' }}
+                    >
+                      Reset
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
