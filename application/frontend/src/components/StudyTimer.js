@@ -139,9 +139,9 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
             Set Your Study Timer
           </div>
           
-          <div className="w-full space-y-6">
+          <div className="w-full space-y-4">
             <div className="flex flex-col items-center">
-              <label style={{ color: '#d1cbed' }} className="mb-2 text-sm">Study Time</label>
+              <label style={{ color: '#d1cbed', fontFamily: 'VT323, monospace' }} className="mb-2 text-sm">Study Time</label>
               <div className="flex gap-2">
                 <input
                   type="number"
@@ -178,7 +178,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
             </div>
 
             <div className="flex flex-col items-center">
-              <label style={{ color: '#d1cbed' }} className="mb-2 text-sm">Break Time</label>
+              <label style={{ color: '#d1cbed', fontFamily: 'VT323, monospace' }} className="mb-2 text-sm">Break Time</label>
               <div className="flex gap-2">
                 <input
                   type="number"
@@ -215,22 +215,18 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
             </div>
 
             <div className="flex flex-col items-center">
-              <label style={{ color: '#d1cbed' }} className="mb-2 text-sm">Rounds</label>
+              <label style={{ color: '#d1cbed', fontFamily: 'VT323, monospace' }} className="mb-2 text-sm">Rounds</label>
               <input
                 type="number"
                 value={rounds}
                 onChange={(e) => setRounds(parseInt(e.target.value))}
                 className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
-                style={{ 
-                  borderColor: '#d1cbed', 
-                  color: '#b2b2b2', 
-                  fontFamily: '"Press Start 2P", monospace'
-                }}
+                style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                 min="1"
               />
             </div>
 
-            <div className="flex items-center justify-center gap-2">
+            <div className="flex items-center justify-center gap-2 mt-2">
               <input
                 type="checkbox"
                 id="soundToggle"
@@ -239,7 +235,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                 className="w-4 h-4 border rounded focus:ring-[#d1cbed]"
                 style={{ borderColor: '#d1cbed' }}
               />
-              <label htmlFor="soundToggle" style={{ color: '#d1cbed' }}>
+              <label htmlFor="soundToggle" style={{ color: '#d1cbed', fontFamily: 'VT323, monospace' }}>
                 Play sound when timer ends
               </label>
             </div>
@@ -247,7 +243,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
 
           <button
             onClick={startTimer}
-            className="mt-auto mb-4 px-8 py-3 text-white rounded-lg transition-colors duration-200"
+            className="mt-4 px-8 py-3 text-white rounded-lg transition-colors duration-200"
             style={{ backgroundColor: '#d1cbed', fontFamily: '"Press Start 2P", monospace' }}
           >
             Start Timer
@@ -313,11 +309,18 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
   };
 
   const resetTimer = () => {
-    setTimeLeft(studyLength);
+    // Convert hours, minutes, seconds to total seconds
+    const totalStudySeconds = (
+      studyTime.hours * 3600 + 
+      studyTime.minutes * 60 + 
+      studyTime.seconds
+    );
+    
+    setTimeLeft(totalStudySeconds);
     setCurrentRound(1);
     setIsBreak(false);
     setIsRunning(true);
-    setCurrentPage('timer');
+    setIsPaused(false);
   };
 
   const handleBack = () => {
@@ -352,22 +355,19 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
         }}
       >
         {!isRunning ? (
-          <div 
-            className="p-4 w-80 h-[600px] flex flex-col bg-[#F0F3FC] timer-handle"
-            style={{ fontFamily: 'VT323, monospace' }}
-          >
-            <div className="timer-handle mb-8 pl-2">
-              <h1 className="text-2xl" style={{ color: '#b2b2b2' }}>Study Timer</h1>
+          <div className="p-6 w-80 h-[500px] flex flex-col bg-[#F0F3FC] timer-handle">
+            <div className="timer-handle mb-4 pl-3">
+              <h1 className="text-2xl" style={{ color: '#b2b2b2', fontFamily: 'VT323, monospace' }}>Study Timer</h1>
             </div>
             
-            <div className="flex flex-col items-center space-y-4 -mt-2">
-              <div className="text-2xl" style={{ color: '#bac6f1', fontFamily: '"Press Start 2P", monospace' }}>
+            <div className="flex flex-col items-center">
+              <div className="text-2xl mb-4" style={{ color: '#bac6f1', fontFamily: '"Press Start 2P", monospace' }}>
                 Set Your Study Timer
               </div>
               
-              <div className="w-full space-y-6">
+              <div className="w-full space-y-4">
                 <div className="flex flex-col items-center">
-                  <label style={{ color: '#d1cbed' }} className="mb-2 text-sm">Study Time</label>
+                  <label style={{ color: '#d1cbed', fontFamily: 'VT323, monospace' }} className="mb-2 text-sm">Study Time</label>
                   <div className="flex gap-2">
                     <input
                       type="number"
@@ -404,7 +404,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                 </div>
 
                 <div className="flex flex-col items-center">
-                  <label style={{ color: '#d1cbed' }} className="mb-2 text-sm">Break Time</label>
+                  <label style={{ color: '#d1cbed', fontFamily: 'VT323, monospace' }} className="mb-2 text-sm">Break Time</label>
                   <div className="flex gap-2">
                     <input
                       type="number"
@@ -441,17 +441,13 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                 </div>
 
                 <div className="flex flex-col items-center">
-                  <label style={{ color: '#d1cbed' }} className="mb-2 text-sm">Rounds</label>
+                  <label style={{ color: '#d1cbed', fontFamily: 'VT323, monospace' }} className="mb-2 text-sm">Rounds</label>
                   <input
                     type="number"
                     value={rounds}
                     onChange={(e) => setRounds(parseInt(e.target.value))}
                     className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
-                    style={{ 
-                      borderColor: '#d1cbed', 
-                      color: '#b2b2b2', 
-                      fontFamily: '"Press Start 2P", monospace'
-                    }}
+                    style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                     min="1"
                   />
                 </div>
@@ -465,15 +461,15 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                     className="w-4 h-4 border rounded focus:ring-[#d1cbed]"
                     style={{ borderColor: '#d1cbed' }}
                   />
-                  <label htmlFor="soundToggle" style={{ color: '#d1cbed' }}>
+                  <label htmlFor="soundToggle" style={{ color: '#d1cbed', fontFamily: 'VT323, monospace' }}>
                     Play sound when timer ends
                   </label>
                 </div>
               </div>
 
-              <button 
+              <button
                 onClick={startTimer}
-                className="mt-auto mb-4 px-8 py-3 text-white rounded-lg transition-colors duration-200"
+                className="mt-4 px-8 py-2 text-white rounded-lg transition-colors duration-200"
                 style={{ backgroundColor: '#d1cbed', fontFamily: '"Press Start 2P", monospace' }}
               >
                 Start Timer
@@ -481,57 +477,48 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
             </div>
           </div>
         ) : (
-          <div 
-            className="p-4 w-80 h-[600px] flex flex-col bg-[#F0F3FC] timer-handle"
-            style={{ fontFamily: 'VT323, monospace' }}
-          >
-            <div className="flex items-center timer-handle mb-8 pl-2">
+          <div className="p-6 w-80 h-[500px] flex flex-col bg-[#F0F3FC] timer-handle">
+            <div className="timer-handle mb-4 pl-3 flex justify-between items-center">
+              <h1 className="text-2xl" style={{ color: '#b2b2b2', fontFamily: 'VT323, monospace' }}>Study Timer</h1>
+              <div style={{ color: '#b2b2b2', fontFamily: 'VT323, monospace' }}>
+                Round {currentRound} of {rounds}
+              </div>
+            </div>
+            
+            <div className="flex-grow flex flex-col items-center">
+              <div className="text-2xl mb-4" style={{ color: '#bac6f1', fontFamily: '"Press Start 2P", monospace' }}>
+                {isBreak ? 'Break Time!' : 'Lock in or else!'}
+              </div>
+              
+              <div className="text-[48px] font-bold mb-2" style={{ color: '#bac6f1', fontFamily: '"Press Start 2P", monospace' }}>
+                {formatTime(timeLeft)}
+              </div>
+            </div>
+
+            <div className="flex justify-between items-center">
               <button 
                 onClick={handleBack}
-                className="text-[#d1cbed] hover:text-pink-400 transition-colors duration-200 mr-3"
+                className="hover:text-[#bac6f1] transition-colors duration-200 pl-3"
+                style={{ fontFamily: 'VT323, monospace', fontSize: '24px', color: '#e4d1f1' }}
               >
-                ←
+                ⬅
               </button>
-              <h1 className="text-2xl" style={{ color: '#b2b2b2' }}>Study Timer</h1>
-            </div>
-
-            <div className="text-[#FFB5C5] text-2xl mt-2" style={{ fontFamily: '"Press Start 2P", monospace' }}>
-              {isBreak ? 'Break Time!' : 'Lock in or else!'}
-            </div>
-
-            <div className="flex-grow flex flex-col justify-between">
-              <div className="flex-grow">
-                {/* Your animation space */}
+              <div className="flex gap-4">
+                <button 
+                  onClick={toggleTimer}
+                  className="px-4 py-1 text-sm rounded-lg transition-colors duration-200"
+                  style={{ backgroundColor: '#d1cbed', color: 'white', fontFamily: 'VT323, monospace' }}
+                >
+                  {isPaused ? 'Resume' : 'Pause'}
+                </button>
+                <button 
+                  onClick={resetTimer}
+                  className="px-4 py-1 text-sm rounded-lg transition-colors duration-200"
+                  style={{ backgroundColor: '#d1cbed', color: 'white', fontFamily: 'VT323, monospace' }}
+                >
+                  Reset
+                </button>
               </div>
-
-                <div className="flex flex-col items-center mb-4">
-                  <div 
-                    className="text-[48px] font-bold text-[#FFB5C5] mb-2" 
-                    style={{ fontFamily: '"Press Start 2P", monospace' }}
-                  >
-                    {formatTime(timeLeft)}
-                  </div>
-
-                  <div className="text-sm text-gray-600 mb-4">
-                    Round {currentRound} of {rounds}
-                  </div>
-
-                  <div className="flex justify-between gap-2.5 w-full">
-                    <button 
-                      onClick={toggleTimer}
-                      className="flex-1 bg-[#E6E6FA] border border-[#FFB5C5] rounded px-4 py-1.5 text-sm hover:bg-[#FFB5C5] hover:text-white cursor-pointer"
-                      style={{ color: '#b2b2b2' }}
-                    >
-                      {isPaused ? 'Resume' : 'Pause'}
-                    </button>
-                    <button 
-                      onClick={resetTimer}
-                      className="flex-1 bg-[#E6E6FA] border border-[#FFB5C5] rounded px-4 py-1.5 text-gray-600 text-sm hover:bg-[#FFB5C5] hover:text-white cursor-pointer"
-                    >
-                      Reset
-                    </button>
-                  </div>
-                </div>
             </div>
           </div>
         )}
