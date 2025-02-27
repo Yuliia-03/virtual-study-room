@@ -119,7 +119,9 @@ function Signup() {
             onChange={handleChange}
           />
           {errors.firstname && (
-            <p className="error-message">{errors.firstname}</p>
+            <p data-testid="error-message-firstname" className="error-message">
+              {errors.firstname}
+            </p>
           )}
         </div>
 
@@ -136,7 +138,9 @@ function Signup() {
             onChange={handleChange}
           />
           {errors.lastname && (
-            <p className="error-message">{errors.lastname}</p>
+            <p data-testid="error-message-lastname" className="error-message">
+              {errors.lastname}
+            </p>
           )}
         </div>
 
@@ -153,7 +157,9 @@ function Signup() {
             onChange={handleChange}
           />
           {errors.username && (
-            <p className="error-message">{errors.username}</p>
+            <p data-testid="error-message-username" className="error-message">
+              {errors.username}
+            </p>
           )}
         </div>
 
@@ -169,7 +175,11 @@ function Signup() {
             value={formData.email}
             onChange={handleChange}
           />
-          {errors.email && <p className="error-message">{errors.email}</p>}
+          {errors.email && (
+            <p data-testid="error-message-email" className="error-message">
+              {errors.email}
+            </p>
+          )}
         </div>
 
         <div className="field">
@@ -199,7 +209,9 @@ function Signup() {
             onChange={handleChange}
           />
           {errors.password && (
-            <p className="error-message">{errors.password}</p>
+            <p data-testid="error-message-password" className="error-message">
+              {errors.password}
+            </p>
           )}
         </div>
 
