@@ -23,6 +23,8 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
   const [studyTime, setStudyTime] = useState({ hours: 0, minutes: 25, seconds: 0 });
   const [breakTime, setBreakTime] = useState({ hours: 0, minutes: 5, seconds: 0 });
 
+  const completionSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+
   useEffect(() => {
     const savedStudyLength = localStorage.getItem('studyLength');
     const savedBreakLength = localStorage.getItem('breakLength');
@@ -118,15 +120,18 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
         setTimeLeft((prevTime) => prevTime - 1);
       }, 1000);
     } else if (timeLeft === 0) {
-      if (playSound) {
-        // Sound effect
-      }
-      
       if (!isBreak && currentRound >= rounds) {
         // All rounds completed - including the current one
         setIsRunning(false);
-        setCurrentPage('completed'); // Transition to the "completed" page
+        setCurrentPage('completed');
+        if (playSound) {
+          completionSound.play();
+        }
         return;
+      }
+      
+      if (playSound) {
+        completionSound.play(); // Play sound at the end of each period
       }
       
       if (!isBreak) {
