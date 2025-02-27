@@ -349,8 +349,8 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
           {formatTime(timeLeft)}
         </div>
 
-        <div className="text-sm text-gray-600 text-center mt-2">
-          Round {currentRound} of {rounds}
+        <div style={{ color: '#d1cbed', fontFamily: 'VT323, monospace' }} className="mb-4">
+          Round {currentRound}/{rounds}
         </div>
 
         <div className="flex justify-between gap-2.5 mt-2.5">
@@ -643,6 +643,10 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                 {formatTime(timeLeft)}
               </div>
 
+              <div style={{ color: '#d1cbed', fontFamily: 'VT323, monospace' }} className="mb-4">
+                Round {currentRound}/{rounds}
+              </div>
+
               <div className="flex-grow"></div>
 
               <div className="w-full flex flex-col gap-4 mb-4">
@@ -650,7 +654,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                   <button 
                     onClick={handleBack}
                     className="hover:text-[#bac6f1] transition-colors duration-200"
-                    style={{ fontFamily: 'VT323, monospace', fontSize: '24px', color: '#e4d1f1' }}
+                    style={{ fontFamily: 'VT323, monospace', fontSize: '24px', color: '#d1cbed' }}
                   >
                     ⬅
                   </button>
