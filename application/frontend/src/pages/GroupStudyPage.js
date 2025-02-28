@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import "../styles/GroupStudyPage.css";
+import MotivationalMessage from './Motivation';
+
 
 function GroupStudyPage(){
 
@@ -135,7 +137,9 @@ function GroupStudyPage(){
                         </div>
                     </div>
                 </div>
-                <div className="motivationMessage-container">Motivation Message</div>
+                <div className="motivationMessage-container">
+                    <MotivationalMessage />
+                </div>
             </div>
             {/*3rd Column */}
             <div className="column">
