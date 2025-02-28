@@ -1,6 +1,7 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from ..models.rewards import Rewards
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])  # ensures only logged in users can access
@@ -27,3 +28,18 @@ def save_description(request):
         "username": user.username,
         "description": user.description,
     })
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated]) # ensures only logged in users can access
+def get_user_badges(request):
+    user = request.user
+    badges = Rewards.objects.filter(user=user)
+    badge_list = [
+        {
+            "reward_number": badge.reward_number,
+            "date_earned": badge.date_earned,
+        }
+        for badge in badges
+    ]
+
+    return Response(badge_list)

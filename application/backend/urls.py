@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
-from api.views.profile_view import get_logged_in_user, save_description
+from api.views.profile_view import get_logged_in_user, save_description, get_user_badges
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -30,6 +30,7 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='index.html')),
     path('api/profile/', get_logged_in_user, name='get_logged_in_user'),
     path('api/description/', save_description, name='save_description'),
+    path('api/badges/', get_user_badges, name='get_user_badges'),
     path('api/signup/', views.signup, name='signup'),
     path('api/login/', views.login, name='login'),
     path('api/todolists/<str:is_shared>/', views.ViewToDoList.as_view(), name='toDoList'),

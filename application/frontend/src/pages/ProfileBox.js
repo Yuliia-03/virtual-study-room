@@ -11,6 +11,7 @@ function ProfileBox() {
     const navigate = useNavigate();
     const [showAvatarSelector, setShowAvatarSelector] = useState(false);
     const [showInventory, setShowInventory] = useState(false);
+    const [userBadges, setUserBadges] = useState([]);
     const [userData, setUserData] = useState({
         username: null,
         description: "",
@@ -97,6 +98,10 @@ function ProfileBox() {
                     description: data.description || "",
                     image: imageUrl,
                 });
+
+                //fetch user badges
+                const badges = await getUserBadges();
+                setUserBadges(badges);
             } 
             catch (error) {
                 console.error("Error Fetching User Data:", error);
@@ -131,6 +136,17 @@ function ProfileBox() {
         catch (error) {
             //TODO: put error message here
             console.log("error");
+        }
+    }
+
+    const getUserBadges = async () => {
+        try {
+            const badges = await getAuthenticatedRequest("/badges/", "GET");
+            console.log(badges);
+            return badges;
+        } catch (error) {
+            console.error("Error fetching user badges:", error);
+            return [];
         }
     }
 
@@ -175,7 +191,7 @@ function ProfileBox() {
                 {showInventory && (
                     <div className='inventory-content'>
                         <h2>Your Badge Collection</h2>
-                        <UserBadges />
+                        <UserBadges userBadges={userBadges}/>
                         {/* TODO: add variable userBadges here */}
                     </div>
                 )}
