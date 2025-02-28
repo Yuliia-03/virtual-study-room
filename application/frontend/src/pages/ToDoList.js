@@ -28,34 +28,41 @@ const ToDoList = () => {
     }, []);
 
 
-    const toggleTaskCompletion = (listId, taskId, currentStatus) => {
-        // Update task completion status
-        const token = localStorage.getItem('access_token');
-        axios
-            .patch(`http://127.0.0.1:8000/api/update_task/${taskId}/`, null, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            })
-            .then(() => {
-                fetchData();
-            })
-            .catch((error) => console.error("Error updating task:", error));
+
+    const toggleTaskCompletion = async (taskId) => {
+        try {
+            const response = await getAuthenticatedRequest(`/update_task/${taskId}/`, "PATCH");
+
+            if (response.status === 0) {
+                console.error("Error updating task status");
+            } else {
+                setLists(prevLists => prevLists.map(list => ({
+                    ...list,
+                    tasks: list.tasks.map(task => task.id === taskId ? { ...task, is_completed: !task.is_completed } : task)
+                })));
+                console.log("Task status updated successfully");
+            }
+        } catch (error) {
+            console.error("Error fetching to-do lists:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDeleteTask = async (taskId) => {
+        try {
+            const data = await getAuthenticatedRequest(`/delete_task/${taskId}/`, "DELETE");
+            setLists(data);
+        } catch (error) {
+            console.error("Error fetching to-do lists:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleAddTask = (listId) => {
         setSelectedListId(listId); // Set the selected list id
         setShowModal(true); // Open the modal
-    };
-
-    const addTaskToList = (newTask) => {
-        setLists((prevLists) =>
-            prevLists.map((list) =>
-                list.id === newTask.listId
-                    ? { ...list, tasks: [...list.tasks, newTask] }
-                    : list
-            )
-        );
     };
 
 
@@ -88,27 +95,26 @@ const ToDoList = () => {
                                     <input
                                         type="checkbox"
                                         checked={task.is_completed}
-                                        onChange={() =>
-                                            toggleTaskCompletion(list.id, task.id, task.is_completed)
-                                        }
+                                        onChange={() => toggleTaskCompletion(task.id)}
                                     />
                                     <span className={task.is_completed ? "completed" : ""}>
                                         {task.title}
                                     </span>
-                                    <button onClick={() => {/* handleDeleteTask(task.id) */ }} className="btn btn-danger btn-sm">
-                                        <i className="bi bi-trash"></i> {/* Trash Icon from Bootstrap Icons */}
+                                    <button onClick={() => handleDeleteTask(task.id)} className="btn btn-danger btn-sm">
+                                        <i className="bi bi-trash"></i>
                                     </button>
                                 </li>
                             ))}
                         </ul>
                     </div>
                 ))}
+
             </div>
             <AddTaskModal
                 showModal={showModal}
                 setShowModal={setShowModal}
                 listId={selectedListId}
-                addTaskToList={addTaskToList}
+                setLists={setLists}
             />
         </div>
         

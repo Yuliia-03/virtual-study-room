@@ -29,12 +29,12 @@ class ViewToDoList(APIView):
 
 
             response_data.append({
-                "id": todo_list.id,
+                "id": todo_list.pk,
                 "name": todo_list.name,
                 "is_shared": todo_list.is_shared,
                 "tasks": [
                     {
-                        "id": task.id,
+                        "id": task.pk,
                         "title": task.title,
                         "content": task.content,
                         "is_completed": task.is_completed,
@@ -44,7 +44,7 @@ class ViewToDoList(APIView):
             })
 
         return Response(response_data, status=status.HTTP_200_OK)
-    
+
     def post(self, request):
         # Define the action type in request body
 
@@ -56,6 +56,26 @@ class ViewToDoList(APIView):
             pass
         return Response({"error": "Invalid action"}, status=status.HTTP_400_BAD_REQUEST)
 
+    def delete(self, request, task_id = None):
+
+        url_name = request.resolver_match.view_name
+        if url_name == "delete_task":
+            return self.delete_task(request, task_id)
+        elif url_name == "create_new_list":
+            pass
+        return Response({"error": "Invalid action"}, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete_task(self, request, task_id):
+        try:
+
+            if toDoList.objects.filter(pk=task_id).exists():
+                toDoList.objects.get(pk=task_id).delete()
+                return self.get(request)
+            else:
+                return Response({"error": "Task doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)
+                
+        except Exception as e:
+            return Response({"error": "Invalid request", "details": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def create_task(self, request):
         try:
@@ -70,19 +90,29 @@ class ViewToDoList(APIView):
                     title=title, content=content, list=list)
                 task.save()
 
-                return Response({"message": "User registered successfully!"}, status=status.HTTP_201_CREATED)
+
+                response_data={
+                    "listId": task.list.pk,
+                    "id": task.pk,
+                    "title": task.title,
+                    "content": task.content,
+                    "is_completed": task.is_completed,
+                }
+                return Response(response_data, status=status.HTTP_200_OK)
+
             else:
                 return Response({"error": "List doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)
-                
+
         except Exception as e:
             return Response({"error": "Invalid request", "details": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request, task_id):
         print(f"Received PATCH request for task_id: {task_id}")
-        task = toDoList.objects.get(id=task_id)  # Get the task by its ID
-        # Only update fields provided
+        task = toDoList.objects.get(id=task_id) 
         if task:
             new_task_status = not task.is_completed
-            toDoList.objects.filter(id=task_id).update(is_completed=new_task_status)
-            return Response(status=status.HTTP_200_OK)
+            task = toDoList.objects.filter(id=task_id).update(is_completed=new_task_status)
+            print(task)
+            return Response(task, status=status.HTTP_200_OK)
+            #return self.get(request)
         return Response('Task not found', status=status.HTTP_400_BAD_REQUEST)

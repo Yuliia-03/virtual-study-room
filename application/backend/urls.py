@@ -37,7 +37,7 @@ urlpatterns = [
     
     path('api/update_task/<int:task_id>/', views.ViewToDoList.as_view(), name='update_task_status'),
     path('api/new_task/', views.ViewToDoList.as_view(), name='create_new_task'),
-    path('api/delete_task/', views.ViewToDoList.as_view(), name='delete_task'),
+    path('api/delete_task/<int:task_id>/', views.ViewToDoList.as_view(), name='delete_task'),
 
     path('api/new_list/', views.ViewToDoList.as_view(), name='create_new_list'),
     path('api/delete_list/', views.ViewToDoList.as_view(), name='delete_list'),
