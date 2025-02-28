@@ -449,6 +449,7 @@ label {
 }
 
 .chatBox-container{
+    margin-top: 50%;
     height: 291px;
     width: 320px;
     border-radius: 40px;

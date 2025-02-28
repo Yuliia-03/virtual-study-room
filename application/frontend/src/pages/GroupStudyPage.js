@@ -144,15 +144,15 @@ function GroupStudyPage(){
             {/*3rd Column */}
             <div className="column">
                 <div className="timer-container">Timer</div>
+                {/* 
                 <div className="custom-container">
-                    {/*This is the button for music and customisation, needs functionality */}
                     <button
                         type="button"
                         className={`music-button ${isActiveMusic ? 'active' : ''}`}
                         onMouseDown={() => handleMouseDown('music')}
                         onMouseUp={() => handleMouseUp('music')}
                         onMouseLeave={() => handleMouseUp('music')}
-                        >Music
+                    >Music
                     </button>
                     <button
                         type="button"
@@ -160,9 +160,10 @@ function GroupStudyPage(){
                         onMouseDown={() => handleMouseDown('custom')}
                         onMouseUp={() => handleMouseUp('custom')}
                         onMouseLeave={() => handleMouseUp('custom')}
-                        >Customisation
+                    >Customisation
                     </button>
                 </div>
+                */}
                 <div className="chatBox-container">Chat Box</div>
             </div>
         </div>
