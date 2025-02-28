@@ -53,16 +53,16 @@ class ViewToDoList(APIView):
         if url_name == "create_new_task":
             return self.create_task(request)
         elif url_name == "create_new_list":
-            pass
+            return self.create_list(request)
         return Response({"error": "Invalid action"}, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, task_id = None):
+    def delete(self, request, id = None):
 
         url_name = request.resolver_match.view_name
         if url_name == "delete_task":
-            return self.delete_task(request, task_id)
-        elif url_name == "create_new_list":
-            pass
+            return self.delete_task(request, id)
+        elif url_name == "delete_list":
+            return self.delete_list(request, id)
         return Response({"error": "Invalid action"}, status=status.HTTP_400_BAD_REQUEST)
 
     def delete_task(self, request, task_id):
@@ -77,8 +77,26 @@ class ViewToDoList(APIView):
         except Exception as e:
             return Response({"error": "Invalid request", "details": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+    def delete_list(self, request, list_id):
+        print("Deleting ..")
+        try:
+
+            if List.objects.filter(pk=list_id).exists():
+                toDoList.objects.filter(list=list_id).delete()
+                Permission.objects.filter(list_id = list_id).delete()
+                List.objects.get(pk=list_id).delete()
+
+                return self.get(request)
+            else:
+                return Response({"error": "Task doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            return Response({"error": "Invalid request", "details": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
     def create_task(self, request):
         try:
+            print("Creating list ...")
             data = request.data
             title = data.get("title")
             list_id = data.get("list_id")
@@ -103,6 +121,28 @@ class ViewToDoList(APIView):
             else:
                 return Response({"error": "List doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)
 
+        except Exception as e:
+            return Response({"error": "Invalid request", "details": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    def create_list(self, request):
+        try:
+            user = request.user
+            data = request.data
+            name = data.get("name")
+            is_shared = data.get("is_shared")
+
+            list = List.objects.create(
+                name=name, is_shared=is_shared)
+            list.save()
+
+            Permission.objects.create(list_id=list, user_id=user)
+            
+            response_data = {
+                "listId": list.pk,
+                "name": list.name,
+                "isShared": list.is_shared,
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": "Invalid request", "details": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 

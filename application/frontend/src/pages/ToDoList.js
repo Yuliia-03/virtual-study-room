@@ -1,32 +1,34 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { getAuthenticatedRequest } from "../utils/authService";
 import "../styles/ToDoList.css";
 import AddTaskModal from "./CreateNewTask";
+import AddListModal from "./CreateNewList";
 
 const ToDoList = () => {
     const [lists, setLists] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const [showModal, setShowModal] = useState(false);
+    const [addTaskWindow, setAddTaskWindow] = useState(false);
     const [selectedListId, setSelectedListId] = useState(null);
 
-    const fetchData = async () => {
-        try {
-            const data = await getAuthenticatedRequest("/todolists/false/");
-            setLists(data);
-        } catch (error) {
-            console.error("Error fetching to-do lists:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
+
+    const [addListWindow, setAddListWindow] = useState(false);
 
     useEffect(() => {
 
+        const fetchData = async () => {
+            try {
+                const data = await getAuthenticatedRequest("/todolists/false/");
+                setLists(data);
+            } catch (error) {
+                console.error("Error fetching to-do lists:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchData();
     }, []);
-
 
 
     const toggleTaskCompletion = async (taskId) => {
@@ -60,9 +62,26 @@ const ToDoList = () => {
         }
     };
 
+    const handleDeleteList = async (listId) => {
+        try {
+            const data = await getAuthenticatedRequest(`/delete_list/${listId}/`, "DELETE");
+            setLists(data);
+        } catch (error) {
+            console.error("Error fetching to-do lists:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleAddTask = (listId) => {
+        console.log("Opening Add Task Modal for list ID:", listId);  // Check if this log appears in the console
+
         setSelectedListId(listId); // Set the selected list id
-        setShowModal(true); // Open the modal
+        setAddTaskWindow(true); // Open the modal
+    };
+
+    const handleAddList = () => {
+        setAddListWindow(true); // Open the modal
     };
 
 
@@ -71,7 +90,7 @@ const ToDoList = () => {
     return (
         <div className="todo-container">
             <h3>To-Do Lists</h3>
-            <button onClick={() => {/*handleAddList(list.id)*/ }} className="btn btn-success btn-sm">
+            <button onClick={() => handleAddList()} className="btn btn-success btn-sm">
                 <i className="bi bi-plus-circle"></i> {/* Plus Icon from Bootstrap Icons */}
             </button>
             <div className="todo-list">
@@ -80,10 +99,10 @@ const ToDoList = () => {
                         {/* Buttons for Add Task and Delete List */}
                         <div className="todo-card-header">
                             <button onClick={() => handleAddTask(list.id)} className="btn btn-success btn-sm">
-                                <i className="bi bi-plus-circle"></i> {/* Plus Icon from Bootstrap Icons */}
+                                <i className="bi bi-plus-circle"></i>
                             </button>
                             
-                            <button onClick={() => {/* handleDeleteList(list.id) */}} className="btn btn-danger btn-sm">
+                            <button onClick={() =>  handleDeleteList(list.id)} className="btn btn-danger btn-sm">
                                 <i className="bi bi-trash"></i> {/* Trash Icon from Bootstrap Icons */}
                             </button>
                         </div>
@@ -111,9 +130,16 @@ const ToDoList = () => {
 
             </div>
             <AddTaskModal
-                showModal={showModal}
-                setShowModal={setShowModal}
+                addTaskWindow={addTaskWindow}
+                setAddTaskWindow={setAddTaskWindow}
                 listId={selectedListId}
+                setLists={setLists}
+            />
+
+
+            <AddListModal
+                addListWindow={addListWindow}
+                setAddListWindow={setAddListWindow}
                 setLists={setLists}
             />
         </div>

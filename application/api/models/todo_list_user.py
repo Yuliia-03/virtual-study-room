@@ -18,9 +18,8 @@ class Permission(models.Model):
     ]
 
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)  # Links to User
-    #list_id = models.ForeignKey(toDoList, on_delete=models.CASCADE)
     list_id = models.ForeignKey(List, on_delete=models.CASCADE)
-    permission_type = models.CharField(max_length=10, choices=PERMISSION_TYPE_CHOICES)
+    #permission_type = models.CharField(max_length=10, choices=PERMISSION_TYPE_CHOICES)
 
     class Meta:
         unique_together = ('user_id', 'list_id')  # Ensures a user can't have duplicate permissions for the same list
