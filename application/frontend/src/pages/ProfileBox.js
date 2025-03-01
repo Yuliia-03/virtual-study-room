@@ -160,7 +160,7 @@ function ProfileBox() {
                 <h1 className='profile-title'>Profile</h1>
                 <ToastContainer position='top-center'/>
                 <img src={userData.image} alt="logo" className="profile-pic" />
-                <input type="file" accept="image/*" id='change-avatar' onChange={handleChangeAvatar} className="change-avatar-button" style={{ display: 'none' }} />
+                <input type="file" accept="image/*" data-testid='file-input' id='change-avatar' onChange={handleChangeAvatar} className="change-avatar-button" style={{ display: 'none' }} />
                 <label htmlFor="change-avatar" className="upload-button" style={{ color: 'black' }}>Upload Avatar</label>
                 <h1 className='profile-username'>{userData.username}</h1>
                 <button className="default-select-button" onClick={() => setShowAvatarSelector(!showAvatarSelector)}>Default Avatars</button>
@@ -169,7 +169,7 @@ function ProfileBox() {
                     className="profile-description"
                     value={userData.description}
                     onChange={handleChangeDescription}
-                    placeholder="Please enter description"
+                    placeholder="Please Enter Description"
                 />
                 <button type="button" className="save-desc-button" onClick={handleSaveDescription}>Save</button>
                 <button 

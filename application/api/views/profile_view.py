@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from ..models.rewards import Rewards
 
+'''Retrives the username and description of the currently logged in user'''
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])  # ensures only logged in users can access
 def get_logged_in_user(request):
@@ -13,8 +14,9 @@ def get_logged_in_user(request):
         "description": user.description,
     })
 
+'''Saves the updated description in the user model'''
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated])  # ensures only logged in users can access
+@permission_classes([IsAuthenticated])
 def save_description(request):
     user = request.user
     description = request.data.get('description')
@@ -29,8 +31,9 @@ def save_description(request):
         "description": user.description,
     })
 
+'''Returns the list of badges that the user currently has'''
 @api_view(['GET'])
-@permission_classes([IsAuthenticated]) # ensures only logged in users can access
+@permission_classes([IsAuthenticated])
 def get_user_badges(request):
     user = request.user
     badges = Rewards.objects.filter(user=user)
