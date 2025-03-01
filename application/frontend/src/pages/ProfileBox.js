@@ -6,6 +6,8 @@ import { getAuthenticatedRequest, getAccessToken } from "./utils/authService";
 import defaultAvatar from '../assets/avatars/avatar_2.png';
 import UserAvatar from '../components/UserAvatar';
 import UserBadges from '../components/UserBadges';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function ProfileBox() {
     const navigate = useNavigate();
@@ -16,15 +18,47 @@ function ProfileBox() {
         username: null,
         description: "",
         image: defaultAvatar, //default image
+        avatarSrc: null, //represents selectable PFPs
     });
 
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const data = await getAuthenticatedRequest("/profile/", "GET");
+
+                //fetch profile picture from firebase using user_id
+                const imageRef = ref(storage, `avatars/${data.username}`);
+                const imageUrl = await getDownloadURL(imageRef).catch(() => defaultAvatar); //default image if not found
+
+                //update user data
+                setUserData({
+                    username: data.username || "N/A",
+                    description: data.description || "",
+                    image: imageUrl,
+                    avatarSrc: imageUrl,
+                });
+
+                //fetch user badges
+                const badges = await getUserBadges();
+                setUserBadges(badges);
+            } 
+            catch (error) {
+                toast.error("error fetching user data");
+            }
+        };
+
+        fetchUserData();
+
+    }, []);
+
     const handleChangeAvatar = async (event) => {
+        //get the selected file
         const file = event.target.files[0];
         if (!file || !userData.username) {
-            //TODO: put error message here
-            console.log("no valid user id");
+            toast.error("no valid user id or file selected");
             return;
         }
+        //get the file reference from firebase
         const fileRef = ref(storage, `avatars/${userData.username}`);
         try 
         {
@@ -38,14 +72,13 @@ function ProfileBox() {
             setUserData((prevData) => ({
                 ...prevData,
                 image: imageUrl,
+                avatarSrc: imageUrl,
             }));
 
-            //TODO: put success message here
-            console.log("success!");
+            toast.success("avatar uploaded successfully");
         } 
         catch (error) {
-            //TODO: put error message here
-            console.log("error");
+            toast.error("error uploading avatar");
         }
     }
 
@@ -54,7 +87,6 @@ function ProfileBox() {
         localStorage.removeItem("refresh_token");
 
         navigate("/login");
-        console.log("logged off");
     }
 
     const handleChangeDescription = (event) => {
@@ -67,6 +99,7 @@ function ProfileBox() {
 
     const handleSaveDescription = async () => {
         try {
+            //update new description in the backend
             const data = await getAuthenticatedRequest("/description/", "PUT", {
                 description: userData.description,
             });
@@ -76,41 +109,13 @@ function ProfileBox() {
                 description: data.description,
             }));
 
-            //TODO: put success message here
+            toast.success("description updated successfully");
         }
         catch (error) {
-            console.error("Error Updating Description:", error);
+            toast.error("error updating description");
         }
         
     }
-
-    useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const data = await getAuthenticatedRequest("/profile/", "GET");
-
-                //fetch profile picture from firebase using user_id
-                const imageRef = ref(storage, `avatars/${data.username}`);
-                const imageUrl = await getDownloadURL(imageRef).catch(() => defaultAvatar); //default image if not found
-
-                setUserData({
-                    username: data.username || "N/A",
-                    description: data.description || "",
-                    image: imageUrl,
-                });
-
-                //fetch user badges
-                const badges = await getUserBadges();
-                setUserBadges(badges);
-            } 
-            catch (error) {
-                console.error("Error Fetching User Data:", error);
-            }
-        };
-
-        fetchUserData();
-
-    }, []);
 
     const handleDefaultPFP = async (avatarSrc) => {
         const fileRef = ref(storage, `avatars/${userData.username}`);
@@ -128,24 +133,23 @@ function ProfileBox() {
             setUserData((prevData) => ({
                 ...prevData,
                 image: imageUrl,
+                avatarSrc: avatarSrc,
             }));
 
-            //TODO: put success message here
-            console.log("success!");
+            toast.success("avatar selected successfully");
         } 
         catch (error) {
-            //TODO: put error message here
-            console.log("error");
+            toast.error("error selecting avatar from defaults")
         }
     }
 
     const getUserBadges = async () => {
         try {
+            //get badges from rewards model in backend
             const badges = await getAuthenticatedRequest("/badges/", "GET");
-            console.log(badges);
             return badges;
         } catch (error) {
-            console.error("Error fetching user badges:", error);
+            toast.error("error fetching user badges")
             return [];
         }
     }
@@ -154,13 +158,13 @@ function ProfileBox() {
         <div className='profile-container'>
             <div className='profile-box'>
                 <h1 className='profile-title'>Profile</h1>
+                <ToastContainer position='top-center'/>
                 <img src={userData.image} alt="logo" className="profile-pic" />
                 <input type="file" accept="image/*" id='change-avatar' onChange={handleChangeAvatar} className="change-avatar-button" style={{ display: 'none' }} />
                 <label htmlFor="change-avatar" className="upload-button" style={{ color: 'black' }}>Upload Avatar</label>
                 <h1 className='profile-username'>{userData.username}</h1>
                 <button className="default-select-button" onClick={() => setShowAvatarSelector(!showAvatarSelector)}>Default Avatars</button>
-                {showAvatarSelector && (<UserAvatar onSelect={handleDefaultPFP} currentAvatar={userData.image}/>)} 
-                {/* TODO: can't use userData.image for current avatar? change in actual component instead? */}
+                {showAvatarSelector && (<UserAvatar onSelect={handleDefaultPFP} currentAvatar={userData.avatarSrc}/>)} 
                 <textarea
                     className="profile-description"
                     value={userData.description}
@@ -192,7 +196,6 @@ function ProfileBox() {
                     <div className='inventory-content'>
                         <h2>Your Badge Collection</h2>
                         <UserBadges userBadges={userBadges}/>
-                        {/* TODO: add variable userBadges here */}
                     </div>
                 )}
                 <button type="button" className="logoff-button" onClick={handleLogOff}>Log Off</button>
