@@ -18,8 +18,37 @@ function Signup() {
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
 
+  const checkEmailExists = async (email) => {
+    try {
+      const { data } = await axios.get(
+        `http://127.0.0.1:8000/api/check-email/`,
+        {
+          params: { email },
+        }
+      );
+      return data.exists;
+    } catch (error) {
+      console.error("Error checking email:", error);
+    }
+  };
+
+  const checkUsernameExists = async (username) => {
+    try {
+      const { data } = await axios.get(
+        `http://127.0.0.1:8000/api/check-username/`,
+        {
+          params: { username },
+        }
+      );
+      return data.exists;
+    } catch (error) {
+      console.error("Error checking username:", error);
+    }
+  };
+
   // validating the user input
-  const validate = () => {
+
+  const validate = async () => {
     let newErrors = {};
 
     // checking if no fields are left empty
@@ -59,6 +88,18 @@ function Signup() {
       newErrors.password = "Password confirmation needs to match password";
     }
 
+    // check if email and username are not already taken
+    const exists = await checkEmailExists(formData.email);
+    if (exists) {
+      newErrors.email = "This email is already taken, please enter another";
+    }
+
+    const usernameExists = await checkUsernameExists(formData.username);
+    if (usernameExists) {
+      newErrors.username =
+        "This username is already taken, please enter another";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -92,12 +133,7 @@ function Signup() {
         navigate("/dashboard");
       }
     } catch (error) {
-      if (error.response) {
-        alert(error.response.data.error);
-      } else {
-        //console.error("Signup error:", error);
-        alert("An error occurred. Please try again.");
-      }
+      alert("An error occurred. Please try again.");
     }
   };
 
