@@ -107,6 +107,16 @@ function GroupStudyPage(){
             <div className="column">
                 <div className="user-list-container">
                     <h2 className="heading"> Study Room: </h2>
+                    <div className='utility-bar'>
+                    <button
+                        type="button"
+                        className={`music-button ${isActiveMusic ? 'active' : ''}`}
+                        onMouseDown={() => handleMouseDown('music')}
+                        onMouseUp={() => handleMouseUp('music')}
+                        onMouseLeave={() => handleMouseUp('music')}
+                    >M
+                   </button>
+                    </div>
                     <h3 className='gs-heading2'> Code: </h3>
                     <div className='users'>
                         {/*These are examples of how the user profiles are displayed. 
