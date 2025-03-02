@@ -128,6 +128,11 @@ label {
     cursor: pointer;
 }
 
+.checkbox:checked + label {
+    text-decoration: line-through;
+    opacity: 0.7; /* Slight fade effect */
+}
+
 .delete-button{
     min-width: 0;
     margin-right: 10px;
@@ -315,13 +320,14 @@ label {
     justify-content: center;
     justify-self: center;
     grid-area: code;
-    width: 100px;
+    width: auto;
     height: 70px;
     border-radius: 40px;
     background-color: #FFFFFF;
     font-family: 'Inter', sans-serif;
     margin-top: 2px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 0 10px;
 }
 
 .utility-bar{
@@ -335,7 +341,20 @@ label {
     background-color: white;
     margin-left: 7%;
     margin-top: 3%;
-    box-shadow: 0 4px 4px rgba(0,0,1,0); 
+    border: 0px solid #b0b0b0;
+}
+
+.utility-bar-2{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    grid-area: code;
+    width: 150px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: white;
+    margin-left: 68%;
+    margin-top: 3%;
 }
 
 .users {
@@ -417,7 +436,6 @@ label {
 
     padding: 15px 20px;
     height: 5%;
-    font-size: 20px;
     width: 10%;
     
     font-weight: 900;
@@ -427,7 +445,7 @@ label {
     border-radius: 20px;
     cursor: pointer;
     outline: none;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     transition: transform 0.1s, box-shadow 0.1s;
 }
 
@@ -441,27 +459,91 @@ label {
     display: flex;
     align-items: center; /* This will vertically center the text */
     justify-content: center; /* This will horizontally center the text */
-    margin-top: 10px;
+    margin-left: 5%;
 
-    padding: 15px 40px;
-    height: 20px;
-    font-size: 40px;
-    width: 10px;
+    padding: 15px 20px;
+    height: 5%;
+    font-size: 20px;
+    width: 10%;
     
     font-weight: 900;
     color: #FFFFFF;
-    background-color: #DFFAE1;  
+    background-color: #C8EECF;  
     border: none;
     border-radius: 20px;
     cursor: pointer;
     outline: none;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     transition: transform 0.1s, box-shadow 0.1s;
 }
 
 .customisation-button.active { /*changing the button's appearance when being clicked on*/
     transform: scale(0.95);
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.copy-button{
+    min-width: 0;
+    display: flex;
+    align-items: center; /* This will vertically center the text */
+    justify-content: center; /* This will horizontally center the text */
+
+    padding: 15px 20px;
+    height: 5%;
+    font-size: 20px;
+    width: 10%;
+    
+    font-weight: 900;
+    color: #FFFFFF;
+    background-color: #FFC107;  
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.copy-button.active { /*changing the button's appearance when being clicked on*/
+    transform: scale(0.95);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.exit-button{
+    min-width: 0;
+    display: flex;
+    align-items: center; /* This will vertically center the text */
+    justify-content: center; /* This will horizontally center the text */
+    margin-left: 5%;
+
+    padding: 15px 20px;
+    height: 5%;
+    font-size: 20px;
+    width: 10%;
+    
+    font-weight: 900;
+    color: #FFFFFF;
+    background-color: #D8BFD8;  
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.exit-button.active { /*changing the button's appearance when being clicked on*/
+    transform: scale(0.95);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.music-button:hover, .customisation-button:hover, .copy-button:hover, .exit-button:hover{
+    filter: grayscale(100%);
+}
+
+.exit-button img,  .copy-button img, .customisation-button img, .music-button img{
+    width: 20px;  
+    height: 20px;
 }
 
 .chatBox-container{
@@ -472,4 +554,102 @@ label {
     background-color: #FFFFFF;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     margin-bottom: 10%;
+}
+
+/* Tooltip styling using ::after */
+.music-button::after {
+    content: "Play Music";  /* The tooltip text */
+    visibility: hidden;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    text-align: center;
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+
+    /* Positioning */
+    position: absolute;
+    left: 50%;
+    top: 150%;
+    transform: translateX(-50%);
+    
+    /* Hidden by default */
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+/* Tooltip styling using ::after */
+.customisation-button::after {
+    content: "Customise";  /* The tooltip text */
+    visibility: hidden;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    text-align: center;
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+
+    /* Positioning */
+    position: absolute;
+    left: 50%;
+    top: 150%;
+    transform: translateX(-50%);
+    
+    /* Hidden by default */
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+/* Tooltip styling using ::after */
+.copy-button::after {
+    content: "Copy Code";  /* The tooltip text */
+    visibility: hidden;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    text-align: center;
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+
+    /* Positioning */
+    position: absolute;
+    left: 50%;
+    top: 150%;
+    transform: translateX(-50%);
+    
+    /* Hidden by default */
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.exit-button::after {
+    content: "Exit";  /* The tooltip text */
+    visibility: hidden;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    text-align: center;
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+
+    /* Positioning */
+    position: absolute;
+    left: 50%;
+    top: 150%;
+    transform: translateX(-50%);
+    
+    /* Hidden by default */
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+
+/* Show tooltip when hovering */
+.music-button:hover::after, .customisation-button:hover::after, .copy-button:hover::after, .exit-button:hover::after{
+    visibility: visible;
+    opacity: 1;
 }
