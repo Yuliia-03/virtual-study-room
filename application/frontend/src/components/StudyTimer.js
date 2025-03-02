@@ -403,6 +403,12 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
 
     return (
       <>
+        {/* Error message positioned at the top center */}
+        {errorMessage && (
+          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-black text-white p-2 rounded">
+            {errorMessage}
+          </div>
+        )}
         <div className="text-[#FFB5C5] text-2xl mt-8" style={{ fontFamily: '"Press Start 2P", monospace' }}>
           {isBreak ? 'Break Time!' : 'Lock in or else!'}
         </div>
@@ -426,15 +432,43 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
           <div className="flex gap-4 mx-4">
             <button 
               onClick={toggleTimer}
-              className="px-4 py-1 text-sm rounded-lg transition-colors duration-200"
-              style={{ backgroundColor: '#d1cbed', color: 'white', fontFamily: 'VT323, monospace' }}
+              style={{
+                backgroundColor: '#d1cbed',
+                color: 'white',
+                fontFamily: 'VT323, monospace',
+                padding: '0.5rem 1rem',
+                borderRadius: '0.375rem',
+                transition: 'background-color 0.3s, transform 0.3s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#8e99e3';
+                e.currentTarget.style.transform = 'scale(1.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#d1cbed';
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
             >
               {isPaused ? 'Resume' : 'Pause'}
             </button>
             <button 
               onClick={resetTimer}
-              className="px-4 py-1 text-sm rounded-lg transition-colors duration-200"
-              style={{ backgroundColor: '#d1cbed', color: 'white', fontFamily: 'VT323, monospace' }}
+              style={{
+                backgroundColor: '#d1cbed',
+                color: 'white',
+                fontFamily: 'VT323, monospace',
+                padding: '0.5rem 1rem',
+                borderRadius: '0.375rem',
+                transition: 'background-color 0.3s, transform 0.3s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#8e99e3';
+                e.currentTarget.style.transform = 'scale(1.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#d1cbed';
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
             >
               Reset
             </button>
@@ -776,15 +810,43 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                   <div className="flex gap-4 mx-4">
                     <button 
                       onClick={toggleTimer}
-                      className="px-4 py-1 text-sm rounded-lg transition-colors duration-200"
-                      style={{ backgroundColor: '#d1cbed', color: 'white', fontFamily: 'VT323, monospace' }}
+                      style={{
+                        backgroundColor: '#d1cbed',
+                        color: 'white',
+                        fontFamily: 'VT323, monospace',
+                        padding: '0.5rem 1rem',
+                        borderRadius: '0.375rem',
+                        transition: 'background-color 0.3s, transform 0.3s',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = '#8e99e3';
+                        e.currentTarget.style.transform = 'scale(1.05)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = '#d1cbed';
+                        e.currentTarget.style.transform = 'scale(1)';
+                      }}
                     >
                       {isPaused ? 'Resume' : 'Pause'}
                     </button>
                     <button 
                       onClick={resetTimer}
-                      className="px-4 py-1 text-sm rounded-lg transition-colors duration-200"
-                      style={{ backgroundColor: '#d1cbed', color: 'white', fontFamily: 'VT323, monospace' }}
+                      style={{
+                        backgroundColor: '#d1cbed',
+                        color: 'white',
+                        fontFamily: 'VT323, monospace',
+                        padding: '0.5rem 1rem',
+                        borderRadius: '0.375rem',
+                        transition: 'background-color 0.3s, transform 0.3s',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = '#8e99e3';
+                        e.currentTarget.style.transform = 'scale(1.05)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = '#d1cbed';
+                        e.currentTarget.style.transform = 'scale(1)';
+                      }}
                     >
                       Reset
                     </button>
