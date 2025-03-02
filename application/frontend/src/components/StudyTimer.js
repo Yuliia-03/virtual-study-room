@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import { getDatabase, ref, set, onValue } from 'firebase/database';
+import { database } from '../firebase-config';
 import 'tailwindcss';
 import '@fontsource/vt323';
 import '@fontsource/press-start-2p';
@@ -22,6 +23,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
   const [playSound, setPlaySound] = useState(true);
   const [studyTime, setStudyTime] = useState({ hours: 0, minutes: 25, seconds: 0 });
   const [breakTime, setBreakTime] = useState({ hours: 0, minutes: 5, seconds: 0 });
+  const [errorMessage, setErrorMessage] = useState('');
 
   const completionSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
 
@@ -57,8 +59,36 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
     setIsMinimized(false);
   };
 
+  const validateTimeInput = (time, type) => {
+    if (time.hours < 0 || time.hours > 99) {
+      setErrorMessage(`Invalid ${type} hours. Please enter a value between 0 and 99.`);
+      return false;
+    }
+    if (time.minutes < 0 || time.minutes > 59) {
+      setErrorMessage(`Invalid ${type} minutes. Please enter a value between 0 and 59.`);
+      return false;
+    }
+    if (time.seconds < 0 || time.seconds > 59) {
+      setErrorMessage(`Invalid ${type} seconds. Please enter a value between 0 and 59.`);
+      return false;
+    }
+    return true;
+  };
+
   const startTimer = () => {
-    // Convert hours, minutes, seconds to total seconds
+    if (!validateTimeInput(studyTime, 'study') || !validateTimeInput(breakTime, 'break')) {
+      return;
+    }
+
+    if (studyTime.hours === 0 && studyTime.minutes === 0 && studyTime.seconds === 0) {
+      setErrorMessage('Focus time input is empty.');
+      return;
+    }
+    if (breakTime.hours === 0 && breakTime.minutes === 0 && breakTime.seconds === 0) {
+      setErrorMessage('Break time input is empty.');
+      return;
+    }
+
     const totalStudySeconds = (
       studyTime.hours * 3600 + 
       studyTime.minutes * 60 + 
@@ -196,17 +226,28 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                 <input
                   type="number"
                   value={studyTime.hours}
-                  onChange={(e) => setStudyTime({...studyTime, hours: parseInt(e.target.value) || 0})}
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value) || 0;
+                    if (value >= 0 && value <= 99) {
+                      setStudyTime({...studyTime, hours: value});
+                    }
+                  }}
                   className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
                   style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                   min="0"
+                  max="99"
                   placeholder="HH"
                 />
                 <span style={{ color: '#d1cbed' }} className="self-center">:</span>
                 <input
                   type="number"
                   value={studyTime.minutes}
-                  onChange={(e) => setStudyTime({...studyTime, minutes: parseInt(e.target.value) || 0})}
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value) || 0;
+                    if (value >= 0 && value <= 59) {
+                      setStudyTime({...studyTime, minutes: value});
+                    }
+                  }}
                   className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
                   style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                   min="0"
@@ -217,7 +258,12 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                 <input
                   type="number"
                   value={studyTime.seconds}
-                  onChange={(e) => setStudyTime({...studyTime, seconds: parseInt(e.target.value) || 0})}
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value) || 0;
+                    if (value >= 0 && value <= 59) {
+                      setStudyTime({...studyTime, seconds: value});
+                    }
+                  }}
                   className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
                   style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                   min="0"
@@ -233,17 +279,28 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                 <input
                   type="number"
                   value={breakTime.hours}
-                  onChange={(e) => setBreakTime({...breakTime, hours: parseInt(e.target.value) || 0})}
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value) || 0;
+                    if (value >= 0 && value <= 99) {
+                      setBreakTime({...breakTime, hours: value});
+                    }
+                  }}
                   className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
                   style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                   min="0"
+                  max="99"
                   placeholder="HH"
                 />
                 <span style={{ color: '#d1cbed' }} className="self-center">:</span>
                 <input
                   type="number"
                   value={breakTime.minutes}
-                  onChange={(e) => setBreakTime({...breakTime, minutes: parseInt(e.target.value) || 0})}
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value) || 0;
+                    if (value >= 0 && value <= 59) {
+                      setBreakTime({...breakTime, minutes: value});
+                    }
+                  }}
                   className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
                   style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                   min="0"
@@ -254,7 +311,12 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                 <input
                   type="number"
                   value={breakTime.seconds}
-                  onChange={(e) => setBreakTime({...breakTime, seconds: parseInt(e.target.value) || 0})}
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value) || 0;
+                    if (value >= 0 && value <= 59) {
+                      setBreakTime({...breakTime, seconds: value});
+                    }
+                  }}
                   className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
                   style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                   min="0"
@@ -353,19 +415,30 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
           Round {currentRound}/{rounds}
         </div>
 
-        <div className="flex justify-between gap-2.5 mt-2.5">
+        <div className="flex justify-center items-center mb-4 px-4">
           <button 
-            onClick={toggleTimer}
-            className="flex-1 bg-[#E6E6FA] border border-[#FFB5C5] rounded px-4 py-1.5 text-gray-600 text-sm hover:bg-[#FFB5C5] hover:text-white cursor-pointer"
+            onClick={handleBack}
+            className="hover:text-[#bac6f1] transition-colors duration-200"
+            style={{ fontFamily: 'VT323, monospace', fontSize: '24px', color: '#d1cbed' }}
           >
-            {isPaused ? 'Resume' : 'Pause'}
+            ⬅
           </button>
-          <button 
-            onClick={resetTimer}
-            className="flex-1 bg-[#E6E6FA] border border-[#FFB5C5] rounded px-4 py-1.5 text-gray-600 text-sm hover:bg-[#FFB5C5] hover:text-white cursor-pointer"
-          >
-            Reset
-          </button>
+          <div className="flex gap-4 mx-4">
+            <button 
+              onClick={toggleTimer}
+              className="px-4 py-1 text-sm rounded-lg transition-colors duration-200"
+              style={{ backgroundColor: '#d1cbed', color: 'white', fontFamily: 'VT323, monospace' }}
+            >
+              {isPaused ? 'Resume' : 'Pause'}
+            </button>
+            <button 
+              onClick={resetTimer}
+              className="px-4 py-1 text-sm rounded-lg transition-colors duration-200"
+              style={{ backgroundColor: '#d1cbed', color: 'white', fontFamily: 'VT323, monospace' }}
+            >
+              Reset
+            </button>
+          </div>
         </div>
       </>
     );
@@ -382,14 +455,18 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
     return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const unsubscribe = onValue(ref(getDatabase(), `rooms/${roomId}/timer`), (snapshot) => {
-    const data = snapshot.val();
-    if (!data && isHost) {
-      // Initialise data if it doesn't exist
-    } else if (data) {
-      // Update local state with Firebase data
-    }
-  });
+  useEffect(() => {
+    const unsubscribe = onValue(ref(database, `rooms/${roomId}/timer`), (snapshot) => {
+      const data = snapshot.val();
+      if (!data && isHost) {
+        // Initialise data if it doesn't exist
+      } else if (data) {
+        // Update local state with Firebase data
+      }
+    });
+
+    return () => unsubscribe(); // Clean up the listener on unmount
+  }, [roomId, isHost]);
 
   const toggleTimer = () => {
     setIsPaused(!isPaused);
@@ -418,8 +495,18 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
     setIsBreak(false);
   };
 
+  const clearError = () => {
+    setErrorMessage('');
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center">
+      {errorMessage && (
+        <div className="absolute top-10 bg-red-500 text-white p-4 rounded">
+          {errorMessage}
+          <button onClick={clearError} className="ml-4 text-black">X</button>
+        </div>
+      )}
       <div 
         style={{ 
           position: 'absolute',
@@ -435,11 +522,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
           WebkitFilter: 'drop-shadow(0 0 40px rgba(186, 198, 241, 0.4))'
         }}
         className="timer-handle"
-        onMouseDown={(e) => {
-          if (e.target.classList.contains('timer-handle')) {
-            onMouseDown(e);
-          }
-        }}
+        onMouseDown={onMouseDown}
       >
         {currentPage === 'completed' ? (
           <div className="p-4 w-80 h-[500px] flex flex-col bg-[#F0F3FC] timer-handle">
@@ -487,17 +570,28 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                     <input
                       type="number"
                       value={studyTime.hours}
-                      onChange={(e) => setStudyTime({...studyTime, hours: parseInt(e.target.value) || 0})}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value) || 0;
+                        if (value >= 0 && value <= 99) {
+                          setStudyTime({...studyTime, hours: value});
+                        }
+                      }}
                       className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
                       style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                       min="0"
+                      max="99"
                       placeholder="HH"
                     />
                     <span style={{ color: '#d1cbed' }} className="self-center">:</span>
                     <input
                       type="number"
                       value={studyTime.minutes}
-                      onChange={(e) => setStudyTime({...studyTime, minutes: parseInt(e.target.value) || 0})}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value) || 0;
+                        if (value >= 0 && value <= 59) {
+                          setStudyTime({...studyTime, minutes: value});
+                        }
+                      }}
                       className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
                       style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                       min="0"
@@ -508,7 +602,12 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                     <input
                       type="number"
                       value={studyTime.seconds}
-                      onChange={(e) => setStudyTime({...studyTime, seconds: parseInt(e.target.value) || 0})}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value) || 0;
+                        if (value >= 0 && value <= 59) {
+                          setStudyTime({...studyTime, seconds: value});
+                        }
+                      }}
                       className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
                       style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                       min="0"
@@ -524,17 +623,28 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                     <input
                       type="number"
                       value={breakTime.hours}
-                      onChange={(e) => setBreakTime({...breakTime, hours: parseInt(e.target.value) || 0})}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value) || 0;
+                        if (value >= 0 && value <= 99) {
+                          setBreakTime({...breakTime, hours: value});
+                        }
+                      }}
                       className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
                       style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                       min="0"
+                      max="99"
                       placeholder="HH"
                     />
                     <span style={{ color: '#d1cbed' }} className="self-center">:</span>
                     <input
                       type="number"
                       value={breakTime.minutes}
-                      onChange={(e) => setBreakTime({...breakTime, minutes: parseInt(e.target.value) || 0})}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value) || 0;
+                        if (value >= 0 && value <= 59) {
+                          setBreakTime({...breakTime, minutes: value});
+                        }
+                      }}
                       className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
                       style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                       min="0"
@@ -545,7 +655,12 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                     <input
                       type="number"
                       value={breakTime.seconds}
-                      onChange={(e) => setBreakTime({...breakTime, seconds: parseInt(e.target.value) || 0})}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value) || 0;
+                        if (value >= 0 && value <= 59) {
+                          setBreakTime({...breakTime, seconds: value});
+                        }
+                      }}
                       className="w-16 h-10 text-center border-2 rounded-lg focus:outline-none"
                       style={{ borderColor: '#d1cbed', color: '#b2b2b2', fontFamily: '"Press Start 2P", monospace' }}
                       min="0"
@@ -649,8 +764,8 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
 
               <div className="flex-grow"></div>
 
-              <div className="w-full flex flex-col gap-4 mb-4">
-                <div className="flex justify-between items-center">
+              <div className="flex flex-col items-center">
+                <div className="flex justify-center items-center mb-4 px-4">
                   <button 
                     onClick={handleBack}
                     className="hover:text-[#bac6f1] transition-colors duration-200"
@@ -658,7 +773,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                   >
                     ⬅
                   </button>
-                  <div className="flex gap-4">
+                  <div className="flex gap-4 mx-4">
                     <button 
                       onClick={toggleTimer}
                       className="px-4 py-1 text-sm rounded-lg transition-colors duration-200"

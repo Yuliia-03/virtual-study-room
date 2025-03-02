@@ -1,46 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { getImageUrl } from '../utils/uploadImages';
+import React from 'react';
+// Import avatar images from assets
+import avatar1 from '../assets/avatars/avatar_1.png';
+import avatar2 from '../assets/avatars/avatar_2.png';
+import avatar3 from '../assets/avatars/avatar_3.png';
+import avatar4 from '../assets/avatars/avatar_4.png';
+import avatar5 from '../assets/avatars/avatar_5.png';
+import avatar6 from '../assets/avatars/avatar_6.png';
+import avatar7 from '../assets/avatars/avatar_7.png';
+import avatar8 from '../assets/avatars/avatar_8.png';
 
-const UserAvatar = ({ userId, onSelect, currentAvatar }) => {
-  const [avatarUrls, setAvatarUrls] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const loadAvatars = async () => {
-      try {
-        const urls = [];
-        const promises = Array.from({ length: 12 }, (_, i) => 
-          getImageUrl('avatars', `avatar_${i + 1}.png`)
-        );
-        
-        const loadedUrls = await Promise.all(promises);
-        setAvatarUrls(loadedUrls);
-      } catch (err) {
-        setError(err);
-        console.error('Error loading avatars:', err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadAvatars();
-  }, []);
+const UserAvatar = ({ onSelect, currentAvatar }) => {
+  const avatarUrls = [
+    avatar1, avatar2, avatar3, avatar4,
+    avatar5, avatar6, avatar7, avatar8,
+  ];
 
   const handleSelect = (url) => {
     if (onSelect) {
       onSelect(url);
     }
   };
-
-  const handleKeyDown = (event, url) => {
-    if (event.key === 'Enter' && onSelect) {
-      onSelect(url);
-    }
-  };
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading avatars</div>;
 
   return (
     <div data-testid="avatar-grid" style={{ width: '440px' }}>
@@ -57,14 +36,12 @@ const UserAvatar = ({ userId, onSelect, currentAvatar }) => {
               src={url}
               alt={`Avatar ${rowIndex * 4 + colIndex + 1}`}
               onClick={() => handleSelect(url)}
-              onKeyDown={(e) => handleKeyDown(e, url)}
-              tabIndex={0}
               style={{
                 width: '100px',
                 height: '100px',
                 margin: '5px',
                 cursor: 'pointer',
-                border: url === currentAvatar ? '2px solid blue' : '1px solid gray'
+                border: url === currentAvatar ? '2px solid #f2bac9' : '1px solid #bad7f5'
               }}
             />
           ))}

@@ -1,11 +1,11 @@
 from django.db import models
-from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 
 '''
 Custom User Model & Manager. Extends AbstractBaseUser to create custom User model
 
 Primary key     :   user_id (Auto-incremented)
-Required fields :   firstname, lastname, email, username, password
+Required fields :   firstname, lastname, email, username, password, description
 
 WHEN USING: 
     -   settings.AUTH_USER_MODEL for models OR
@@ -17,7 +17,7 @@ class UserManager(BaseUserManager):
       """
       Custom User Manager to handle user creation
       """
-      def create_user(self, email, firstname, lastname, username, password, **extra_fields):
+      def create_user(self, email, firstname, lastname, username, password, description, **extra_fields):
             """
             Create and save a user
             """
@@ -33,13 +33,14 @@ class UserManager(BaseUserManager):
                 raise ValueError("Password must be set")
             
             email = self.normalize_email(email) #Normalises email by lowercasing the domain part
-            user = self.model(email=email, username=username, firstname=firstname, lastname=lastname, **extra_fields)
+            user = self.model(email=email, username=username, firstname=firstname, lastname=lastname, description=description, **extra_fields)
             user.set_password(password)         #Automatically hashes password before saving
             user.save(using=self._db)
             return user
     
-class User(AbstractBaseUser):
-    user_id = models.AutoField(primary_key=True)
+
+class User(AbstractBaseUser, PermissionsMixin):
+    #user_id = models.AutoField(primary_key=True)
     firstname = models.CharField(max_length=50)
     lastname = models.CharField(max_length=50)
     email = models.EmailField(max_length=100, unique=True)
@@ -47,6 +48,10 @@ class User(AbstractBaseUser):
     created_at = models.DateTimeField(auto_now_add=True)
     hours_studied = models.IntegerField(default=0)
     streaks = models.IntegerField(default=0)
+    description = models.TextField(blank=True, default="")  #Text field that can be blank
+    total_sessions = models.IntegerField(default=0)
+    #profile_id = models.CharField(max_length=255, blank=True, null=True)  #For Firebase storage reference for image - if still needed
+
 
     is_active = models.BooleanField(default=True)   #Allows users to be disabled if needed
     
