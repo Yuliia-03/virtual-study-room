@@ -11,6 +11,13 @@
     overflow: hidden;
 }
 
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Prevents scrolling */
+}
+
 .column {
     flex: 1; 
     margin: 15px; 
@@ -338,10 +345,9 @@ label {
     width: 150px;
     height: 40px;
     border-radius: 10px;
-    background-color: white;
+    background-color: #FFFEF8;
     margin-left: 7%;
     margin-top: 3%;
-    border: 0px solid #b0b0b0;
 }
 
 .utility-bar-2{
@@ -352,7 +358,7 @@ label {
     width: 150px;
     height: 40px;
     border-radius: 10px;
-    background-color: white;
+    background-color: #FFFEF8;
     margin-left: 68%;
     margin-top: 3%;
 }
@@ -412,12 +418,21 @@ label {
 }
 
 .timer-container{
-    height: 251px;
+    height: 500px;
     width: 320px;
     border-radius: 40px;
     background-color: #FFFFFF;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    flex-direction: column;
+}
+
+.chatBox-container{
+    margin: auto;
+    height: 300px;
+    width: 320px;
+    border-radius: 40px;
+    background-color: #FFFFFF;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin-bottom: 10%;
 }
 
 .custom-container{
@@ -544,16 +559,6 @@ label {
 .exit-button img,  .copy-button img, .customisation-button img, .music-button img{
     width: 20px;  
     height: 20px;
-}
-
-.chatBox-container{
-    margin-top: 50%;
-    height: 291px;
-    width: 320px;
-    border-radius: 40px;
-    background-color: #FFFFFF;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    margin-bottom: 10%;
 }
 
 /* Tooltip styling using ::after */

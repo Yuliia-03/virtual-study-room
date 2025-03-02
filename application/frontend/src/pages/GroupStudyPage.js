@@ -121,45 +121,45 @@ function GroupStudyPage(){
                 <div className="user-list-container">
                     <h2 className="heading"> Study Room: </h2>
                     <div className='utility-bar'>
-                            <button
-                                type="button"
-                                className={`music-button ${isActiveMusic ? 'active' : ''}`}
-                                onMouseDown={() => handleMouseDown('music')}
-                                onMouseUp={() => handleMouseUp('music')}
-                                onMouseLeave={() => handleMouseUp('music')}
-                            >
-                                <img src={musicLogo} alt="Music" />
-                            </button>
-                   <button
-                        type="button"
-                        className={`customisation-button ${isActiveCustom ? 'active' : ''}`}
-                        onMouseDown={() => handleMouseDown('custom')}
-                        onMouseUp={() => handleMouseUp('custom')}
-                        onMouseLeave={() => handleMouseUp('custom')}
-                    >
-                        <img src={customLogo} alt="Customisation" />
-                    </button>
+                        <button
+                            type="button"
+                            className={`music-button ${isActiveMusic ? 'active' : ''}`}
+                            onMouseDown={() => handleMouseDown('music')}
+                            onMouseUp={() => handleMouseUp('music')}
+                            onMouseLeave={() => handleMouseUp('music')}
+                        >
+                            <img src={musicLogo} alt="Music" />
+                        </button>
+                        <button
+                            type="button"
+                            className={`customisation-button ${isActiveCustom ? 'active' : ''}`}
+                            onMouseDown={() => handleMouseDown('custom')}
+                            onMouseUp={() => handleMouseUp('custom')}
+                            onMouseLeave={() => handleMouseUp('custom')}
+                        >
+                            <img src={customLogo} alt="Customisation" />
+                        </button>
                     </div>
                     <h3 className='gs-heading2'> Code: a2654h </h3>
                     <div className='utility-bar-2'>
-                    <button
-                        type="button"
-                        className={`copy-button ${isActiveCopy ? 'active' : ''}`}
-                        onMouseDown={() => handleMouseDown('copy')}
-                        onMouseUp={() => handleMouseUp('copy')}
-                        onMouseLeave={() => handleMouseUp('copy')}
-                    >
-                        <img src={copyLogo} alt="Copy" />
-                    </button>
-                    <button
-                        type="button"
-                        className={`exit-button ${isActiveExit ? 'active' : ''}`}
-                        onMouseDown={() => handleMouseDown('exit')}
-                        onMouseUp={() => handleMouseUp('exit')}
-                        onMouseLeave={() => handleMouseUp('exit')}
-                    >
-                        <img src={exitLogo} alt="Exit" />
-                    </button>
+                        <button
+                            type="button"
+                            className={`copy-button ${isActiveCopy ? 'active' : ''}`}
+                            onMouseDown={() => handleMouseDown('copy')}
+                            onMouseUp={() => handleMouseUp('copy')}
+                            onMouseLeave={() => handleMouseUp('copy')}
+                        >
+                            <img src={copyLogo} alt="Copy" />
+                        </button>
+                        <button
+                            type="button"
+                            className={`exit-button ${isActiveExit ? 'active' : ''}`}
+                            onMouseDown={() => handleMouseDown('exit')}
+                            onMouseUp={() => handleMouseUp('exit')}
+                            onMouseLeave={() => handleMouseUp('exit')}
+                        >
+                            <img src={exitLogo} alt="Exit" />
+                        </button>
                     </div>
                     <div className='users'>
                         {/*These are examples of how the user profiles are displayed. 
@@ -197,26 +197,6 @@ function GroupStudyPage(){
             {/*3rd Column */}
             <div className="column">
                 <div className="timer-container">Timer</div>
-                {/* 
-                <div className="custom-container">
-                    <button
-                        type="button"
-                        className={`music-button ${isActiveMusic ? 'active' : ''}`}
-                        onMouseDown={() => handleMouseDown('music')}
-                        onMouseUp={() => handleMouseUp('music')}
-                        onMouseLeave={() => handleMouseUp('music')}
-                    >Music
-                    </button>
-                    <button
-                        type="button"
-                        className={`customisation-button ${isActiveCustom ? 'active' : ''}`}
-                        onMouseDown={() => handleMouseDown('custom')}
-                        onMouseUp={() => handleMouseUp('custom')}
-                        onMouseLeave={() => handleMouseUp('custom')}
-                    >Customisation
-                    </button>
-                </div>
-                */}
                 <div className="chatBox-container">Chat Box</div>
             </div>
         </div>
