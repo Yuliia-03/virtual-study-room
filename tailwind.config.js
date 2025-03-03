@@ -5,6 +5,12 @@ module.exports = {
   ],
   theme: {
     extend: {
+      backgroundColor: ['hover'],
+      safelist: [
+        'hover:bg-[#8e99e3]',
+        'hover:scale-105',
+      ],
+      scale: ['hover'],
       fontFamily: {
         'press-start': ['"Press Start 2P"', 'cursive'],
       },
