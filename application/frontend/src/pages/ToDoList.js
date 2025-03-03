@@ -7,15 +7,12 @@ import AddListModal from "./CreateNewList";
 const ToDoList = () => {
     const [lists, setLists] = useState([]);
     const [loading, setLoading] = useState(true);
-
     const [addTaskWindow, setAddTaskWindow] = useState(false);
     const [selectedListId, setSelectedListId] = useState(null);
-
-
     const [addListWindow, setAddListWindow] = useState(false);
+    const [isFullScreen, setIsFullScreen] = useState(false);
 
     useEffect(() => {
-
         const fetchData = async () => {
             try {
                 const data = await getAuthenticatedRequest("/todolists/false/");
@@ -26,23 +23,23 @@ const ToDoList = () => {
                 setLoading(false);
             }
         };
-
         fetchData();
     }, []);
-
 
     const toggleTaskCompletion = async (taskId) => {
         try {
             const response = await getAuthenticatedRequest(`/update_task/${taskId}/`, "PATCH");
-
             if (response.status === 0) {
                 console.error("Error updating task status");
             } else {
-                setLists(prevLists => prevLists.map(list => ({
-                    ...list,
-                    tasks: list.tasks.map(task => task.id === taskId ? { ...task, is_completed: !task.is_completed } : task)
-                })));
-                console.log("Task status updated successfully");
+                setLists(prevLists =>
+                    prevLists.map(list => ({
+                        ...list,
+                        tasks: list.tasks.map(task =>
+                            task.id === taskId ? { ...task, is_completed: !task.is_completed } : task
+                        )
+                    }))
+                );
             }
         } catch (error) {
             console.error("Error fetching to-do lists:", error);
@@ -74,16 +71,13 @@ const ToDoList = () => {
     };
 
     const handleAddTask = (listId) => {
-        console.log("Opening Add Task Modal for list ID:", listId);  // Check if this log appears in the console
-
-        setSelectedListId(listId); // Set the selected list id
-        setAddTaskWindow(true); // Open the modal
+        setSelectedListId(listId);
+        setAddTaskWindow(true);
     };
 
     const handleAddList = () => {
-        setAddListWindow(true); // Open the modal
+        setAddListWindow(true);
     };
-    const [isFullScreen, setIsFullScreen] = useState(false);
 
     const toggleFullScreen = () => {
         setIsFullScreen(!isFullScreen);
@@ -92,15 +86,23 @@ const ToDoList = () => {
     if (loading) return <div>Loading To-Do Lists...</div>;
 
     return (
-        <div className="todo-container">
+        <div className={isFullScreen ? "todo-container full-screen" : "todo-container"}>
             <div className="todo-header">
                 <h3>To-Do Lists</h3>
                 <div className="header-buttons">
-                    <button onClick={() => handleAddList()} className="btn btn-success btn-sm">
+                    <button onClick={handleAddList} className="btn btn-success btn-sm">
                         <i className="bi bi-plus-circle"></i>
                     </button>
                     <button onClick={toggleFullScreen} className="full-screen-btn">
-                        <i className="bi bi-arrows-fullscreen"></i> View All
+                        {isFullScreen ? (
+                            <>
+                                <i className="bi bi-box-arrow-in-down"></i> Exit View
+                            </>
+                        ) : (
+                            <>
+                                <i className="bi bi-arrows-fullscreen"></i> View All
+                            </>
+                        )}
                     </button>
                 </div>
             </div>
@@ -108,14 +110,12 @@ const ToDoList = () => {
             <div className="todo-list">
                 {lists.map((list) => (
                     <div className="todo-card" key={list.id}>
-                        {/* Buttons for Add Task and Delete List */}
                         <div className="todo-card-header">
                             <button onClick={() => handleAddTask(list.id)} className="btn btn-success btn-sm">
                                 <i className="bi bi-plus-circle"></i>
                             </button>
-                            
-                            <button onClick={() =>  handleDeleteList(list.id)} className="btn btn-danger btn-sm">
-                                <i className="bi bi-trash"></i> {/* Trash Icon from Bootstrap Icons */}
+                            <button onClick={() => handleDeleteList(list.id)} className="btn btn-danger btn-sm">
+                                <i className="bi bi-trash"></i>
                             </button>
                         </div>
 
@@ -139,7 +139,6 @@ const ToDoList = () => {
                         </ul>
                     </div>
                 ))}
-
             </div>
             <AddTaskModal
                 addTaskWindow={addTaskWindow}
@@ -147,17 +146,13 @@ const ToDoList = () => {
                 listId={selectedListId}
                 setLists={setLists}
             />
-
-
             <AddListModal
                 addListWindow={addListWindow}
                 setAddListWindow={setAddListWindow}
                 setLists={setLists}
             />
         </div>
-        
     );
-
 };
 
 export default ToDoList;

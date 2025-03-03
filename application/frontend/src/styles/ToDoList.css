@@ -1,37 +1,86 @@
+
+
 /* To-Do List Container */
 .todo-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    max-width: 50%;
+    max-width: 30%;
+    width: 100%;
     height: 100%;
-    padding: 15px;
+    padding: 0.5%;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: all 0.3s ease-in-out;
 }
-
+/* Full-Screen Mode */
 .todo-container.full-screen {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
+    max-height: 100%;
     z-index: 999;
     background: white;
     padding: 20px;
-    overflow: auto;
+    overflow-y: auto;
+    /* ✅ Allow vertical scrolling */
+    overflow-x: hidden;
+    /* Prevents horizontal scrolling */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    max-width: 100% !important;
 }
+
+/* Full-Screen List Layout */
+.todo-container.full-screen .todo-list {
+    width: 90%;
+    /* Ensures lists stay inside the screen */
+    height: auto;
+    /* Allow height to adjust */
+    max-height: calc(100vh - 100px);
+    /* ✅ Adjust height dynamically to allow vertical scroll */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    /* Centers the lists */
+    overflow-y: auto;
+    /* ✅ Enable vertical scrolling */
+}
+
+/* Full-Screen List Card */
+.todo-container.full-screen .todo-card {
+    width: 30%;
+    min-width: 300px;
+    max-width: 400px;
+    flex-shrink: 0;
+}
+
+/* ✅ Add vertical scroll to container if needed */
+.todo-container.full-screen::-webkit-scrollbar {
+    width: 5px;
+}
+
+.todo-container.full-screen::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 5px;
+}
+
 /* Header Container */
 .todo-header {
     display: flex;
     justify-content: space-between;
-    /* Puts space between h3 and button */
     align-items: center;
-    width: 100%;
+    width: 90%;
+    /* ✅ Reduce width to keep buttons visible */
+    margin: 0 auto;
+    /* ✅ Center the header */
     margin-bottom: 10px;
 }
 
@@ -43,6 +92,11 @@
 }
 
 /* Add List Button */
+.header-buttons {
+    display: flex;
+    gap: 10px;
+}
+
 .todo-header button {
     padding: 8px 12px;
     font-size: 14px;
@@ -62,6 +116,7 @@
     /* Space between lists */
     width: 100%;
     height: 100%;
+    max-height: 50%;
     /* Leaves space for header */
     overflow-x: auto;
     /* Horizontal scroll if too many lists */
@@ -75,7 +130,9 @@
     border: 1px solid #ddd;
     border-radius: 6px;
     padding: 10px;
-    width: 250px;
+    width: 300px;
+    min-height: 60%;
+    max-height: 60%;
     /* Set a fixed width for each list */
     min-width: 250px;
     /* Prevent shrinking */
@@ -95,7 +152,7 @@
 
 /* Tasks Container (Scrollable if Needed) */
 .todo-card ul {
-    max-height: 300px;
+    max-height: 400px;
     /* Limits the height of tasks */
     overflow-y: auto;
     /* Vertical scroll if too many tasks */
@@ -155,3 +212,4 @@
 .todo-card ul::-webkit-scrollbar-thumb:hover {
     background: #999;
 }
+
