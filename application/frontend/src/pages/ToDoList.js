@@ -83,16 +83,28 @@ const ToDoList = () => {
     const handleAddList = () => {
         setAddListWindow(true); // Open the modal
     };
+    const [isFullScreen, setIsFullScreen] = useState(false);
 
+    const toggleFullScreen = () => {
+        setIsFullScreen(!isFullScreen);
+    };
 
     if (loading) return <div>Loading To-Do Lists...</div>;
 
     return (
         <div className="todo-container">
-            <h3>To-Do Lists</h3>
-            <button onClick={() => handleAddList()} className="btn btn-success btn-sm">
-                <i className="bi bi-plus-circle"></i> {/* Plus Icon from Bootstrap Icons */}
-            </button>
+            <div className="todo-header">
+                <h3>To-Do Lists</h3>
+                <div className="header-buttons">
+                    <button onClick={() => handleAddList()} className="btn btn-success btn-sm">
+                        <i className="bi bi-plus-circle"></i>
+                    </button>
+                    <button onClick={toggleFullScreen} className="full-screen-btn">
+                        <i className="bi bi-arrows-fullscreen"></i> View All
+                    </button>
+                </div>
+            </div>
+
             <div className="todo-list">
                 {lists.map((list) => (
                     <div className="todo-card" key={list.id}>

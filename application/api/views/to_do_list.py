@@ -93,7 +93,6 @@ class ViewToDoList(APIView):
         except Exception as e:
             return Response({"error": "Invalid request", "details": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-
     def create_task(self, request):
         try:
             print("Creating list ...")

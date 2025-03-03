@@ -2,7 +2,7 @@ from rest_framework.test import APIClient
 from rest_framework import status
 from rest_framework.test import APITestCase
 from api.models import User, List, Permission, toDoList
-
+from random import choice
 
 class ListViewTestCase(APITestCase):
     fixtures = ['api/tests/fixtures/default_user.json',
@@ -34,3 +34,25 @@ class ListViewTestCase(APITestCase):
         self.assertEqual(list_data['id'], self.todo_list.id)
         self.assertEqual(list_data['name'], self.todo_list.name)
         self.assertEqual(list_data['is_shared'], self.todo_list.is_shared)
+
+    def test_delete_list_(self):
+        """Test if the API correctly delete lists"""
+        list_to_delete = choice(List.objects.all())
+        id = list_to_delete.pk
+
+        response = self.client.delete(f'/api/delete_list/{id}/')
+
+        print("\nDEBUG: Response status code ->", response.status_code)
+        print("DEBUG: Response content ->", response.data)
+
+        is_deleted = List.objects.filter(pk=id).exists()
+
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(is_deleted, False)
+
+        '''list_data = response.data[0]
+        self.assertEqual(list_data['id'], self.todo_list.id)
+        self.assertEqual(list_data['name'], self.todo_list.name)
+        self.assertEqual(list_data['is_shared'], self.todo_list.is_shared)'''

@@ -25,4 +25,4 @@ class Permission(models.Model):
         unique_together = ('user_id', 'list_id')  # Ensures a user can't have duplicate permissions for the same list
 
     def __str__(self):
-        return f"{self.user_id} - {self.list_id} - {self.permission_type}"
+        return f"{self.user_id} - {self.list_id}"

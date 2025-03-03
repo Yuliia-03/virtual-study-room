@@ -4,8 +4,7 @@
         "pk": 1,
         "fields": {
             "user_id": 1,
-            "list_id": 1,
-            "permission_type": "read"
+            "list_id": 1
         }
     },
     {
@@ -13,8 +12,7 @@
         "pk": 2,
         "fields": {
             "user_id": 1,
-            "list_id": 2,
-            "permission_type": "write"
+            "list_id": 2
         }
     },
     {
@@ -22,8 +20,7 @@
         "pk": 3,
         "fields": {
             "user_id": 1,
-            "list_id": 3,
-            "permission_type": "read"
+            "list_id": 3
         }
     },
     {
@@ -31,8 +28,7 @@
         "pk": 4,
         "fields": {
             "user_id": 2,
-            "list_id": 4,
-            "permission_type": "write"
+            "list_id": 4
         }
     }
 ]
