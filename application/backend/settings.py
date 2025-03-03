@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'api.apps.ApplicationConfig',
     'django_seed',
     'corsheaders',
+    'daphne',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -69,6 +71,7 @@ REST_FRAMEWORK = {
 
 ROOT_URLCONF = 'backend.urls'
 
+CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React frontend
 ]
