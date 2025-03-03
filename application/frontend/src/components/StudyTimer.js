@@ -202,7 +202,19 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                   setIsRunning(false);
                 }}
                 className="w-full px-4 py-2 text-white rounded-lg transition-colors duration-200 text-sm"
-                style={{ backgroundColor: '#d1cbed', fontFamily: '"Press Start 2P", monospace' }}
+                style={{ 
+                  backgroundColor: '#d1cbed', 
+                  fontFamily: '"Press Start 2P", monospace',
+                  transition: 'background-color 0.3s, transform 0.3s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#8e99e3';
+                  e.currentTarget.style.transform = 'scale(1.05)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#d1cbed';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
               >
                 Start New Session
               </button>
@@ -392,7 +404,19 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
             <button
               onClick={startTimer}
               className="w-full mt-2 px-4 py-2 text-white rounded-lg transition-colors duration-200 text-sm"
-              style={{ backgroundColor: '#d1cbed', fontFamily: '"Press Start 2P", monospace' }}
+              style={{ 
+                backgroundColor: '#d1cbed', 
+                fontFamily: '"Press Start 2P", monospace',
+                transition: 'background-color 0.3s, transform 0.3s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#8e99e3';
+                e.currentTarget.style.transform = 'scale(1.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#d1cbed';
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
             >
               Start Timer
             </button>
@@ -403,12 +427,6 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
 
     return (
       <>
-        {/* Error message positioned at the top center */}
-        {errorMessage && (
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-black text-white p-2 rounded">
-            {errorMessage}
-          </div>
-        )}
         <div className="text-[#FFB5C5] text-2xl mt-8" style={{ fontFamily: '"Press Start 2P", monospace' }}>
           {isBreak ? 'Break Time!' : 'Lock in or else!'}
         </div>
@@ -533,14 +551,66 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
     setErrorMessage('');
   };
 
+  // Add this useEffect to automatically clear errors
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage('');
+      }, 3000); // 3 seconds
+      
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
+
+  // Update the animation for better visibility
+  const errorMessageAnimation = `
+    @keyframes dissolveIn {
+      0% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  `;
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center">
+    <div className="fixed inset-0 flex items-center justify-center" style={{ pointerEvents: 'none' }}>
+      <style>{errorMessageAnimation}</style>
+      {/* Error message positioned ABOVE the timer */}
       {errorMessage && (
-        <div className="absolute top-10 bg-red-500 text-white p-4 rounded">
-          {errorMessage}
-          <button onClick={clearError} className="ml-4 text-black">X</button>
+        <div 
+          className="fixed p-3 z-50 flex items-center justify-center"
+          style={{ 
+            backgroundColor: '#e2e8ff',
+            borderBottom: '2px solid rgba(209, 203, 237, 0.5)',
+            borderRadius: '8px',
+            boxShadow: '0 2px 8px rgba(186, 198, 241, 0.2)',
+            width: '300px',
+            animation: 'dissolveIn 0.3s ease-out forwards',
+            top: `${position.y - 50}px`,
+            left: `${position.x}px`,  // Start from the left edge of the timer
+            transform: 'translateX(10px)',  // Slight adjustment for better centering
+            pointerEvents: 'auto',
+            margin: '0 auto',  // Auto margins for horizontal centering
+            right: 'auto',
+            marginLeft: '10px',  // Slight adjustment to center relative to timer
+          }}
+        >
+          <span 
+            style={{ 
+              color: '#99a8c7', 
+              fontFamily: 'VT323, monospace',
+              fontSize: '18px'
+            }}
+          >
+            {errorMessage}
+          </span>
         </div>
       )}
+      
       <div 
         style={{ 
           position: 'absolute',
@@ -553,9 +623,10 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
           filter: 'blur(0.3px)',
           outline: '4px solid rgba(186, 198, 241, 0.3)',
           outlineOffset: '4px',
-          WebkitFilter: 'drop-shadow(0 0 40px rgba(186, 198, 241, 0.4))'
+          WebkitFilter: 'drop-shadow(0 0 40px rgba(186, 198, 241, 0.4))',
+          pointerEvents: 'auto'
         }}
-        className="timer-handle"
+        className="timer-handle relative"
         onMouseDown={onMouseDown}
       >
         {currentPage === 'completed' ? (
@@ -579,7 +650,19 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                     setIsRunning(false);
                   }}
                   className="w-full px-4 py-2 text-white rounded-lg transition-colors duration-200 text-sm"
-                  style={{ backgroundColor: '#d1cbed', fontFamily: '"Press Start 2P", monospace' }}
+                  style={{ 
+                    backgroundColor: '#d1cbed', 
+                    fontFamily: '"Press Start 2P", monospace',
+                    transition: 'background-color 0.3s, transform 0.3s',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#8e99e3';
+                    e.currentTarget.style.transform = 'scale(1.05)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#d1cbed';
+                    e.currentTarget.style.transform = 'scale(1)';
+                  }}
                 >
                   Start New Session
                 </button>
@@ -770,7 +853,19 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                 <button
                   onClick={startTimer}
                   className="w-full mt-2 px-4 py-2 text-white rounded-lg transition-colors duration-200 text-sm"
-                  style={{ backgroundColor: '#d1cbed', fontFamily: '"Press Start 2P", monospace' }}
+                  style={{ 
+                    backgroundColor: '#d1cbed', 
+                    fontFamily: '"Press Start 2P", monospace',
+                    transition: 'background-color 0.3s, transform 0.3s',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#8e99e3';
+                    e.currentTarget.style.transform = 'scale(1.05)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#d1cbed';
+                    e.currentTarget.style.transform = 'scale(1)';
+                  }}
                 >
                   Start Timer
                 </button>
@@ -779,8 +874,31 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
           </div>
         ) : (
           <div className="p-4 w-80 h-[500px] flex flex-col bg-[#F0F3FC] timer-handle">
-            <div className="timer-handle mb-6 px-8 mt-2">
+            <div className="timer-handle mb-6 px-8 mt-2 flex justify-between items-center">
               <h1 className="text-2xl" style={{ color: '#b2b2b2', fontFamily: 'VT323, monospace' }}>Study Timer</h1>
+              <button 
+                onClick={handleBack}
+                className="transition-colors duration-200"
+                style={{ 
+                  fontFamily: 'VT323, monospace', 
+                  fontSize: '24px', 
+                  color: '#d1cbed',
+                  marginRight: '-8px',
+                  padding: '0.5rem',
+                  borderRadius: '0.375rem',
+                  transition: 'background-color 0.3s, transform 0.3s, color 0.3s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#8e99e3';
+                  e.currentTarget.style.transform = 'scale(1.05)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = '#d1cbed';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+              >
+                ⬅
+              </button>
             </div>
             
             <div className="flex-grow flex flex-col items-center px-8">
@@ -798,59 +916,50 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
 
               <div className="flex-grow"></div>
 
-              <div className="flex flex-col items-center">
-                <div className="flex justify-center items-center mb-4 px-4">
+              <div className="flex justify-center w-full mb-4">
+                <div className="flex gap-4">
                   <button 
-                    onClick={handleBack}
-                    className="hover:text-[#bac6f1] transition-colors duration-200"
-                    style={{ fontFamily: 'VT323, monospace', fontSize: '24px', color: '#d1cbed' }}
+                    onClick={toggleTimer}
+                    style={{
+                      backgroundColor: '#d1cbed',
+                      color: 'white',
+                      fontFamily: 'VT323, monospace',
+                      padding: '0.5rem 1rem',
+                      borderRadius: '0.375rem',
+                      transition: 'background-color 0.3s, transform 0.3s',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#8e99e3';
+                      e.currentTarget.style.transform = 'scale(1.05)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '#d1cbed';
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
                   >
-                    ⬅
+                    {isPaused ? 'Resume' : 'Pause'}
                   </button>
-                  <div className="flex gap-4 mx-4">
-                    <button 
-                      onClick={toggleTimer}
-                      style={{
-                        backgroundColor: '#d1cbed',
-                        color: 'white',
-                        fontFamily: 'VT323, monospace',
-                        padding: '0.5rem 1rem',
-                        borderRadius: '0.375rem',
-                        transition: 'background-color 0.3s, transform 0.3s',
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#8e99e3';
-                        e.currentTarget.style.transform = 'scale(1.05)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = '#d1cbed';
-                        e.currentTarget.style.transform = 'scale(1)';
-                      }}
-                    >
-                      {isPaused ? 'Resume' : 'Pause'}
-                    </button>
-                    <button 
-                      onClick={resetTimer}
-                      style={{
-                        backgroundColor: '#d1cbed',
-                        color: 'white',
-                        fontFamily: 'VT323, monospace',
-                        padding: '0.5rem 1rem',
-                        borderRadius: '0.375rem',
-                        transition: 'background-color 0.3s, transform 0.3s',
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#8e99e3';
-                        e.currentTarget.style.transform = 'scale(1.05)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = '#d1cbed';
-                        e.currentTarget.style.transform = 'scale(1)';
-                      }}
-                    >
-                      Reset
-                    </button>
-                  </div>
+                  <button 
+                    onClick={resetTimer}
+                    style={{
+                      backgroundColor: '#d1cbed',
+                      color: 'white',
+                      fontFamily: 'VT323, monospace',
+                      padding: '0.5rem 1rem',
+                      borderRadius: '0.375rem',
+                      transition: 'background-color 0.3s, transform 0.3s',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#8e99e3';
+                      e.currentTarget.style.transform = 'scale(1.05)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '#d1cbed';
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                  >
+                    Reset
+                  </button>
                 </div>
               </div>
             </div>
