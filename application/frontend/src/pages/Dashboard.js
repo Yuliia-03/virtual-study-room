@@ -14,9 +14,7 @@ function Dashboard() {
             {/* Left panel - main panel - right panel*/}
             <div class = "dashboard-content">
                 <div class = "dashboard-left-panel">
-                    <div class="dashboard-panel">
-                        <Analytics />
-                    </div>
+                    <Analytics />
                     <div class="dashboard-panel">Calendar</div>
                     <div class="dashboard-panel">Invites</div>
                 </div>
