@@ -24,6 +24,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from api import views
 
 from api.views.analytics import get_analytics
+from api.views.groupStudyRoom import create_room, join_room
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -37,6 +38,6 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/motivational-message/', views.motivationalMessage, name='motivation'),
-    path('api/create-room/', views.create_room),
-    path('api/join-room/', views.join_room),
+    path('api/create-room/', create_room),
+    path('api/join-room/', join_room),
 ] 

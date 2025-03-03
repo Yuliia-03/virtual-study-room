@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import "../styles/GroupStudyPage.css";
 
 function GroupStudyPage(){
@@ -6,6 +6,35 @@ function GroupStudyPage(){
     const [isActiveAddMore, setIsActiveAddMore] = useState(false); //initialise both variables: isActive and setIsActive to false
     const [isActiveMusic, setIsActiveMusic] = useState(false);
     const [isActiveCustom, setIsActiveCustom] = useState(false);
+
+    // for websockets
+    const [socket, setSocket] = useState(null);
+    const [messages, setMessages] = useState([]);
+    const [input, setInput] = useState("");
+
+    useEffect(() => {
+        const ws = new WebSocket('ws://localhost:8000/ws/room/${room_id}/');
+
+        ws.onopen = () => console.log("Connected to Websocket");
+        ws.onmessage - (event) => {
+            const data = JSON.parse(event.data);
+            setMessages((prev) => [...prev, data.message]);
+        };
+
+        ws.onclose = () console.log("Disconnected from Websocket");
+
+        setSocket(ws);
+
+        return () => ws.close(0;)
+    }, [room_id]);
+
+    const sendMessage = () => {
+        if (socket && input.trim()) {
+            socket.send(JSON.stringify({ message: input }));
+            setInput("");
+        }
+    };
+    // end of websockets stuff
 
     const handleMouseDown = (btnType) => {
         //when the button is pressed then the variable setIsActive is set to True
@@ -104,8 +133,10 @@ function GroupStudyPage(){
             {/*2nd Column */}
             <div className="column">
                 <div className="user-list-container">
-                    <h2 className="heading"> Study Room: </h2>
-                    <h3 className='gs-heading2'> Code: </h3>
+                    <h2 className="heading"> Study Room: {</h2>
+                    <h3 className='gs-heading2'> Code: {room_id}</h3>
+                    {/* Debugging messages */}}
+                    {messages.map((msg, index) => <p key={index}>{msg}</p>)}
                     <div className='users'>
                         {/*These are examples of how the user profiles are displayed. 
                         user-image has the white circle, user-name is for the name at the bottom of the user. Can be changed, this is just an example.*/}
@@ -158,6 +189,10 @@ function GroupStudyPage(){
                         onMouseLeave={() => handleMouseUp('custom')}
                         >Customisation
                     </button>
+
+                    <input value={input} onChange={(e) => setInput(e.target.value)} />
+                    <button onClick={sendMessage}>Send</button>
+
                 </div>
                 <div className="chatBox-container">Chat Box</div>
             </div>
