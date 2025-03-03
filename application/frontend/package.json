@@ -56,12 +56,15 @@
     "web-vitals": "^4.2.4",
     "webpack": "^5.64.4",
     "webpack-manifest-plugin": "^4.0.2",
-    "workbox-webpack-plugin": "^6.4.1"
+    "workbox-webpack-plugin": "^6.4.1",
+    "wrangler": "^3.111.0"
   },
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "preview" : "npm run build && wrangler dev",
+    "deploy" : "npm run build && wrangler deploy"
   },
   "eslintConfig": {
     "extends": [

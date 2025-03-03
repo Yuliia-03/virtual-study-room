@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
+from django.core.validators import RegexValidator
 
 '''
 Custom User Model & Manager. Extends AbstractBaseUser to create custom User model
@@ -41,14 +42,20 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     #user_id = models.AutoField(primary_key=True)
-    firstname = models.CharField(max_length=50)
-    lastname = models.CharField(max_length=50)
-    email = models.EmailField(max_length=100, unique=True)
-    username = models.CharField(max_length=50, unique=True)
+    firstname = models.CharField(max_length=50, blank=False)
+    lastname = models.CharField(max_length=50, blank=False)
+    email = models.EmailField(max_length=100, unique=True, blank=False)
+    username = models.CharField(max_length=30,
+        unique=True,
+        validators=[RegexValidator(
+            regex=r'^@\w{3,}$',
+            message='Username must consist of @ followed by at least three alphanumericals'
+        )])
     created_at = models.DateTimeField(auto_now_add=True)
     hours_studied = models.IntegerField(default=0)
     streaks = models.IntegerField(default=0)
     description = models.TextField(blank=True, default="")  #Text field that can be blank
+    total_sessions = models.IntegerField(default=0)
     #profile_id = models.CharField(max_length=255, blank=True, null=True)  #For Firebase storage reference for image - if still needed
 
 
@@ -60,3 +67,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.username
+
+    def full_name(self):
+        """Return a string containing the user's full name."""
+
+        return f'{self.firstname} {self.lastname}'
