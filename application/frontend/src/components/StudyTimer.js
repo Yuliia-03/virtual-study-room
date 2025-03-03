@@ -525,7 +525,6 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
   };
 
   const resetTimer = () => {
-    // Convert hours, minutes, seconds to total seconds
     const totalStudySeconds = (
       studyTime.hours * 3600 + 
       studyTime.minutes * 60 + 
@@ -551,7 +550,6 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
     setErrorMessage('');
   };
 
-  // Add this useEffect to automatically clear errors
   useEffect(() => {
     if (errorMessage) {
       const timer = setTimeout(() => {
@@ -562,7 +560,6 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
     }
   }, [errorMessage]);
 
-  // Update the animation for better visibility
   const errorMessageAnimation = `
     @keyframes dissolveIn {
       0% {
@@ -579,7 +576,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center" style={{ pointerEvents: 'none' }}>
       <style>{errorMessageAnimation}</style>
-      {/* Error message positioned ABOVE the timer */}
+      {/* Error message positioned abovethe timer */}
       {errorMessage && (
         <div 
           className="fixed p-3 z-50 flex items-center justify-center"
@@ -591,12 +588,12 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
             width: '300px',
             animation: 'dissolveIn 0.3s ease-out forwards',
             top: `${position.y - 50}px`,
-            left: `${position.x}px`,  // Start from the left edge of the timer
-            transform: 'translateX(10px)',  // Slight adjustment for better centering
+            left: `${position.x}px`,  
+            transform: 'translateX(10px)',  
             pointerEvents: 'auto',
-            margin: '0 auto',  // Auto margins for horizontal centering
+            margin: '0 auto',  
             right: 'auto',
-            marginLeft: '10px',  // Slight adjustment to center relative to timer
+            marginLeft: '10px',  
           }}
         >
           <span 

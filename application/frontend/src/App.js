@@ -8,7 +8,6 @@ import GroupStudyPage from './pages/GroupStudyPage';
 import Analytics from './pages/Analytics';
 import UserProfile from "./components/UserProfile";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import StudyRoomTest from './components/StudyRoomTest';
 import MotivationalMessage from "./pages/Motivation";
 //import ToDoList from './pages/ToDoList';
 
@@ -26,7 +25,6 @@ function App() {
         <Route path="/analytics/:username" element={<Analytics />} />
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/timer-test" element={<StudyRoomTest />} />
       </Routes>
     </Router>
   );
