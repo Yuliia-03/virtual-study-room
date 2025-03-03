@@ -9,6 +9,7 @@ class StudySession(models.Model):
     # user that creates the study session
     createdBy = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'study_session')
     sessionName = models.CharField(max_length=255, blank=False)
+    # Aamukta - auto generated Study Session ID will be used as the room code
     startTime = models.TimeField(default=now)
     endTime = models.TimeField()
     date = models.DateField(default=datetime.date.today)

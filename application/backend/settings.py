@@ -69,6 +69,13 @@ REST_FRAMEWORK = {
     )
 }
 
+ASGI_APPLICATION = "backend.asgi.application"
+CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer", # when we deploy change to redis?
+        }
+}
+
 ROOT_URLCONF = 'backend.urls'
 
 CORS_ALLOW_CREDENTIALS = True
