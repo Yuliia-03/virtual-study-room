@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import "../styles/GroupStudyPage.css";
-import StudyTimer from '../components/StudyTimer';
 
 function GroupStudyPage(){
 
@@ -140,7 +139,26 @@ function GroupStudyPage(){
             </div>
             {/*3rd Column */}
             <div className="column">
-                <StudyTimer roomId="yourRoomId" isHost={true} onClose={() => console.log('Timer closed')} />
+                <div className="timer-container">Timer</div>
+                <div className="custom-container">
+                    {/*This is the button for music and customisation, needs functionality */}
+                    <button
+                        type="button"
+                        className={`music-button ${isActiveMusic ? 'active' : ''}`}
+                        onMouseDown={() => handleMouseDown('music')}
+                        onMouseUp={() => handleMouseUp('music')}
+                        onMouseLeave={() => handleMouseUp('music')}
+                        >Music
+                    </button>
+                    <button
+                        type="button"
+                        className={`customisation-button ${isActiveCustom ? 'active' : ''}`}
+                        onMouseDown={() => handleMouseDown('custom')}
+                        onMouseUp={() => handleMouseUp('custom')}
+                        onMouseLeave={() => handleMouseUp('custom')}
+                        >Customisation
+                    </button>
+                </div>
                 <div className="chatBox-container">Chat Box</div>
             </div>
         </div>
