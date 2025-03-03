@@ -3,22 +3,25 @@
     background: white;
     padding: 2rem;
     border-radius: 1rem;
-    width: 400px;
+    width: 300px;
+    max-height: 500px;
+    height: fit-content;
     margin: auto;
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .analytics-box h2 {
-    font-size: 1.5rem;
+    font-size: 1rem;
     font-weight: bold;
     color: #1a1a1a;
     margin-bottom: 1.5rem;
+    margin-top: -1rem;
 }
 
 .stats {
     display: flex;
     justify-content: space-around;
-    margin: 2rem 0;
+    margin: -1rem 0;
     gap: 2rem;
 }
 
@@ -52,7 +55,7 @@
 }
 
 .share {
-    margin-top: 2rem;
+    margin-top: 1rem;
 }
 
 .share p {

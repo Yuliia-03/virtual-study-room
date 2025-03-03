@@ -190,9 +190,7 @@ function GroupStudyPage(){
                         </div>
                     </div>
                 </div>
-                <div className="motivationMessage-container">
-                    <MotivationalMessage />
-                </div>
+                <MotivationalMessage />
             </div>
             {/*3rd Column */}
             <div className="column">
