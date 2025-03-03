@@ -7,7 +7,7 @@ function Dashboard() {
         <div className="some-page-wrapper">
 
             {/* First Column - 30% Width */}
-            <div className="column">
+            <div className="">
                 <div><ToDoList /></div>
             </div>
 
