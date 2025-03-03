@@ -5,6 +5,8 @@ import { BrowserRouter } from "react-router-dom";
 import axios from "axios"; // Import axios
 import { cleanup } from "@testing-library/react";
 
+//npx jest --coverage
+
 jest.mock("axios", () => ({
   get: jest.fn(() => Promise.resolve({ data: {} })),
   post: jest.fn(() => Promise.resolve({ data: {} })),
@@ -100,7 +102,7 @@ describe("SignUpForm", () => {
 
     fireEvent.change(firstname, { target: { value: "John" } });
     fireEvent.change(lastname, { target: { value: "Doe" } });
-    fireEvent.change(username, { target: { value: "johndoe" } });
+    fireEvent.change(username, { target: { value: "@john789" } });
     fireEvent.change(email, { target: { value: "johndoe@gmail.com" } });
     fireEvent.change(password1, { target: { value: "Qa1" } });
     fireEvent.change(password2, { target: { value: "Qa1" } });
@@ -204,7 +206,7 @@ describe("SignUpForm", () => {
   });
 
   test("shows message if password do not match", async () => {
-    submitFormSuccessfully();
+    fillAndSubmitForm(true);
 
     axios.post.mockRejectedValueOnce({
       response: {

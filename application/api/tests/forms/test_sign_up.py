@@ -13,7 +13,7 @@ class SignUpFormTestCase(TestCase):
             "firstname": "Alice",
             "lastname": "Smith",
             "email": "alice@example.com",
-            "username": "alice123",
+            "username": "@alice123",
             "new_password": "Password123",
             "password_confirmation": "Password123",
             "created_at": "2025-01-01T12:00:00Z"
@@ -77,7 +77,7 @@ class SignUpFormTestCase(TestCase):
         user = User.objects.get(email='alice@example.com')
         self.assertEqual(user.firstname, 'Alice')
         self.assertEqual(user.lastname, 'Smith')
-        self.assertEqual(user.username, 'alice123')
+        self.assertEqual(user.username, '@alice123')
         is_password_correct = check_password('Password123', user.password)
         self.assertTrue(is_password_correct)
 
@@ -85,7 +85,7 @@ class SignUpFormTestCase(TestCase):
         form_data1 = {
             'firstname': 'Name1',
             'lastname': 'Surname1',
-            'username': 'username1',
+            'username': '@username1',
             'email': 'email@example.org',
             'new_password': 'Password123',
             'password_confirmation': 'Password123'
@@ -97,7 +97,7 @@ class SignUpFormTestCase(TestCase):
         form_data2 = {
             'firstname': 'Name2',
             'lastname': 'Surname2',
-            'username': 'username2',
+            'username': '@username2',
             'email': 'email@example.org',
             'new_password': 'Password123',
             'password_confirmation': 'Password123'
@@ -112,7 +112,7 @@ class SignUpFormTestCase(TestCase):
         form_data1 = {
             'firstname': 'Name1',
             'lastname': 'Surname1',
-            'username': 'username',
+            'username': '@username',
             'email': 'email1@example.org',
             'new_password': 'Password123',
             'password_confirmation': 'Password123'
@@ -124,7 +124,7 @@ class SignUpFormTestCase(TestCase):
         form_data2 = {
             'firstname': 'Name2',
             'lastname': 'Surname2',
-            'username': 'username',
+            'username': '@username',
             'email': 'email2@example.org',
             'new_password': 'Password123',
             'password_confirmation': 'Password123'

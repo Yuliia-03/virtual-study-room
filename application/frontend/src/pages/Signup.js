@@ -121,7 +121,8 @@ function Signup() {
     }
 
     try {
-      if (validate()) {
+      const isValid = await validate();
+      if (isValid) {
         const response = await axios.post(
           "http://127.0.0.1:8000/api/signup/",
           formData,
@@ -130,7 +131,7 @@ function Signup() {
           }
         );
         alert(response.data.message);
-        navigate("/login");
+        navigate("/dashboard");
       }
     } catch (error) {
       alert("An error occurred. Please try again.");
