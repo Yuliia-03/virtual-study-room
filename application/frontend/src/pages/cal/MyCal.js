@@ -1,37 +1,78 @@
-// MyCal.js
-import React, { useRef } from 'react';
+import { React, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
+import timeGridPlugin from '@fullcalendar/timegrid';
+//import '../styles/calendar.css'; // One directory up
+//import ".../styles/calendar.css";
 
 const MyCal = ({ myEvents }) => {
-    const calendarRef = useRef(null);
+    // Get today's date (without time)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-    // Handle dropping an event onto the calendar
-    const handleEventReceive = (info) => {
-        const task = JSON.parse(info.draggedEl.getAttribute('data-task'));
-        const newEvent = {
-            ...task,
-            start: info.dateStr,
-            allDay: true,
+    // State to hold the selected event for the popup
+    const [selectedEvent, setSelectedEvent] = useState(null);
+
+    // Process events to set colors dynamically
+    const processedEvents = myEvents.map(event => {
+        const eventDate = new Date(event.start); // Assuming `start` holds the date
+        eventDate.setHours(0, 0, 0, 0); // Normalize to ignore time differences
+
+        let backgroundColor = '#BAD7F2'; // Future events (Red)
+        if (eventDate < today) {
+            backgroundColor = '#F2BAC9'; // Past events (Green)
+        } else if (eventDate.getTime() === today.getTime()) {
+            backgroundColor =  '#B0F2B4'; // Today's events (Yellow)
+        }
+
+        return {
+            ...event,
+            backgroundColor,
+            borderColor: backgroundColor,
+            textColor: 'black', // Set text color explicitly
+            classNames: ['rounded-event'],
         };
+    });
 
-        console.log('Event dropped:', newEvent);
-        // Here, you could make an API call to update the event's start date in your backend
+    // Event click handler to open popup
+    const handleEventClick = (info) => {
+        setSelectedEvent(info.event); // Store the clicked event in state
+    };
+
+    // Close the popup
+    const closePopup = () => {
+        setSelectedEvent(null); // Reset the event
     };
 
     return (
-        <FullCalendar
-            ref={calendarRef}
-            plugins={[dayGridPlugin, interactionPlugin]}
-            initialView="dayGridMonth"
-            editable={true}
-            droppable={true}
-            events={myEvents}
-            eventReceive={handleEventReceive}
-        />
+        <div className = "calendar">
+            {/* FullCalendar Component */}
+            <FullCalendar
+                plugins={[dayGridPlugin, timeGridPlugin]}
+                initialView="timeGridWeek"
+                events={processedEvents}
+                headerToolbar={{
+                    left: 'prev,today,next',
+                    center: 'title',
+                    right: 'timeGridWeek,dayGridMonth,dayGridYear',
+                }}
+                eventClick={handleEventClick} // Handle event click
+            />
+
+            {/* Event Popup */}
+            {selectedEvent && (
+                <div className="event-popup">
+                    <div className="popup-content">
+                        <h2>Event Details</h2>
+                        <p><strong>Title:</strong> {selectedEvent.title}</p>
+                        <p><strong>Start:</strong> {selectedEvent.start.toLocaleString()}</p>
+                        <p><strong>End:</strong> {selectedEvent.end ? selectedEvent.end.toLocaleString() : 'N/A'}</p>
+                        <p><strong>Description:</strong> {selectedEvent.extendedProps.description || 'No description available'}</p>
+                        <button onClick={closePopup}>Close</button>
+                    </div>
+                </div>
+            )}
+        </div>
     );
 };
-
 export default MyCal;
-
