@@ -10,9 +10,9 @@ from api.models import Friends, User, Status, toDoList, Permission, Motivational
 
 import pytz
 from faker import Faker
-import datetime
 from django.utils.timezone import now
 from random import choice, randint, sample
+from datetime import datetime, timedelta, date
 
 '''
 For a default users we can simply create a json file and upload the data (have a look on tests/fixtures) 
@@ -134,7 +134,7 @@ class Command(BaseCommand):
         hoursStudied = randint(0, 8760)     # assuming that the hoursStudied reset every year
         streaks = randint(0, 365)            # assuming the streaks reset every year
         description = Faker().text(max_nb_chars=200)
-        totalSessions = randint(0, 100)
+        totalSessions = randint(1, 100)
 
         self.try_create_user({'firstName': firstName, 'lastName' : lastName, 'email': email, 'username': username, 'hoursStudied': hoursStudied, 'streaks': streaks, 'description': description, 'totalSessions': totalSessions})
 
@@ -282,8 +282,16 @@ class Command(BaseCommand):
         user = choice(User.objects.all())
         session_name = self.faker.sentence(nb_words=4)
         start_time = now()
-        end_time = start_time + datetime.timedelta(hours=randint(1,5))
-        session_date = datetime.date.today()
+
+        # Decide if session has ended or is ongoing
+        is_ongoing = randint(0, 1)  # 50% chance of session being ongoing
+        if is_ongoing:
+            end_time = None  # Session is still ongoing
+        else:
+            # Session has ended
+            end_time = start_time + timedelta(hours=randint(1, 5))
+
+        session_date = date.today()
 
         try:
             StudySession.objects.create(
@@ -324,13 +332,34 @@ class Command(BaseCommand):
         print("Study Session Users seeding complete!")
 
     def create_session_user(self, user, session):
+        joined_at_time = now()
+    
+        if session.endTime is None:
+            # Session is ongoing
+            has_left = randint(0, 1)  # 50% chance user has left
+            
+            if has_left:
+                # User left sometime after 1 or 2 hrs
+                left_at_time = joined_at_time + timedelta(hours=randint(1,2))
+            else:
+                # User is still in the session
+                left_at_time = None
+        else:
+            # Session has ended, so all users must have left
+            # User left sometime between joining and session end
+            end_time = session.endTime
+
+            max_duration = (end_time - joined_at_time).total_seconds()
+            random_duration = randint(60, int(max_duration)) if max_duration > 60 else 60
+            left_at_time = joined_at_time + timedelta(seconds=random_duration)
         try:
             SessionUser.objects.create(
                 user=user,
                 session=session,
                 status=choice(['FOCUSED', 'CASUAL']),
                 focus_target=self.faker.sentence(nb_words=6) if randint(0, 1) else None,
-                joined_at=now()
+                joined_at= joined_at_time,
+                left_at = left_at_time
             )
         except Exception as e:
             print(f"Failed to create session user: {e}")

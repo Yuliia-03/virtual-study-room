@@ -31,7 +31,6 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='index.html')),
     path('api/signup/', views.SignUpView.as_view(), name='signup'),
     path("api/analytics/", get_analytics, name="analytics"),  # Default for logged-in user
-    path("api/analytics/<str:username>/", get_analytics, name="analytics_by_user"),  # Fetch by username
     path('api/login/', views.login, name='login'),
     
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
