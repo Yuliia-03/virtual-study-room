@@ -37,7 +37,7 @@ function Login() {
             alert("Login successful!");
             navigate('/dashboard');  // Redirect to dashboard after login
         } catch (error) {
-            if (error.response) {
+            if (error.response && error.response.data && error.response.data.error) {
                 alert(error.response.data.error);
             } else {
                 alert("An error occurred. Please try again.");
@@ -54,7 +54,7 @@ function Login() {
 
             {error && <p className="error-message">{error}</p>} {/* Show error if login fails */}
 
-            <label className="username-text">Username:</label>
+            <label className="username-text">Email:</label>
             <input
             type="text"
             name="email"

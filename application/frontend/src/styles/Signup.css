@@ -1,129 +1,142 @@
 .signup-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #F6F0F0;
-    min-height: 100vh;
-    width: 100vw;
-    flex-direction: column;
-    padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f6f0f0;
+  min-height: 100vh;
+  width: 100vw;
+  flex-direction: column;
+  padding: 20px;
 }
 
 .heading1 {
-    border: 3px solid #F2BAC9;
-    padding: 15px;
-    text-align: center;
-    font-family: 'Impact', sans-serif;
-    font-size: 48px;
-    background-color: #F2BAC9;
-    width: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    box-sizing: border-box;
-    z-index: 1000;
+  border: 3px solid #f2bac9;
+  padding: 15px;
+  text-align: center;
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 48px;
+  background-color: #f2bac9;
+  color: white;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  z-index: 1000;
 }
 
 .signup-form {
-    border: 5px solid #FFE7AC;
-    width: 450px;
-    padding: 20px;
-    border-radius: 20px;
-    background-color: #FFE7AC;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-    margin-top: 200px;
-    margin-bottom: 100px;
-}
-
-.signup-form {
-    width: 500px;
-    padding: 35px;
-    height: 850px;
+  border: 5px solid #ffe7ac;
+  width: 450px;
+  padding: 20px;
+  border-radius: 20px;
+  background-color: #ffe7ac;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 200px;
+  margin-bottom: 100px;
 }
 
 .heading2 {
-    text-align: center;
-    font-size: 26px;
-    font-family: 'Impact', sans-serif;
-    margin-bottom: 20px;
+  text-align: center;
+  font-size: 26px;
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  margin-bottom: 20px;
 }
 
 .label-text {
     width: 90%;
     text-align: left;
     font-size: 18px;
-    font-weight: bold;
-    margin-top: 20px;
-    font-family: 'Arial', sans-serif;
+    font-weight: 500;
+    margin-top: 10px;
+    font-family: 'Inter', sans-serif;
+    color:black;
 }
 
 .input-field {
-    width: 90%;
-    padding: 12px;
-    margin-top: 5px;margin-bottom: 15px;
-    border: 2px solid #ddd;
-    border-radius: 25px;
-    text-align: left;
-    background-color: white;
-    outline: none;
-    font-size: 16px;
+  width: 90%;
+  padding: 12px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border: 2px solid #ddd;
+  border-radius: 25px;
+  text-align: left;
+  background-color: white;
+  outline: none;
+  font-size: 16px;
 }
 
 .username-field:focus,
 .password-field:focus {
-    border-color: #F2BAC9;
-    box-shadow: 0 0 5px rgba(242, 186, 201, 0.5);
+  border-color: #f2bac9;
+  box-shadow: 0 0 5px rgba(242, 186, 201, 0.5);
 }
 
 .submit-button {
-    margin-top: 20px;
-    padding: 12px 20px;
-    width: 50%;
-    border: none;
-    border-radius: 25px;
-    background-color: #F2BAC9;
-    color: black;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    font-family: 'Arial', sans-serif;
-    transition: 0.3s ease-in-out;
+  margin-top: 20px;
+  padding: 12px 20px;
+  width: 50%;
+  border: none;
+  border-radius: 25px;
+  background-color: #f2bac9;
+  color: black;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: "Inter", sans-serif;
+  transition: 0.3s ease-in-out;
 }
 
 .submit-button:hover {
-    background-color: #f28ca6;
-    color: white;
+  background-color: #f28ca6;
+  color: white;
 }
 
 .checkbox-container {
-    display: flex;
-    align-items: center;
-    margin-top: 15px;
-    margin-bottom: 15px;
-    font-size: 14px;
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  font-size: 14px;
 }
 
 .checkbox-container input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    margin-right: 10px;
-    cursor: pointer;
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+  cursor: pointer;
 }
 
 .checkbox-label {
-    font-family: 'Arial', sans-serif;
-    font-size: 14px;
-    cursor: pointer;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
 }
 
 .checkbox-label a {
-    color: #007bff;
-    text-decoration: none;
+  color: #007bff;
+  text-decoration: none;
 }
 
 .checkbox-label a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
+}
+
+.error-message {
+  font-size: 12px;
+  color: red;
+  text-align: center;
+}
+
+.field {
+  width: 90%;
+  gap: 0;
+  margin-top: 5px;
+  margin-bottom: 15px;
 }
