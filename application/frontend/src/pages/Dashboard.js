@@ -26,7 +26,7 @@ function Dashboard() {
                 </div>
                 <div class = "dashboard-right-panel">
                     <div class="dashboard-panel">Generate Group Study Room</div>
-                    <ToDoList/>
+                    <div class="dashboard-panel"><ToDoList/></div>
                 </div>
             </div>
 
