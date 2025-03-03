@@ -130,7 +130,7 @@ function Signup() {
           }
         );
         alert(response.data.message);
-        navigate("/dashboard");
+        navigate("/login");
       }
     } catch (error) {
       alert("An error occurred. Please try again.");
