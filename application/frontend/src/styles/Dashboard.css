@@ -1,3 +1,4 @@
+
 .dashboard-container{
     /* Flex to store components in the dashboard */
     display: flex;
@@ -94,6 +95,7 @@
 }
 .dashboard-right-panel .dashboard-panel:last-child {
    height: 400px; /* Set a larger height for the to do list panel */
+    width: 400px;
    color: red;
 }
 /*There is a minimum size, after which it cannot get any smaller because as of now*/
@@ -101,3 +103,4 @@
    height: 40px; /* Set a larger height for the invites panel*/
    color: purple;
 }
+
