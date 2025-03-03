@@ -11,6 +11,7 @@ const ToDoList = () => {
     const [selectedListId, setSelectedListId] = useState(null);
     const [addListWindow, setAddListWindow] = useState(false);
     const [isFullScreen, setIsFullScreen] = useState(false);
+    const [expandedTasks, setExpandedTasks] = useState({}); // Tracks expanded tasks
 
     useEffect(() => {
         const fetchData = async () => {
@@ -83,6 +84,13 @@ const ToDoList = () => {
         setIsFullScreen(!isFullScreen);
     };
 
+    const toggleTaskDetails = (taskId) => {
+        setExpandedTasks((prev) => ({
+            ...prev,
+            [taskId]: !prev[taskId], // Toggle state for the specific task
+        }));
+    };
+
     if (loading) return <div>Loading To-Do Lists...</div>;
 
     return (
@@ -122,24 +130,53 @@ const ToDoList = () => {
                         <h4>{list.name}</h4>
                         <ul>
                             {list.tasks.map((task) => (
-                                <li key={task.id} className="task-item">
-                                    <input
-                                        type="checkbox"
-                                        checked={task.is_completed}
-                                        onChange={() => toggleTaskCompletion(task.id)}
-                                    />
-                                    <span className={task.is_completed ? "completed" : ""}>
-                                        {task.title}
-                                    </span>
+                                <li key={task.id} className="task">
+                                    <div className="task-item">
+                                        <input
+                                            type="checkbox"
+                                            checked={task.is_completed}
+                                            onChange={() => toggleTaskCompletion(task.id)}
+                                        />
+                                        <span className={task.is_completed ? "completed" : ""}>
+                                            {task.title}
+                                        </span>
+                                        <div className="task-item-buttons">
+
+                                            
+
+                                    {/* Delete Task Button */}
                                     <button onClick={() => handleDeleteTask(task.id)} className="btn btn-danger btn-sm">
                                         <i className="bi bi-trash"></i>
                                     </button>
+                                    {/* Expand/Collapse Button for Task Details */}
+                                    <button onClick={() => toggleTaskDetails(task.id)} className="btn btn-info btn-sm">
+                                        {expandedTasks[task.id] ? (
+                                            <>
+                                                <i className="bi bi-chevron-up"></i> Hide Details
+                                            </>
+                                        ) : (
+                                            <>
+                                                <i className="bi bi-chevron-down"></i> Show Details
+                                            </>
+                                        )}
+                                    </button>
+                                        </div>
+                                    </div>
+
+                                {/* Task Details (Only visible when expanded) */}
+                                {expandedTasks[task.id] && (
+                                    <div className="task-details">
+                                        <p><strong>Description:</strong> {task.content || "No details available"}</p>
+                                        {/*<p><strong>Due Date:</strong> {task.date || "Not set"}</p>*/}
+                                    </div>
+                                )}
                                 </li>
                             ))}
                         </ul>
                     </div>
                 ))}
             </div>
+
             <AddTaskModal
                 addTaskWindow={addTaskWindow}
                 setAddTaskWindow={setAddTaskWindow}

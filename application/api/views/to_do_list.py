@@ -38,6 +38,7 @@ class ViewToDoList(APIView):
                         "title": task.title,
                         "content": task.content,
                         "is_completed": task.is_completed,
+                        "creation_date": task.creation_date
                     }
                     for task in tasks
                 ]
@@ -114,6 +115,7 @@ class ViewToDoList(APIView):
                     "title": task.title,
                     "content": task.content,
                     "is_completed": task.is_completed,
+                    "creation_date": task.creation_date
                 }
                 return Response(response_data, status=status.HTTP_200_OK)
 
