@@ -84,10 +84,6 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
       setErrorMessage('Focus time input is empty.');
       return;
     }
-    if (breakTime.hours === 0 && breakTime.minutes === 0 && breakTime.seconds === 0) {
-      setErrorMessage('Break time input is empty.');
-      return;
-    }
 
     const totalStudySeconds = (
       studyTime.hours * 3600 + 
