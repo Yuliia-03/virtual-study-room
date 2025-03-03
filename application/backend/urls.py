@@ -22,7 +22,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from api import views
-from api.views.profile_view import get_logged_in_user, save_description, get_user_badges
 
 from api.views.analytics import get_analytics
 
@@ -48,7 +47,5 @@ urlpatterns = [
 
     path('api/motivational-message/', views.motivationalMessage, name='motivation'),
     path('api/check-email/', views.checkEmailView, name='check_email'),
-    path('api/check-username/', views.checkUsernameView, name='check_username'),
-    path('api/profile/', get_logged_in_user, name='get_logged_in_user'),
-    path('api/description/', save_description, name='save_description'),
-    path('api/badges/', get_user_badges, name='get_user_badges')
+    path('api/check-username/', views.checkUsernameView, name='check_username')
+]

@@ -9,7 +9,6 @@ import Analytics from './pages/Analytics';
 import UserProfile from "./components/UserProfile";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MotivationalMessage from "./pages/Motivation";
-import ProfileBox from "./pages/ProfileBox";
 //import ToDoList from './pages/ToDoList';
 
 function App() {
@@ -26,7 +25,6 @@ function App() {
         <Route path="/analytics/:username" element={<Analytics />} />
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/profile" element={<ProfileBox />} />
       </Routes>
     </Router>
   );
