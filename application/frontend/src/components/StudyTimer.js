@@ -582,6 +582,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
             borderRadius: '8px',
             boxShadow: '0 2px 8px rgba(186, 198, 241, 0.2)',
             width: '300px',
+            height: '600px',
             animation: 'dissolveIn 0.3s ease-out forwards',
             top: `${position.y - 50}px`,
             left: `${position.x}px`,  
