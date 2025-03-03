@@ -18,6 +18,7 @@ function Signup() {
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
 
+
   const checkEmailExists = async (email) => {
     try {
       const { data } = await axios.get(
@@ -59,6 +60,7 @@ function Signup() {
     if (!formData.lastname.trim()) {
       newErrors.lastname = "Last Name is required";
     }
+
 
     // using regex to check the username, email, and password are in the correct format
     const usernameRegex = /^@\w{3,}$/;

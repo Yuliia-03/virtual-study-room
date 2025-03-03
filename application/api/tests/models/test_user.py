@@ -44,6 +44,20 @@ class UserModelTest(TestCase):
         with self.assertRaises(ValueError):
             User.objects.create_user(description = "", email="test@example.com", firstname="Test", lastname="User", username="", password="password123")
 
+    def test_user_without_firstname_error(self):
+        """Test that creating a user without a username raises an error"""
+        User = get_user_model()
+        with self.assertRaises(ValueError):
+            User.objects.create_user(description="", email="test@example.com",
+                                     firstname="", lastname="User", username="Test", password="password123")
+
+    def test_user_without_lastname_error(self):
+        """Test that creating a user without a username raises an error"""
+        User = get_user_model()
+        with self.assertRaises(ValueError):
+            User.objects.create_user(description="", email="test@example.com",
+                                     firstname="FirstName", lastname="", username="Test", password="password123")
+
     def test_user_without_password_error(self):
         """Test that creating a user without a password raises an error"""
         User = get_user_model()

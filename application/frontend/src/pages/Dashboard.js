@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import "../styles/Dashboard.css";
 import axios from "axios";
@@ -25,9 +26,10 @@ function Dashboard() {
                 </div>
                 <div class = "dashboard-right-panel">
                     <div class="dashboard-panel">Generate Group Study Room</div>
-                    <div class="dashboard-panel">To Do List</div>
+                    <div class="dashboard-panel"><ToDoList/></div>
                 </div>
             </div>
+
         </div>
     );
 }
