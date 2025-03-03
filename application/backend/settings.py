@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'api.apps.ApplicationConfig',
     'django_seed',
     'corsheaders',
+    'daphne',
+    'channels',
 ]
 
 MIDDLEWARE = [
