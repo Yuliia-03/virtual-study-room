@@ -4,20 +4,38 @@ import axios from "axios";
 import "../styles/Analytics.css";
 
 const Analytics = () => {
-    const { username } = useParams();
     const [analytics, setAnalytics] = useState({ streaks: 0, average_study_hours: 0 });
 
     useEffect(() => {
-        const url = username
-            ? `http://127.0.0.1:8000/api/analytics/${username}/`
-            : `http://127.0.0.1:8000/api/analytics/`;
+        const fetchAnalytics = async () => {
+            const token = localStorage.getItem("access_token"); // Get the access token from localStorage
 
-        axios.get(url, { withCredentials: true })
-            .then(response => setAnalytics(response.data))
-            .catch(error => console.error(
-                "Error fetching analytics:", error.response ? error.response.status : error.message
-            ));
-    }, [username]);
+            if (!token) {
+                console.error("No access token found. Please log in.");
+                return;
+            }
+
+            try {
+                const response = await axios.get(
+                    "http://127.0.0.1:8000/api/analytics/", // Endpoint for fetching analytics
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`, // Include the access token in the request
+                        },
+                        withCredentials: true,
+                    }
+                );
+                setAnalytics(response.data); // Set the analytics data
+            } catch (error) {
+                console.error(
+                    "Error fetching analytics:",
+                    error.response ? error.response.status : error.message
+                );
+            }
+        };
+
+        fetchAnalytics();
+    }, []); // Empty dependency array ensures this runs only once when the component mounts
 
     return (
         <div className="analytics-box">

@@ -1,7 +1,8 @@
 """Unit tests for the StudySession model."""
 from django.test import TestCase
 from api.models import StudySession, User
-from datetime import datetime, time, date
+from datetime import datetime, time, date, timedelta
+from django.utils.timezone import now
 from django.core.exceptions import ValidationError
 
 class StudySessionTestCase(TestCase):
@@ -9,8 +10,8 @@ class StudySessionTestCase(TestCase):
     def setUp(self):
         self.user = User.objects.create(firstname = "John", lastname = "Doe", email = "johndoe@example.com", username = "@johndoe")
         self.sessionName = "Test Session"
-        self.startTime = datetime.now().time()
-        self.endTime = time(14, 30)
+        self.startTime = now()
+        self.endTime = self.startTime + timedelta(hours=2)
         self.date = date.today()
         self.session = StudySession.objects.create(createdBy = self.user, sessionName = self.sessionName, startTime = self.startTime, endTime = self.endTime)
 

@@ -9,8 +9,8 @@ class StudySession(models.Model):
     # user that creates the study session
     createdBy = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'study_session')
     sessionName = models.CharField(max_length=255, blank=False)
-    startTime = models.TimeField(default=now)
-    endTime = models.TimeField()
+    startTime = models.DateTimeField(default=now)
+    endTime = models.DateTimeField(null=True, blank=True)
     date = models.DateField(default=datetime.date.today)
 
     def __str__(self):
