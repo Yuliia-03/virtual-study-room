@@ -14,19 +14,10 @@ const badges = [
   badge5, badge6, badge7, badge8 
 ];
 
-const UserBadges = ({userBadges }) => {
+const UserBadges = ({ userId, userBadges }) => {
   const rows = [];
   for (let i = 0; i < badges.length; i += 4) {
     rows.push(badges.slice(i, i + 4));
-  }
-
-  const isBadgeEarned = (rewardNumber) => {
-    return userBadges.some(badge => badge.reward_number === rewardNumber);
-  }
-
-  const getBadgeEarnedDate = (rewardNumber) => {
-    const badge = userBadges.find(badge => badge.reward_number === rewardNumber);
-    return badge ? new Date(badge.date_earned).toLocaleDateString() : null;
   }
 
   return (
@@ -35,7 +26,7 @@ const UserBadges = ({userBadges }) => {
         <div key={rowIndex} style={{ display: 'flex' }}>
           {row.map((badgeUrl, colIndex) => {
             const badgeIndex = rowIndex * 4 + colIndex + 1;
-            const isEarned = userBadges && isBadgeEarned(badgeIndex);
+            const isEarned = userBadges && userBadges[`badge_${badgeIndex}`];
 
             return (
               <div 
@@ -75,7 +66,7 @@ const UserBadges = ({userBadges }) => {
                     color: '#666',
                     marginTop: '2px'
                   }}>
-                    Earned: {getBadgeEarnedDate(badgeIndex)}
+                    Earned: {new Date(userBadges[`badge_${badgeIndex}`].dateAwarded).toLocaleDateString()}
                   </div>
                 )}
                 {!isEarned && (
