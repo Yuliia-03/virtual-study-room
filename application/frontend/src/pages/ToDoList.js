@@ -134,6 +134,7 @@ const ToDoList = () => {
                                     <div className="task-item">
                                         <input
                                             type="checkbox"
+                                            class="custom-checkbox"
                                             checked={task.is_completed}
                                             onChange={() => toggleTaskCompletion(task.id)}
                                         />
