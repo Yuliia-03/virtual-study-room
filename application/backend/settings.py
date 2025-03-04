@@ -74,7 +74,7 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React frontend
     "https://virtual-study-room-phi.vercel.app", # real website
-    "https://studyspot.pythonanywhere.com/api/login"
+    "https://studyspot.pythonanywhere.com"
 ]
 
 TEMPLATES = [
