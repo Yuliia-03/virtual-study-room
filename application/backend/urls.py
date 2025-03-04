@@ -19,11 +19,11 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from api.views import *
 from api import views
-from api.views.calendar import AppointmentViewset
+from api.views.calendar import *
 from rest_framework.routers import DefaultRouter
 
-router = DefaultRouter()
-router.register('appointments', AppointmentViewset, basename='appointments')
+# router = DefaultRouter()
+# router.register('appointments', AppointmentViewset, basename='appointments')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,8 +31,10 @@ urlpatterns = [
     # path('api/events/', get_events),
     # path('api/events/', create_event, name='create_event'),
     path('', TemplateView.as_view(template_name='index.html')),
-    path('calendar/', AppointmentViewset.as_view({'get': 'list'}), name='calendar'), 
+    path('appointments/', create_appointment, name='create-appointment'),
+    #path('appointments/', appointments_list, name='appointments-list'),
+    #path('calendar/', AppointmentViewset.as_view({'get': 'list'}), name='calendar'), 
     path('api/signup/', views.signup, name='signup'),
 ] 
 
-urlpatterns += router.urls
+# urlpatterns += router.urls

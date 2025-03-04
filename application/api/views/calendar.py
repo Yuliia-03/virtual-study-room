@@ -1,28 +1,20 @@
-from rest_framework import viewsets, permissions 
-from ..serializers import *
-from rest_framework.response import Response 
-from ..models.events import * 
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from ..models import Appointments
+from ..serializers import AppointmentSerializer
+@api_view(['GET', 'POST'])
+def create_appointment(request):
+    if request.method == 'GET':
+        # Fetch all appointments
+        appointments = Appointments.objects.all()
+        serializer = AppointmentSerializer(appointments, many=True)
+        return Response(serializer.data)
 
-class AppointmentViewset(viewsets.ViewSet): 
-    permission_classes = [permissions.AllowAny]
-    queryset = Appointments.objects.all()
-    serializer_class = AppointmentSerializer
-
-    def create(self,request):
-        serializer = self.serializer_class(data=request.data)
+    elif request.method == 'POST':
+        # Handle appointment creation
+        serializer = AppointmentSerializer(data=request.data)  # DRF's request.data
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
-        else: 
-            return Response(serializer.errors, status=400)
-
-    def list(self, request):
-        queryset = Appointments.objects.all()
-        serializer = self.serializer_class(queryset, many=True)
-        return Response(serializer.data)
-    
-    def retrieve(self, request, pk=None):
-        queryset = self.queryset.get(pk=pk)
-        serializer = self.serializer_class(queryset)
-        return Response(serializer.data)
-
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
