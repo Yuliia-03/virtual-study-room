@@ -119,7 +119,6 @@
 .task{
     display: flex;
     flex-direction: column;
-    /* Stack title & details vertically */
     align-items: center;
     padding: 2%;
     max-width: 90%;
