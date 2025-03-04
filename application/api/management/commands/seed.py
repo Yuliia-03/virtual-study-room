@@ -145,7 +145,7 @@ class Command(BaseCommand):
 
     def generate_random_reward(self):
         user = choice(User.objects.all())
-        reward_id = randint(1,100)      # would be linked to firebase but for now is random numbers
+        reward_id = randint(1,8)      # since there are 8 rewards, it will choose from one of those
         try:
             Rewards.objects.create(user = user, reward_number = reward_id)
         except Exception as e:
