@@ -50,4 +50,3 @@ urlpatterns = [
     path('api/check-email/', views.checkEmailView, name='check_email'),
     path('api/check-username/', views.checkUsernameView, name='check_username')
 ]
-
