@@ -29,7 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "localhost",  # For local development
     "127.0.0.1",  # Localhost IP
-    "https://virtual-study-room-bljpp8i67-gummybearamnesias-projects.vercel.app", # real website
+    "https://virtual-study-room-phi.vercel.app", # real website
 ]
 
 
@@ -73,7 +73,7 @@ ROOT_URLCONF = 'backend.urls'
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React frontend
-    "https://virtual-study-room-bljpp8i67-gummybearamnesias-projects.vercel.app", # real website
+    "https://virtual-study-room-phi.vercel.app", # real website
 ]
 
 TEMPLATES = [
