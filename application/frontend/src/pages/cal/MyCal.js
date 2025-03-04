@@ -2,61 +2,148 @@ import { React, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
-//import '../styles/calendar.css'; // One directory up
-//import ".../styles/calendar.css";
 
-const MyCal = ({ myEvents }) => {
-    // Get today's date (without time)
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+// Assume you are using fetch or axios to send data to your backend
+// Backend URL to save event
+const backendURL = 'http://127.0.0.1:8000/appointments/';
 
-    // State to hold the selected event for the popup
+const MyCal = () => {
+    const [myEvents, setMyEvents] = useState([]);
     const [selectedEvent, setSelectedEvent] = useState(null);
+    
+    // States for popup form
+    const [showPopup, setShowPopup] = useState(false);
+    const [eventTitle, setEventTitle] = useState('');
+    const [eventDescription, setEventDescription] = useState('');
+    const [eventStart, setEventStart] = useState('');
+    const [eventEnd, setEventEnd] = useState('');
 
-    // Process events to set colors dynamically
-    const processedEvents = myEvents.map(event => {
-        const eventDate = new Date(event.start); // Assuming `start` holds the date
-        eventDate.setHours(0, 0, 0, 0); // Normalize to ignore time differences
+    // Open the add event popup
+    const openAddEventPopup = () => {
+        setShowPopup(true);
+    };
 
-        let backgroundColor = '#BAD7F2'; // Future events (Red)
-        if (eventDate < today) {
-            backgroundColor = '#F2BAC9'; // Past events (Green)
-        } else if (eventDate.getTime() === today.getTime()) {
-            backgroundColor =  '#B0F2B4'; // Today's events (Yellow)
-        }
+    // Close the add event popup
+    const closeAddEventPopup = () => {
+        setShowPopup(false);
+    };
 
-        return {
-            ...event,
-            backgroundColor,
-            borderColor: backgroundColor,
-            textColor: 'black', // Set text color explicitly
-            classNames: ['rounded-event'],
+    // Submit event form and save it to backend
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // Create event object
+        const newEvent = {
+            title: eventTitle,
+            description: eventDescription,
+            start: eventStart,
+            end: eventEnd,
         };
-    });
+
+        // Send data to backend
+        try {
+            const response = await fetch(backendURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newEvent),
+            });
+
+            if (response.ok) {
+                const savedEvent = await response.json();
+                // Add the saved event to state
+                setMyEvents([...myEvents, savedEvent]);
+
+                // Close popup after submission
+                closeAddEventPopup();
+
+                // Reset form values
+                setEventTitle('');
+                setEventDescription('');
+                setEventStart('');
+                setEventEnd('');
+            } else {
+                alert('Error saving event.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error connecting to backend.');
+        }
+    };
 
     // Event click handler to open popup
     const handleEventClick = (info) => {
-        setSelectedEvent(info.event); // Store the clicked event in state
+        setSelectedEvent(info.event);
     };
 
-    // Close the popup
+    // Close the event popup
     const closePopup = () => {
-        setSelectedEvent(null); // Reset the event
+        setSelectedEvent(null);
     };
 
     return (
-        <div className = "calendar">
+        <div>
+            {/* Button to open the Add Event popup */}
+            <button onClick={openAddEventPopup}>Add Event</button>
+
+            {/* Add Event Popup Form */}
+            {showPopup && (
+                <div className="event-popup">
+                    <div className="popup-content">
+                        <h2>Add Event</h2>
+                        <form onSubmit={handleSubmit}>
+                            <div>
+                                <label>Title: </label>
+                                <input
+                                    type="text"
+                                    value={eventTitle}
+                                    onChange={(e) => setEventTitle(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label>Description: </label>
+                                <textarea
+                                    value={eventDescription}
+                                    onChange={(e) => setEventDescription(e.target.value)}
+                                />
+                            </div>
+                            <div>
+                                <label>Start: </label>
+                                <input
+                                    type="datetime-local"
+                                    value={eventStart}
+                                    onChange={(e) => setEventStart(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label>End: </label>
+                                <input
+                                    type="datetime-local"
+                                    value={eventEnd}
+                                    onChange={(e) => setEventEnd(e.target.value)}
+                                />
+                            </div>
+                            <button type="submit">Save Event</button>
+                            <button type="button" onClick={closeAddEventPopup}>Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            )}
+
             {/* FullCalendar Component */}
             <FullCalendar
                 plugins={[dayGridPlugin, timeGridPlugin]}
                 initialView="timeGridWeek"
-                events={processedEvents}
+                events={myEvents}
                 headerToolbar={{
                     left: 'prev,today,next',
                     center: 'title',
                     right: 'timeGridWeek,dayGridMonth,dayGridYear',
                 }}
-                eventClick={handleEventClick} // Handle event click
+                eventClick={handleEventClick}
             />
 
             {/* Event Popup */}
@@ -75,4 +162,5 @@ const MyCal = ({ myEvents }) => {
         </div>
     );
 };
+
 export default MyCal;
