@@ -141,26 +141,25 @@ const ToDoList = () => {
                                         <span className={task.is_completed ? "completed" : ""}>
                                             {task.title}
                                         </span>
+                                    
                                         <div className="task-item-buttons">
 
-                                            
-
-                                    {/* Delete Task Button */}
-                                    <button onClick={() => handleDeleteTask(task.id)} className="btn btn-danger btn-sm">
-                                        <i className="bi bi-trash"></i>
-                                    </button>
-                                    {/* Expand/Collapse Button for Task Details */}
-                                    <button onClick={() => toggleTaskDetails(task.id)} className="btn btn-info btn-sm">
-                                        {expandedTasks[task.id] ? (
-                                            <>
-                                                <i className="bi bi-chevron-up"></i> Hide Details
-                                            </>
-                                        ) : (
-                                            <>
-                                                <i className="bi bi-chevron-down"></i> Show Details
-                                            </>
-                                        )}
-                                    </button>
+                                            {/* Delete Task Button */}
+                                            <button onClick={() => handleDeleteTask(task.id)} className="btn btn-danger btn-sm">
+                                                <i className="bi bi-trash"></i>
+                                            </button>
+                                            {/* Expand/Collapse Button for Task Details */}
+                                            <button onClick={() => toggleTaskDetails(task.id)} className="btn btn-info btn-sm">
+                                                {expandedTasks[task.id] ? (
+                                                    <>
+                                                        <i className="bi bi-chevron-up"></i> Hide Details
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <i className="bi bi-chevron-down"></i> Show Details
+                                                    </>
+                                                )}
+                                            </button>
                                         </div>
                                     </div>
 

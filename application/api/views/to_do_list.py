@@ -148,21 +148,21 @@ class ViewToDoList(APIView):
             return Response({"error": "Invalid request", "details": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-def patch(self, request, task_id):
-    print(f"Received PATCH request for task_id: {task_id}")
+    def patch(self, request, task_id):
+        print(f"Received PATCH request for task_id: {task_id}")
 
-    try:
+        try:
         # This line throws DoesNotExist if not found
-        task = toDoList.objects.get(id=task_id)
+            task = toDoList.objects.get(id=task_id)
 
-        new_task_status = not task.is_completed
-        task.is_completed = new_task_status
-        task.save()
+            new_task_status = not task.is_completed
+            task.is_completed = new_task_status
+            task.save()
 
-        return Response({"is_completed": task.is_completed}, status=status.HTTP_200_OK)
+            return Response({"is_completed": task.is_completed}, status=status.HTTP_200_OK)
 
-    except toDoList.DoesNotExist:  # Catch the specific exception
-        return Response({"error": "Task not found"}, status=status.HTTP_400_BAD_REQUEST)
+        except toDoList.DoesNotExist:  # Catch the specific exception
+            return Response({"error": "Task not found"}, status=status.HTTP_400_BAD_REQUEST)
 
-    except Exception as e:
-        return Response({"error": "Invalid request", "details": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"error": "Invalid request", "details": str(e)}, status=status.HTTP_400_BAD_REQUEST)

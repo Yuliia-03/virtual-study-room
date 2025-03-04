@@ -146,6 +146,7 @@
 .task-item span {
     color: #000000;
     margin: 1%;
+    font-weight: lighter;
     /* Pushes the column to the right */
 }
 
@@ -154,7 +155,7 @@
     flex-direction: column;
     align-items: flex-end;
     justify-content: center;
-    margin-left: auto;
+    margin-left: 1%;;
 }
 
 /* Show/Hide Details Button */
@@ -167,6 +168,7 @@
     background: #f0f0f0;
     border: 1px solid #ccc;
     transition: 0.2s ease-in-out;
+    font-weight: lighter;
 }
 
 .task-item button:hover {
@@ -181,7 +183,8 @@
     margin-top: 5px;
     border-radius: 6px;
     text-align: left;
-    min-width: 90%;max-width: 90%;
+    min-width: 95%;
+    max-width: 95%;
 }
 
 /* Task Title & Buttons in One Line */
