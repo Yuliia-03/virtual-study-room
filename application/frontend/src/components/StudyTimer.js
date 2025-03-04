@@ -528,6 +528,8 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
             position: absolute !important;
             background-color: #F0F3FC !important;
             border: 4px solid #E2E8FF !important;
+            padding: 20px;
+            border-radius: 30px;
             box-shadow: 0 0 10px #E2E8FF, inset 0 0 10px #E2E8FF, 0 0 20px rgba(226, 232, 255, 0.4), 0 0 30px rgba(186, 198, 241, 0.2) !important;
             filter: blur(0.3px) !important;
             outline: 4px solid rgba(186, 198, 241, 0.3) !important;
@@ -535,7 +537,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
             -webkit-filter: drop-shadow(0 0 40px rgba(186, 198, 241, 0.4)) !important;
             pointer-events: auto !important;
             z-index: 1000 !important;
-            width: 280px !important;
+            width: 315px !important;
             height: 400px !important;
             display: flex !important;
             flex-direction: column !important;
@@ -560,7 +562,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
             color: #b2b2b2 !important;
             font-family: "Press Start 2P", monospace !important;
             font-size: 0.875rem !important;
-            margin: 0 0.5rem !important;
+            margin: 0 1.2rem !important;
             box-shadow: 
               0 0 0 2px #F0F3FC,
               0 0 0 4px #d1cbed !important;
@@ -652,7 +654,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
       >
         <div className="timer-content">
           {currentPage === 'completed' ? (
-            <div className="p-4 w-80 h-[500px] flex flex-col bg-[#F0F3FC] timer-handle">
+            <div className="p-4 w-80 min-height flex flex-col bg-[#F0F3FC] timer-handle">
               <div className="flex-grow flex flex-col items-center px-8">
                 <div className="text-2xl mt-8 text-center" style={{ color: '#bac6f1', fontFamily: '"Press Start 2P", monospace' }}>
                   Well done!
@@ -692,7 +694,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
               </div>
             </div>
           ) : !isRunning ? (
-            <div className="p-4 w-80 h-[500px] flex flex-col bg-[#F0F3FC] timer-handle">
+            <div className="p-4 w-80 min-height flex flex-col bg-[#F0F3FC] timer-handle">
               <div className="timer-handle mb-2 px-8 mt-2">
                 <h1 className="text-2xl vt323" style={{ color: '#b2b2b2' }}>Study Timer</h1>
               </div>
@@ -795,13 +797,15 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
 
                   <div className="flex flex-col items-center space-y-2">
                     <label className="vt323 text-sm" style={{ color: '#d1cbed' }}>Rounds</label>
-                    <input
-                      type="number"
-                      value={rounds}
-                      onChange={(e) => setRounds(parseInt(e.target.value) || 1)}
-                      min="1"
-                      placeholder="4"
-                    />
+                    <div className="flex justify-center gap-4">
+                      <input
+                        type="number"
+                        value={rounds}
+                        onChange={(e) => setRounds(parseInt(e.target.value) || 1)}
+                        min="1"
+                        placeholder="4"
+                      />
+                      </div>
                   </div>
 
                   <div className="flex items-center justify-center space-x-2">
@@ -838,7 +842,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
               </div>
             </div>
           ) : (
-            <div className="p-4 w-80 h-[500px] flex flex-col bg-[#F0F3FC] timer-handle">
+            <div className="p-4 w-80 min-height flex flex-col bg-[#F0F3FC] timer-handle">
               <div className="timer-handle mb-6 px-8 mt-2 flex justify-between items-center">
                 <h1 className="text-2xl vt323" style={{ color: '#b2b2b2' }}>Study Timer</h1>
                 <button 
