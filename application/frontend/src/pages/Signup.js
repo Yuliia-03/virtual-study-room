@@ -22,7 +22,7 @@ function Signup() {
   const checkEmailExists = async (email) => {
     try {
       const { data } = await axios.get(
-      "https://studyspot.pythonanywhere.com/api/check-email/"
+      "https://studyspot.pythonanywhere.com/api/check-email/",
 //        `http://127.0.0.1:8000/api/check-email/`,
         {
           params: { email },
