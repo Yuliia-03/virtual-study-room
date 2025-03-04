@@ -5,8 +5,8 @@
         "fields": {
             "createdBy": 1,
             "sessionName": "OSC Study Group",
-            "startTime": "14:27:00",
-            "endTime": "16:56:00",
+            "startTime": "2025-02-10T14:30:00Z",
+            "endTime": null,
             "date": "2025-02-10"
         }
     },
@@ -16,8 +16,8 @@
         "fields": {
             "createdBy": 2,
             "sessionName": "MangoCat Study Room",
-            "startTime": "10:09:38",
-            "endTime": "12:00:30",
+            "startTime": "2025-02-11T10:09:38Z",
+            "endTime": "2025-02-11T12:00:30Z",
             "date": "2025-02-11"
         }
     }

@@ -1,7 +1,7 @@
 .groupStudyRoom-container{
     margin: 0;
     display: flex;
-    justify-content: space-between; 
+    justify-content: space-between;
     align-items: flex-start;
     max-height: 100vh;
     max-width: 100vw;
@@ -12,8 +12,8 @@
 }
 
 .column {
-    flex: 1; 
-    margin: 15px; 
+    flex: 1;
+    margin: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -140,7 +140,7 @@ label {
     font-size: 20px;
     font-weight: 900;
     color: #FFFFFF;
-    background-color: #BAF2E9;  
+    background-color: #BAF2E9;
     border-radius: 20px;
     cursor: pointer;
     outline: none;
@@ -264,7 +264,7 @@ label {
     font-size: 20px;
     font-weight: 900;
     color: #FFFFFF;
-    background-color: #BAF2E9;  
+    background-color: #BAF2E9;
     border: none;
     border-radius: 20px;
     cursor: pointer;
@@ -289,7 +289,7 @@ label {
 
 .user-list-container{
     display: grid;
-    grid-template-areas: 
+    grid-template-areas:
         "header"
         "code"
         "users";
@@ -302,7 +302,7 @@ label {
 .heading {
     display: flex;
     align-items: center;
-    justify-content: center; 
+    justify-content: center;
     grid-area: header;
     width: 600px;
     height: 70px;
@@ -310,7 +310,7 @@ label {
     background-color: #DFFAE1;
     font-family: 'Inter', sans-serif;
     font-weight: 700;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .gs-heading2{
@@ -355,11 +355,11 @@ label {
 
 .users {
     display: flex;
-    flex-wrap: wrap; 
-    grid-area: users;  
-    justify-content: center;  
-    align-items: center; 
-    padding: 5px;  
+    flex-wrap: wrap;
+    grid-area: users;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
     gap: 5px;
 }
 
@@ -368,8 +368,8 @@ label {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 120px;  
-    margin: 5px; 
+    width: 120px;
+    margin: 5px;
     text-align: center;
 }
 
@@ -427,7 +427,7 @@ label {
     height: 166px;
     width: 320px;
     border-radius: 40px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .music-button{
@@ -439,10 +439,10 @@ label {
     padding: 15px 20px;
     height: 5%;
     width: 10%;
-    
+
     font-weight: 900;
     color: #FFFFFF;
-    background-color: #BAD7F2;  
+    background-color: #BAD7F2;
     border: none;
     border-radius: 20px;
     cursor: pointer;
@@ -467,10 +467,10 @@ label {
     height: 5%;
     font-size: 20px;
     width: 10%;
-    
+
     font-weight: 900;
     color: #FFFFFF;
-    background-color: #C8EECF;  
+    background-color: #C8EECF;
     border: none;
     border-radius: 20px;
     cursor: pointer;
@@ -494,10 +494,10 @@ label {
     height: 5%;
     font-size: 20px;
     width: 10%;
-    
+
     font-weight: 900;
     color: #FFFFFF;
-    background-color: #FFC107;  
+    background-color: #FFC107;
     border: none;
     border-radius: 20px;
     cursor: pointer;
@@ -522,10 +522,10 @@ label {
     height: 5%;
     font-size: 20px;
     width: 10%;
-    
+
     font-weight: 900;
     color: #FFFFFF;
-    background-color: #D8BFD8;  
+    background-color: #D8BFD8;
     border: none;
     border-radius: 20px;
     cursor: pointer;
@@ -544,7 +544,7 @@ label {
 }
 
 .exit-button img,  .copy-button img, .customisation-button img, .music-button img{
-    width: 20px;  
+    width: 20px;
     height: 20px;
 }
 
@@ -565,7 +565,7 @@ label {
     left: 50%;
     top: 150%;
     transform: translateX(-50%);
-    
+
     /* Hidden by default */
     opacity: 0;
     transition: opacity 0.2s ease-in-out;
@@ -588,7 +588,7 @@ label {
     left: 50%;
     top: 150%;
     transform: translateX(-50%);
-    
+
     /* Hidden by default */
     opacity: 0;
     transition: opacity 0.2s ease-in-out;
@@ -611,7 +611,7 @@ label {
     left: 50%;
     top: 150%;
     transform: translateX(-50%);
-    
+
     /* Hidden by default */
     opacity: 0;
     transition: opacity 0.2s ease-in-out;
@@ -633,7 +633,7 @@ label {
     left: 50%;
     top: 150%;
     transform: translateX(-50%);
-    
+
     /* Hidden by default */
     opacity: 0;
     transition: opacity 0.2s ease-in-out;
