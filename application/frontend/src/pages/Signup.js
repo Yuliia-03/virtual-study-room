@@ -127,7 +127,7 @@ function Signup() {
     try {
       if (validate()) {
         const response = await axios.post(
-        "https://studyspot.pythonanywhere.com/api/signup",
+        "https://studyspot.pythonanywhere.com/api/signup/",
 //          "http://127.0.0.1:8000/api/signup/",
           formData,
           {
