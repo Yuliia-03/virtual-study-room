@@ -85,7 +85,8 @@ function Signup() {
     } else if (
       formData.password.trim() !== formData.passwordConfirmation.trim()
     ) {
-      newErrors.password = "Password confirmation needs to match password";
+      newErrors.passwordConfirmation =
+        "Password confirmation needs to match password";
     }
 
     // check if email and username are not already taken
@@ -264,6 +265,12 @@ function Signup() {
             value={formData.passwordConfirmation}
             onChange={handleChange}
           />
+          <p
+            data-testid="error-message-passwordConfirmation"
+            className="error-message"
+          >
+            {errors.passwordConfirmation}
+          </p>
         </div>
 
         <div className="checkbox-container">
