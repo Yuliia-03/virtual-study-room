@@ -12,8 +12,9 @@ class SignupTestCase(APITestCase):
             'lastname': 'Doe',
             'username': '@johndoe',
             'email': 'johndoe@example.com',
-            'password': 'Password123',
-            'passwordConfirmation': 'Password123'
+            'description': '',
+            'password': 'password123',
+            'passwordConfirmation': 'password123'
         }
         response = self.client.post('/api/signup/', data, format='json')
 

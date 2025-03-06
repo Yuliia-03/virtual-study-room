@@ -60,7 +60,7 @@ class FriendsModelTestCase(TestCase):
         """Ensure a specific user exists in the database"""
         friends = Friends.get_friends_with_status(self.user1, Status.ACCEPTED)
         self.assertEqual(len(friends), 1)
-        self.assertEqual(friends[0].user2.user_id, self.user2.user_id)
+        self.assertEqual(friends[0].user2, self.user2)
 
     def _assert_user_is_valid(self, friendship):
         friendship.full_clean()
