@@ -1,31 +1,43 @@
 from django.forms import ValidationError
 from django.test import TestCase, override_settings
 from api.models.todo_list import toDoList
+from api.models.todo_list_user import List
 from datetime import date, timedelta
 
 """ Creating toDoList Model Tests"""
 
 @override_settings(MIGRATION_MODULES={"api": None})
 class toDoListModelTest(TestCase):
+
+    fixtures = [
+        'api/tests/fixtures/default_lists.json'
+    ]
+
+
     """Creating test toDoList objects"""
     def setUp(self):
+        self.list1 = List.objects.get(pk=1)
+        self.list2 = List.objects.get(pk=2)
+
         self.todo = toDoList.objects.create(
+            list = self.list1,
             title = "Test task",
             content = "This is Content of a to do list item.",
-            is_completed = True,
-            is_shared = True
+            is_completed = True
         )
         self.todo2 = toDoList.objects.create(
+            list = self.list2,
             title = "Test task2",
             content = ""
         )
 
     """Testing whether the todo object has been created correctly"""
+
     def test_toDo_create(self):
+        self.assertEqual(self.todo.list, self.list1)
         self.assertEqual(self.todo.title, "Test task")
         self.assertEqual(self.todo.content, "This is Content of a to do list item.")
         self.assertEqual(self.todo.is_completed, True)
-        self.assertEqual(self.todo.is_shared, True)
 
     """Testing whether a blank title is shown correctly as invalid"""
     def test_blank_title_is_invalid(self):
@@ -47,7 +59,6 @@ class toDoListModelTest(TestCase):
             self.fail("Default test todo should be deemed valid")
 
         self.assertFalse(self.todo2.is_completed, "should be set to False")
-        self.assertFalse(self.todo2.is_shared, "should be set to False")
 
         try:
             self.todo2.full_clean()
@@ -81,13 +92,13 @@ class toDoListModelTest(TestCase):
 
     """Testing if another toDoList object is created on the same day, then it should have the same creation_date as the previous toDoList object"""
     def test_creation_date_with_multiple_objects_is_valid(self):
-        todoLater = toDoList.objects.create(title="Test task3")
+        todoLater = toDoList.objects.create(list = self.list1, title="Test task3")
         self.assertEqual(todoLater.creation_date, date.today())
         self.assertEqual(self.todo.creation_date, todoLater.creation_date)
 
     """Testing the string method, seeing if it outputs the correct expected message"""
     def test_str(self):
-        expected_str = f'Test task has list_id {self.todo.list_id}'
+        expected_str = f'Test task has list_id {self.todo.list}'
         self.assertEqual(str(self.todo), expected_str)
 
 

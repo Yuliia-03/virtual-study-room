@@ -25,7 +25,8 @@ function Login() {
         setError("");
         try {
             const response = await axios.post(
-                "http://127.0.0.1:8000/api/login/",
+                "https://studyspot.pythonanywhere.com/api/login",
+                //"http://127.0.0.1:8000/api/login/",
                 formData,  // Contains email and password
                 { headers: { "Content-Type": "application/json" } }  // No Authorization header here
             );
@@ -37,7 +38,7 @@ function Login() {
             alert("Login successful!");
             navigate('/dashboard');  // Redirect to dashboard after login
         } catch (error) {
-            if (error.response) {
+            if (error.response && error.response.data && error.response.data.error) {
                 alert(error.response.data.error);
             } else {
                 alert("An error occurred. Please try again.");

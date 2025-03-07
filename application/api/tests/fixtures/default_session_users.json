@@ -20,8 +20,8 @@
             "session": 1,
             "status": "CASUAL",
             "focus_target": null,
-            "joined_at": "2025-02-10T15:00:00Z",
-            "left_at": null
+            "joined_at": "2025-02-11T10:09:38Z",
+            "left_at": "2025-02-10T11:09:38Z"
         }
     },
     {
@@ -33,7 +33,7 @@
             "status": "FOCUSED",
             "focus_target": "Week 2 Quizzes",
             "joined_at": "2025-02-11T10:15:00Z",
-            "left_at": null
+            "left_at": "2025-02-11T12:00:30Z"
         }
     }
 ]

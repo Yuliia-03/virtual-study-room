@@ -1,0 +1,33 @@
+{
+  "files": {
+    "main.css": "/static/css/main.c5caaa69.css",
+    "main.js": "/static/js/main.ec1754e9.js",
+    "static/js/488.7213179a.chunk.js": "/static/js/488.7213179a.chunk.js",
+    "static/media/mango_cat.png": "/static/media/mango_cat.22b551e820d5dfdb5838.png",
+    "static/media/avatar_1.png": "/static/media/avatar_1.9ac9d7776691db95b824.png",
+    "static/media/badge_5.png": "/static/media/badge_5.67c6027f33d1e004259c.png",
+    "static/media/avatar_6.png": "/static/media/avatar_6.1887f65383454586bb6c.png",
+    "static/media/avatar_3.png": "/static/media/avatar_3.c52d183fea3fe4a9e8ac.png",
+    "static/media/badge_6.png": "/static/media/badge_6.dbcc77985bc43c1b2386.png",
+    "static/media/badge_7.png": "/static/media/badge_7.5e789211e87b4b6173a4.png",
+    "static/media/badge_1.png": "/static/media/badge_1.70db4824aae158f25c43.png",
+    "static/media/badge_4.png": "/static/media/badge_4.b472e6330b9689a5cc2e.png",
+    "static/media/avatar_7.png": "/static/media/avatar_7.ab7f755c19a11c899e12.png",
+    "static/media/avatar_2.png": "/static/media/avatar_2.dc4fbe7bf7ee6a8a43e4.png",
+    "static/media/badge_3.png": "/static/media/badge_3.b7bbded8f06b72f44688.png",
+    "static/media/badge_8.png": "/static/media/badge_8.c82c826c62c5e3e952c4.png",
+    "static/media/avatar_8.png": "/static/media/avatar_8.5a92a813831db369eab7.png",
+    "static/media/badge_2.png": "/static/media/badge_2.dc64491716dd34a8b443.png",
+    "static/media/avatar_4.png": "/static/media/avatar_4.d15a663d6340a10a858c.png",
+    "static/media/avatar_5.png": "/static/media/avatar_5.abb20d45296eafc7c651.png",
+    "static/media/music_logo.png": "/static/media/music_logo.c507eafffcecc32351ce.png",
+    "index.html": "/index.html",
+    "main.c5caaa69.css.map": "/static/css/main.c5caaa69.css.map",
+    "main.ec1754e9.js.map": "/static/js/main.ec1754e9.js.map",
+    "488.7213179a.chunk.js.map": "/static/js/488.7213179a.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c5caaa69.css",
+    "static/js/main.ec1754e9.js"
+  ]
+}

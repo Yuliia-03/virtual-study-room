@@ -7,7 +7,8 @@ const MotivationalMessage = () => {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/motivational-message/")
+        .get("https://studyspot.pythonanywhere.com/api/motivational-message/")
+//      .get("http://127.0.0.1:8000/api/motivational-message/")
       .then((response) => {
         setMessage(response.data.message);
       })
@@ -18,11 +19,11 @@ const MotivationalMessage = () => {
   }, []);
 
   return (
-    <div className="message-container">
+    
       <div className="message-card">
         <h4>{message}</h4>
       </div>
-    </div>
+    
   );
 };
 

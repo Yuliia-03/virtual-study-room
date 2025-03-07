@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import "../styles/GroupStudyPage.css";
+import MotivationalMessage from './Motivation';
+import musicLogo from "../assets/music_logo.png"
+import customLogo from "../assets/customisation_logo.png"
+import copyLogo from "../assets/copy_logo.png"
+import exitLogo from "../assets/exit_logo.png"
+import StudyTimer from '../components/StudyTimer.js';
 
 function GroupStudyPage({ roomCode }){
 
     const [isActiveAddMore, setIsActiveAddMore] = useState(false); //initialise both variables: isActive and setIsActive to false
     const [isActiveMusic, setIsActiveMusic] = useState(false);
     const [isActiveCustom, setIsActiveCustom] = useState(false);
+    const [isActiveCopy, setIsActiveCopy] = useState(false);
+    const [isActiveExit, setIsActiveExit] = useState(false);
 
     // for websockets
     const [socket, setSocket] = useState(null);
@@ -44,6 +52,10 @@ function GroupStudyPage({ roomCode }){
             setIsActiveMusic(true);
         } else if (btnType == 'custom'){
             setIsActiveCustom(true)
+        } else if (btnType == 'copy'){
+            setIsActiveCopy(true)
+        } else if (btnType == 'exit'){
+            setIsActiveExit(true)
         }
         
     };
@@ -56,6 +68,10 @@ function GroupStudyPage({ roomCode }){
             setIsActiveMusic(false);
         } else if (btnType == 'custom'){
             setIsActiveCustom(false)
+        } else if (btnType == 'copy'){
+            setIsActiveCopy(false)
+        } else if (btnType == 'exit'){
+            setIsActiveExit(false)
         }
     };
 
@@ -137,6 +153,47 @@ function GroupStudyPage({ roomCode }){
                     <h3 className='gs-heading2'> Code: {roomCode}</h3>
                     {/* Debugging messages */}}
                     {messages.map((msg, index) => <p key={index}>{msg}</p>)}
+                    <div className='utility-bar'>
+                        <button
+                            type="button"
+                            className={`music-button ${isActiveMusic ? 'active' : ''}`}
+                            onMouseDown={() => handleMouseDown('music')}
+                            onMouseUp={() => handleMouseUp('music')}
+                            onMouseLeave={() => handleMouseUp('music')}
+                        >
+                            <img src={musicLogo} alt="Music" />
+                        </button>
+                        <button
+                            type="button"
+                            className={`customisation-button ${isActiveCustom ? 'active' : ''}`}
+                            onMouseDown={() => handleMouseDown('custom')}
+                            onMouseUp={() => handleMouseUp('custom')}
+                            onMouseLeave={() => handleMouseUp('custom')}
+                        >
+                            <img src={customLogo} alt="Customisation" />
+                        </button>
+                    </div>
+                    <h3 className='gs-heading2'> Code: a2654h </h3>
+                    <div className='utility-bar-2'>
+                        <button
+                            type="button"
+                            className={`copy-button ${isActiveCopy ? 'active' : ''}`}
+                            onMouseDown={() => handleMouseDown('copy')}
+                            onMouseUp={() => handleMouseUp('copy')}
+                            onMouseLeave={() => handleMouseUp('copy')}
+                        >
+                            <img src={copyLogo} alt="Copy" />
+                        </button>
+                        <button
+                            type="button"
+                            className={`exit-button ${isActiveExit ? 'active' : ''}`}
+                            onMouseDown={() => handleMouseDown('exit')}
+                            onMouseUp={() => handleMouseUp('exit')}
+                            onMouseLeave={() => handleMouseUp('exit')}
+                        >
+                            <img src={exitLogo} alt="Exit" />
+                        </button>
+                    </div>
                     <div className='users'>
                         {/*These are examples of how the user profiles are displayed. 
                         user-image has the white circle, user-name is for the name at the bottom of the user. Can be changed, this is just an example.*/}
@@ -166,7 +223,7 @@ function GroupStudyPage({ roomCode }){
                         </div>
                     </div>
                 </div>
-                <div className="motivationMessage-container">Motivation Message</div>
+                <MotivationalMessage />
             </div>
             {/*3rd Column */}
             <div className="column">
@@ -194,6 +251,7 @@ function GroupStudyPage({ roomCode }){
                     <button onClick={sendMessage}>Send</button>
 
                 </div>
+                <StudyTimer roomId="yourRoomId" isHost={true} onClose={() => console.log('Timer closed')} />
                 <div className="chatBox-container">Chat Box</div>
             </div>
         </div>

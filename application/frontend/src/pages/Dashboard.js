@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ToDoList from '../pages/ToDoList';
 import GroupStudyRoom from '../pages/GroupStudyPage';
+import Analytics from './Analytics';
 
 function Dashboard() {
 
@@ -46,6 +47,7 @@ function Dashboard() {
             {/* Left panel - main panel - right panel*/}
             <div class = "dashboard-content">
                 <div class = "dashboard-left-panel">
+                    <Analytics />
                     <div>
                         {!joined ? (
                             <>
@@ -68,7 +70,7 @@ function Dashboard() {
                 </div>
                 <div class = "dashboard-right-panel">
                     <div class="dashboard-panel">Generate Group Study Room</div>
-                    <div class="dashboard-panel">To Do List</div>
+                    <div class="dashboard-panel"><ToDoList/></div>
                 </div>
             </div>
         </div>

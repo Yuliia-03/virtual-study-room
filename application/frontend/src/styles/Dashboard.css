@@ -1,3 +1,4 @@
+
 .dashboard-container{
     /* Flex to store components in the dashboard */
     display: flex;
@@ -44,8 +45,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 30px;
-    gap: 30px;
+    padding: 10px;
+    gap: 15px;
     height: 100%; /* Ensure panels stretch to fill the full height of their container */
     box-sizing: border-box; /* Ensure padding/border don't increase its size */
 }
@@ -94,6 +95,7 @@
 }
 .dashboard-right-panel .dashboard-panel:last-child {
    height: 400px; /* Set a larger height for the to do list panel */
+    width: 400px;
    color: red;
 }
 /*There is a minimum size, after which it cannot get any smaller because as of now*/
@@ -101,3 +103,4 @@
    height: 40px; /* Set a larger height for the invites panel*/
    color: purple;
 }
+
