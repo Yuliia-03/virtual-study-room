@@ -136,7 +136,8 @@ class ViewToDoList(APIView):
                 name=name, is_shared=is_shared)
             list.save()
 
-            Permission.objects.create(list_id=list, user_id=user)
+            permission = Permission.objects.create(list_id=list, user_id=user)
+            permission.save()
             
             response_data = {
                 "listId": list.pk,
