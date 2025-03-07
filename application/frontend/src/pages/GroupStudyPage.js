@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import "../styles/GroupStudyPage.css";
 
-function GroupStudyPage(){
+function GroupStudyPage({ roomCode }){
 
     const [isActiveAddMore, setIsActiveAddMore] = useState(false); //initialise both variables: isActive and setIsActive to false
     const [isActiveMusic, setIsActiveMusic] = useState(false);
@@ -13,20 +13,20 @@ function GroupStudyPage(){
     const [input, setInput] = useState("");
 
     useEffect(() => {
-        const ws = new WebSocket('ws://localhost:8000/ws/room/${room_id}/');
+        const ws = new WebSocket(`ws://localhost:8000/ws/room/${roomCode}/`);
 
         ws.onopen = () => console.log("Connected to Websocket");
-        ws.onmessage - (event) => {
+        ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
             setMessages((prev) => [...prev, data.message]);
         };
 
-        ws.onclose = () console.log("Disconnected from Websocket");
+        ws.onclose = () => console.log("Disconnected from Websocket");
 
         setSocket(ws);
 
-        return () => ws.close(0;)
-    }, [room_id]);
+        return () => ws.close();
+    }, [roomCode]);
 
     const sendMessage = () => {
         if (socket && input.trim()) {
@@ -133,8 +133,8 @@ function GroupStudyPage(){
             {/*2nd Column */}
             <div className="column">
                 <div className="user-list-container">
-                    <h2 className="heading"> Study Room: {</h2>
-                    <h3 className='gs-heading2'> Code: {room_id}</h3>
+                    <h2 className="heading"> Study Room: </h2>
+                    <h3 className='gs-heading2'> Code: {roomCode}</h3>
                     {/* Debugging messages */}}
                     {messages.map((msg, index) => <p key={index}>{msg}</p>)}
                     <div className='users'>

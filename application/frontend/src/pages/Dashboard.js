@@ -3,28 +3,39 @@ import "../styles/Dashboard.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ToDoList from '../pages/ToDoList';
-import StudySession from "./StudySession";
+import GroupStudyRoom from '../pages/GroupStudyPage';
 
 function Dashboard() {
 
     // Web socket handling
-    const [roomId, setRoomId] = useState("")
+    const [roomCode, setRoomCode] = useState("")    // Ensure that the room code is defined
     const [joined, setJoined] = useState(false);
 
     const createRoom = async () => {
-        const res = await fetch("http://localhost:8000/api/create-room/", { method: "POST" });
-        const data = await res.json();
-        setRoomCode(data.roomCode);
-        setJoined(true);
+        try {
+            const res = await axios.post("http://localhost:8000/api/create-room/");
+            setRoomCode(res.data.roomCode);
+            setJoined(true);
+        }
+
+        catch (error) {
+            console.error("Error creating room: ", error)
+        }
     };
 
     const joinRoom = async () => {
-        const res = await fetch("http://localhost:8000/api/join-room/", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ roomCode })
-        });
-        if (res.ok) setJoined(true);
+        try {
+            const res = await axios.post("http://localhost:8000/api/join-room/", {
+                roomCode
+            }, {
+                headers: { "Content-Type" : "application/json" }
+            });
+
+            if (res.statue === 200) setJoined(true);
+        }
+
+        catch (error) {
+            console.error("Error joining room:", error)}
     };
 
     return (
@@ -43,7 +54,7 @@ function Dashboard() {
                                 <button onClick={joinRoom}>Join Room</button>
                             </>
                         ) : (
-                            <Room roomCode={roomCode} />
+                            <GroupStudyRoom roomCode={roomCode} />
                         )}
                     </div>
                     <div class="dashboard-panel">Analytics</div>
