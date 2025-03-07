@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import "../styles/GroupStudyPage.css";
 import MotivationalMessage from './Motivation';
-import musicLogo from "../assets/music_logo.png"
-import customLogo from "../assets/customisation_logo.png"
-import copyLogo from "../assets/copy_logo.png"
-import exitLogo from "../assets/exit_logo.png"
+import musicLogo from "../assets/music_logo.png";
+import customLogo from "../assets/customisation_logo.png";
+import copyLogo from "../assets/copy_logo.png";
+import exitLogo from "../assets/exit_logo.png";
 import StudyTimer from '../components/StudyTimer.js';
 
 function GroupStudyPage({ roomCode }){
@@ -110,7 +110,7 @@ function GroupStudyPage({ roomCode }){
                 <div className="todo-list-container">
                     <h2 className='todo-heading'>To Do: 
                     <div class="checkbox-wrapper-5">
-                        <div class="check">
+                        <div className="check">
                             <input id="check-5" type="checkbox"></input>
                             <label for="check-5"></label>
                         </div>
@@ -197,29 +197,29 @@ function GroupStudyPage({ roomCode }){
                     <div className='users'>
                         {/*These are examples of how the user profiles are displayed. 
                         user-image has the white circle, user-name is for the name at the bottom of the user. Can be changed, this is just an example.*/}
-                        <div class="user-circle"> 
-                            <div class="user-image">JD</div>
-                            <div class="user-name">John Doe</div>
+                        <div className="user-circle"> 
+                            <div className="user-image">JD</div>
+                            <div className="user-name">John Doe</div>
                         </div>
-                        <div class="user-circle">
-                            <div class="user-image">JD</div>
-                            <div class="user-name">John Doe</div>
+                        <div className="user-circle">
+                            <div className="user-image">JD</div>
+                            <div className="user-name">John Doe</div>
                         </div>
-                        <div class="user-circle">
-                            <div class="user-image">JD</div>
-                            <div class="user-name">John Doe</div>
+                        <div className="user-circle">
+                            <div className="user-image">JD</div>
+                            <div className="user-name">John Doe</div>
                         </div>
-                        <div class="user-circle">
-                            <div class="user-image">JD</div>
-                            <div class="user-name">John Doe</div>
+                        <div className="user-circle">
+                            <div className="user-image">JD</div>
+                            <div className="user-name">John Doe</div>
                         </div>
-                        <div class="user-circle">
-                            <div class="user-image">JD</div>
-                            <div class="user-name">John Doe</div>
+                        <div className="user-circle">
+                            <div className="user-image">JD</div>
+                            <div className="user-name">John Doe</div>
                         </div>
-                        <div class="user-circle">
-                            <div class="user-image">JD</div>
-                            <div class="user-name">John Doe</div>
+                        <div className="user-circle">
+                            <div className="user-image">JD</div>
+                            <div className="user-name">John Doe</div>
                         </div>
                     </div>
                 </div>
