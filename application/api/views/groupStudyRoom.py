@@ -12,6 +12,9 @@ from ..models.study_session import StudySession
 @permission_classes([IsAuthenticated])
 def create_room(request):
     print("API is being called")
+    print("Request headers:", request.headers)  # Debugging: Log request headers
+    print("Request user:", request.user)  # Debugging: Log the user
+    print("Request data:", request.data)  # Debugging: Log the request data
     print(request)
     print(request.user)
     print(request.data)
@@ -19,7 +22,7 @@ def create_room(request):
 
     # Add a check to make sure the user is logged in here!
     if not user.is_authenticated:
-        return Response({"error": "User must be logged in"}, status=400)
+        return Response({"error": "User must be logged in"}, status=401)
 
     print("User", user, "is attempting to make a room")
     # use as default session name for now, later take as input field for user to type in

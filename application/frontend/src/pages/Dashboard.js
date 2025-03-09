@@ -20,6 +20,9 @@ function Dashboard() {
                     console.error("No access token found. Please log in.");
                     return;
                 }
+
+        console.log("token was found!")
+
         try {
             const res = await axios.post("http://localhost:8000/api/create-room/", {},
                     {
@@ -29,6 +32,8 @@ function Dashboard() {
                         withCredentials: true,
                     }
                     );
+            console.log("Room creation response:", res); // Debugging: Log the response
+
             setRoomCode(res.data.roomCode);
             setJoined(true);
         }
