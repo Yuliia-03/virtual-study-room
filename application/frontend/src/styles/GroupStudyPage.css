@@ -440,8 +440,6 @@ label {
     height: 5%;
     width: 10%;
 
-    font-weight: 900;
-    color: #FFFFFF;
     background-color: #BAD7F2;
     border: none;
     border-radius: 20px;
@@ -544,6 +542,7 @@ label {
 }
 
 .exit-button img,  .copy-button img, .customisation-button img, .music-button img{
+    max-width: none;
     width: 20px;
     height: 20px;
 }

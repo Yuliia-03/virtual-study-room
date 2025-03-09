@@ -17,30 +17,30 @@ function GroupStudyPage(){
 
     const handleMouseDown = (btnType) => {
         //when the button is pressed then the variable setIsActive is set to True
-        if (btnType == 'addMore') {
+        if (btnType === 'addMore') {
             setIsActiveAddMore(true);
-        } else if (btnType == 'music') {
+        } else if (btnType === 'music') {
             setIsActiveMusic(true);
-        } else if (btnType == 'custom'){
+        } else if (btnType === 'custom'){
             setIsActiveCustom(true)
-        } else if (btnType == 'copy'){
+        } else if (btnType === 'copy'){
             setIsActiveCopy(true)
-        } else if (btnType == 'exit'){
+        } else if (btnType === 'exit'){
             setIsActiveExit(true)
         }
     };
 
     const handleMouseUp = (btnType) => {
         //when the button is released then setIsActive is set to False
-        if (btnType == 'addMore') {
+        if (btnType === 'addMore') {
             setIsActiveAddMore(false);
-        } else if (btnType == 'music') {
+        } else if (btnType === 'music') {
             setIsActiveMusic(false);
-        } else if (btnType == 'custom'){
+        } else if (btnType === 'custom'){
             setIsActiveCustom(false)
-        } else if (btnType == 'copy'){
+        } else if (btnType === 'copy'){
             setIsActiveCopy(false)
-        } else if (btnType == 'exit'){
+        } else if (btnType === 'exit'){
             setIsActiveExit(false)
         }
     };
@@ -79,7 +79,7 @@ function GroupStudyPage(){
             <div className="column">
                 <div className="todo-list-container">
                     <h2 className='todo-heading'>To Do: 
-                    <div class="checkbox-wrapper-5">
+                    <div className="checkbox-wrapper-5">
                         <div className="check">
                             <input id="check-5" type="checkbox"></input>
                             <label for="check-5"></label>
