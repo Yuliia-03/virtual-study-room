@@ -40,9 +40,8 @@ const AddListModal = ({ addListWindow, setAddListWindow, setLists }) => {
             setAddListWindow(false);
             console.log("List Created:", response);
         } catch (error) {
-            console.error("Error creating list:", error);
             if (error.response) {
-                alert(error.response.data.error);  // or display specific error from the server
+                alert(error.response.data.error);
             } else {
                 alert("An error occurred. Please try again.");
             }
@@ -66,7 +65,7 @@ const AddListModal = ({ addListWindow, setAddListWindow, setLists }) => {
                             name="name"
                             value={formData.name}
                             onChange={handleChange}
-                            placeholder="Enter task title"
+                            placeholder="Enter list title"
                             required
                         />
                         <input

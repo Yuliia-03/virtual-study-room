@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import "../styles/CreateNewTask.css";
-import axios from "axios";
 
 import { getAuthenticatedRequest } from "../utils/authService";
 
 const AddTaskModal = ({ addTaskWindow, setAddTaskWindow, listId, setLists }) => {
     const [formData, setFormData] = useState({ listId: listId, taskTitle: "", taskContent: "", isCompleted: false });
 
-        // Handle form submission
     const handleSubmit = (e) => {
         e.preventDefault();
         handleSaveTask(formData, listId);
@@ -15,15 +13,14 @@ const AddTaskModal = ({ addTaskWindow, setAddTaskWindow, listId, setLists }) => 
     };
 
     const handleChange = (e) => {
-            const { name, value } = e.target;
-            setFormData({
-                ...formData,
-                [name]: value
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value
         });
     };
 
 
-        // Save task function
     const handleSaveTask = async (newTask, listId) => {
         console.log("Saving task to list", listId, "Task:", newTask.taskTitle, "Content:", newTask.taskContent);
 
@@ -33,6 +30,8 @@ const AddTaskModal = ({ addTaskWindow, setAddTaskWindow, listId, setLists }) => 
                 title: newTask.taskTitle,
                 content: newTask.taskContent
             });
+
+            console.log("Task being added to list:", response);
 
             setLists(prevLists =>
                 prevLists.map(list =>
@@ -44,7 +43,6 @@ const AddTaskModal = ({ addTaskWindow, setAddTaskWindow, listId, setLists }) => 
             setAddTaskWindow(false);
             console.log("Task Created:", response);
 
-            setAddTaskWindow(false);
         } catch (error) {
             if (error.response) {
                 alert(error.response.data.error);
@@ -56,10 +54,10 @@ const AddTaskModal = ({ addTaskWindow, setAddTaskWindow, listId, setLists }) => 
 
 
 
-        const handleCancel = () => {
-            setFormData({ taskTitle: "", taskContent: "" });
-            setAddTaskWindow(false);
-        };
+    const handleCancel = () => {
+        setFormData({ taskTitle: "", taskContent: "" });
+        setAddTaskWindow(false);
+    };
 
     if (!addTaskWindow) return null;
     
@@ -94,4 +92,4 @@ const AddTaskModal = ({ addTaskWindow, setAddTaskWindow, listId, setLists }) => 
     );
 };
 
-    export default AddTaskModal;
+export default AddTaskModal;

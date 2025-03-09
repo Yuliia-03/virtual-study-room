@@ -1,8 +1,6 @@
 
 import React, { useState } from 'react';
 import "../styles/Dashboard.css";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import ToDoList from '../pages/ToDoList';
 import Analytics from './Analytics';
 
