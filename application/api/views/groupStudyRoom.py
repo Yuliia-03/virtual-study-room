@@ -40,7 +40,7 @@ def create_room(request):
         # is using the study session auto generated ID as the room code
 
         print("User", user, "has successfully made the room:", session_name, "with code:", room.roomCode)
-        return Response({"roomCode" : str(room.id)})
+        return Response({"roomCode" : room.roomCode})
         # returns the room ID as the room code
     except Exception as e:
         return Response({"error": f"Failed to create room: {str(e)}"}, status=400)

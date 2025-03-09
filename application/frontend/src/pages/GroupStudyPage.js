@@ -6,8 +6,20 @@ import customLogo from "../assets/customisation_logo.png";
 import copyLogo from "../assets/copy_logo.png";
 import exitLogo from "../assets/exit_logo.png";
 import StudyTimer from '../components/StudyTimer.js';
+import { useParams, useLocation } from 'react-router-dom';
 
-function GroupStudyPage({ roomCode }){
+function GroupStudyPage(){
+
+    // Import room code
+    const { roomCode } = useParams();
+
+    // Location object used for state
+    const location = useLocation();
+
+    // Retrieve roomCode from state if not in URL
+    const stateRoomCode = location.state?.roomCode;
+    const finalRoomCode = roomCode || stateRoomCode;
+    // finalRoomCode is what we should refer to!
 
     const [isActiveAddMore, setIsActiveAddMore] = useState(false); //initialise both variables: isActive and setIsActive to false
     const [isActiveMusic, setIsActiveMusic] = useState(false);
@@ -21,7 +33,14 @@ function GroupStudyPage({ roomCode }){
     const [input, setInput] = useState("");
 
     useEffect(() => {
-        const ws = new WebSocket(`ws://localhost:8000/ws/room/${roomCode}/`);
+
+        // Ensure room code is given
+        if (!finalRoomCode) {
+            console.error("Room code is missing.");
+            return;
+        }
+
+        const ws = new WebSocket(`ws://localhost:8000/ws/room/${finalRoomCode}/`);
 
         ws.onopen = () => console.log("Connected to Websocket");
         ws.onmessage = (event) => {
@@ -34,7 +53,7 @@ function GroupStudyPage({ roomCode }){
         setSocket(ws);
 
         return () => ws.close();
-    }, [roomCode]);
+    }, [finalRoomCode]);
 
     const sendMessage = () => {
         if (socket && input.trim()) {
@@ -109,10 +128,10 @@ function GroupStudyPage({ roomCode }){
             <div className="column">
                 <div className="todo-list-container">
                     <h2 className='todo-heading'>To Do: 
-                    <div class="checkbox-wrapper-5">
+                    <div className="checkbox-wrapper-5">
                         <div className="check">
                             <input id="check-5" type="checkbox"></input>
-                            <label for="check-5"></label>
+                            <label htmlFor="check-5"></label>
                         </div>
                     </div>
                     </h2>
@@ -150,8 +169,8 @@ function GroupStudyPage({ roomCode }){
             <div className="column">
                 <div className="user-list-container">
                     <h2 className="heading"> Study Room: </h2>
-                    <h3 className='gs-heading2'> Code: {roomCode}</h3>
-                    {/* Debugging messages */}}
+                    <h3 className='gs-heading2'> Code: {finalRoomCode}</h3>
+                    {/* Debugging messages */}
                     {messages.map((msg, index) => <p key={index}>{msg}</p>)}
                     <div className='utility-bar'>
                         <button
@@ -173,7 +192,6 @@ function GroupStudyPage({ roomCode }){
                             <img src={customLogo} alt="Customisation" />
                         </button>
                     </div>
-                    <h3 className='gs-heading2'> Code: a2654h </h3>
                     <div className='utility-bar-2'>
                         <button
                             type="button"
