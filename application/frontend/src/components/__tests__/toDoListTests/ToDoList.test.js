@@ -32,12 +32,17 @@ const mockListsData = [
 
 describe("ToDoList", () => {
 
-    let mockSetLists;
-    let mockSetLoading;
-
     beforeEach(() => {
-        mockSetLists = jest.fn();
-        mockSetLoading = jest.fn();
+
+        jest.spyOn(console, 'error').mockImplementation(() => { });
+        jest.spyOn(window, 'alert').mockImplementation(() => { });
+
+    });
+
+    afterEach(() => {
+
+        console.error.mockRestore();
+        window.alert.mockRestore();
     });
 
     const setup = () => {
@@ -68,6 +73,62 @@ describe("ToDoList", () => {
         expect(taskLabel).toHaveClass('completed');
 
     });
+
+    test('should handle API error and show an alert when fetching tasks fails', async () => {
+
+        authService.getAuthenticatedRequest.mockRejectedValue({
+            response: { data: { error: "Failed to fetch tasks" } },
+        });
+
+        render(<ToDoList />);
+
+        await waitFor(() => screen.queryByText(/Loading To-Do Lists.../i), { timeout: 3000 });
+        expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
+        expect(window.alert).toHaveBeenCalledWith("Failed to fetch tasks");
+        expect(console.error).toHaveBeenCalled();
+        expect(console.error.mock.calls[0][0]).toContain("Error fetching to-do lists");
+
+    });
+
+    test("should log an error if task update request fails", async () => {
+
+        // Step 1: Render successfully with mock data
+        authService.getAuthenticatedRequest.mockResolvedValueOnce(mockListsData);
+
+        render(<ToDoList />);
+
+        await waitFor(() => expect(authService.getAuthenticatedRequest).toHaveBeenCalled());
+        expect(screen.getByText("List 1")).toBeInTheDocument(); // Ensure list is displayed
+        authService.getAuthenticatedRequest.mockRejectedValueOnce(new Error("API Error"));
+        const taskCheckbox = screen.getAllByRole("checkbox")[0]; // Get first task checkbox
+
+        await act(async () => {
+            fireEvent.click(taskCheckbox); // Simulate toggling the task
+        });
+
+        expect(console.error).toHaveBeenCalledWith("Error fetching to-do lists:", expect.any(Error));
+
+    });
+
+
+    test("should log an error if API returns status 0", async () => {
+
+        authService.getAuthenticatedRequest.mockResolvedValueOnce(mockListsData);
+
+        render(<ToDoList />);
+        authService.getAuthenticatedRequest.mockResolvedValue({ status: 0 });
+
+        await waitFor(() => screen.queryByText(/Loading To-Do Lists.../i));
+        const taskCheckbox = screen.getAllByRole("checkbox")[0]; // Get first task checkbox
+        await act(async () => {
+            fireEvent.click(taskCheckbox); // Simulate toggling the task
+        });
+        
+        expect(console.error).toHaveBeenCalledWith("Error updating task status");
+
+    });
+
+
 
 
 
