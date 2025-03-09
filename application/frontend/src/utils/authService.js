@@ -23,7 +23,7 @@ const logoutUser = () => {
 export const refreshToken = async () => {
     const refresh = getRefreshToken();
     if (!refresh || isTokenExpired(refresh)) {
-        console.warn("Refresh token is expired or missing. Logging out.");
+        //console.warn("Refresh token is expired or missing. Logging out.");
         logoutUser();
         return null;
     }

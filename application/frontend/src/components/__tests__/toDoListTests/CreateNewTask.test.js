@@ -1,11 +1,12 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import AddTaskModal from "../../CreateNewTask";
-import * as authService from "../../../utils/authService";
+import AddTaskModal from "../../ToDoListComponents/CreateNewTask";
+import * as authService from "../../../pages/utils/authService";
 
-jest.mock("../../../utils/authService", () => ({
+jest.mock("../../../pages/utils/authService", () => ({
     getAuthenticatedRequest: jest.fn(),
 }));
+
 describe("CreateNewTask", () => {
 
     let setAddTaskWindowMock, setListsMock;

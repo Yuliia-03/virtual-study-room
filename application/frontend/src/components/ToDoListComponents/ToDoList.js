@@ -7,6 +7,7 @@ import AddListModal from "./CreateNewList";
 const ToDoList = () => {
     const [lists, setLists] = useState([]);
     const [loading, setLoading] = useState(true);
+    
     const [addTaskWindow, setAddTaskWindow] = useState(false);
     const [selectedListId, setSelectedListId] = useState(null);
     const [addListWindow, setAddListWindow] = useState(false);
@@ -14,11 +15,18 @@ const ToDoList = () => {
     const [expandedTasks, setExpandedTasks] = useState({}); // Tracks expanded tasks
 
     useEffect(() => {
+        console.log("Fetching data in useEffect...");
         const fetchData = async () => {
+            
             try {
                 const data = await getAuthenticatedRequest("/todolists/false/");
+
+                console.log("Fetched data:", data);
                 setLists(data);
             } catch (error) {
+                if (error.response) {
+                    alert(error.response.data.error);
+                }
                 console.error("Error fetching to-do lists:", error);
             } finally {
                 setLoading(false);
