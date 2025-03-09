@@ -74,7 +74,7 @@ function GroupStudyPage(){
     //Third Column: Timer, customisation, chatbox
     
     return (
-        <div className='groupStudyRoom-container'>
+        <div className='groupStudyRoom-container' data-testid="groupStudyRoom-container">
             {/*1st Column */}
             <div className="column">
                 <div className="todo-list-container">
@@ -82,7 +82,7 @@ function GroupStudyPage(){
                     <div className="checkbox-wrapper-5">
                         <div className="check">
                             <input id="check-5" type="checkbox"></input>
-                            <label for="check-5"></label>
+                            <label htmlFor="check-5"></label>
                         </div>
                     </div>
                     </h2>
@@ -97,7 +97,7 @@ function GroupStudyPage(){
                                         checked={todo.checked}
                                         onChange={() => toggleTodo(todo.id)}
                                     />
-                                    <label htmlFor={`todo-${todo.id}`}>{todo.text}</label>
+                                    <label htmlFor={`todo-${todo.id}`} className='todo-label'>{todo.text}</label>
                                 </div>
                                 <button type= "button" className='delete-button' >X</button>
                             </div>
