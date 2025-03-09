@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import "../styles/Dashboard.css";
-import ToDoList from '../pages/ToDoList';
+import ToDoList from '../components/ToDoList';
 import Analytics from './Analytics';
 
 function Dashboard() {

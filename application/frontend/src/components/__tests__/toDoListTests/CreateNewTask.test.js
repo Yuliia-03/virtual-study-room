@@ -1,9 +1,9 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import AddTaskModal from "../pages/CreateNewTask";
-import * as authService from "../utils/authService";
+import AddTaskModal from "../../CreateNewTask";
+import * as authService from "../../../utils/authService";
 
-jest.mock("../utils/authService", () => ({
+jest.mock("../../../utils/authService", () => ({
     getAuthenticatedRequest: jest.fn(),
 }));
 describe("CreateNewTask", () => {
@@ -37,7 +37,7 @@ describe("CreateNewTask", () => {
         );
     };
 
-    const fillForm = () => {
+    const submitForm = () => {
 
         const titleInput = screen.getByPlaceholderText("Enter task title");
         const contentInput = screen.getByPlaceholderText("Enter task content");
@@ -91,9 +91,7 @@ describe("CreateNewTask", () => {
         });
 
         setup();
-
-        // Fill inputs
-        fillForm();
+        submitForm();
 
         await waitFor(() => {
             expect(authService.getAuthenticatedRequest).toHaveBeenCalledWith(
@@ -132,16 +130,7 @@ describe("CreateNewTask", () => {
         });
 
         setup();
-
-        const titleInput = screen.getByPlaceholderText("Enter task title");
-        const contentInput = screen.getByPlaceholderText("Enter task content");
-
-        fireEvent.change(titleInput, { target: { value: "New Task" } });
-        fireEvent.change(contentInput, { target: { value: "Task details" } });
-
-        const submitButton = screen.getByText("Save");
-
-        fireEvent.click(submitButton);
+        submitForm();
 
         await waitFor(() => {
             expect(authService.getAuthenticatedRequest).toHaveBeenCalled();
@@ -165,23 +154,13 @@ describe("CreateNewTask", () => {
         });
 
         setup();
-
-        const titleInput = screen.getByPlaceholderText("Enter task title");
-        const contentInput = screen.getByPlaceholderText("Enter task content");
-
-        fireEvent.change(titleInput, { target: { value: "New Task" } });
-        fireEvent.change(contentInput, { target: { value: "Task details" } });
-
-        const submitButton = screen.getByText("Save");
-
-        fireEvent.click(submitButton);
+        submitForm();
 
         await waitFor(() => {
             expect(authService.getAuthenticatedRequest).toHaveBeenCalled();
         });
 
         await waitFor(() => {
-            // Ensure the alert is called with the error message from the response
             expect(global.alert).toHaveBeenCalledWith("Something went wrong with the request");
         });
 

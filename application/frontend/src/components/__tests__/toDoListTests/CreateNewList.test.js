@@ -1,9 +1,9 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import AddListModal from "../pages/CreateNewList";
-import * as authService from "../utils/authService";
+import AddListModal from "../../CreateNewList";
+import * as authService from "../../../utils/authService";
 
-jest.mock("../utils/authService", () => ({
+jest.mock("../../../utils/authService", () => ({
     getAuthenticatedRequest: jest.fn(),
 }));
 describe("CreateNewList", () => {
@@ -35,6 +35,19 @@ describe("CreateNewList", () => {
             />
         );
     };
+
+    const submitForm = () => {
+        const titleInput = screen.getByPlaceholderText("Enter list title");
+        const isShared = screen.getByRole("checkbox");
+
+        fireEvent.change(titleInput, { target: { value: "New List" } });
+        fireEvent.click(isShared);
+
+        expect(titleInput.value).toBe("New List");
+        expect(isShared.checked).toBe(true);
+
+        fireEvent.click(screen.getByText("Save"));
+    }
 
     test("renders modal correctly when addListWindow is true", () => {
         setup();
@@ -71,20 +84,9 @@ describe("CreateNewList", () => {
         setListsMock.mockImplementation((updateFunc) => {
             updatedMockLists = updateFunc(updatedMockLists);
         });
+        
         setup();
-
-        // Fill inputs
-        const titleInput = screen.getByPlaceholderText("Enter list title");
-        const isShared = screen.getByRole("checkbox");
-
-        fireEvent.change(titleInput, { target: { value: "New List" } });
-        fireEvent.click(isShared);
-
-        expect(titleInput.value).toBe("New List");
-        expect(isShared.checked).toBe(true);
-
-        // Submit the form
-        fireEvent.click(screen.getByText("Save"));
+        submitForm();
 
         await waitFor(() => {
             expect(authService.getAuthenticatedRequest).toHaveBeenCalledWith(
@@ -122,18 +124,7 @@ describe("CreateNewList", () => {
         });
 
         setup();
-
-        const titleInput = screen.getByPlaceholderText("Enter list title");
-        const isShared = screen.getByRole("checkbox");
-
-        fireEvent.change(titleInput, { target: { value: "New List" } });
-        fireEvent.click(isShared);
-
-        expect(titleInput.value).toBe("New List");
-        expect(isShared.checked).toBe(true);
-
-        // Submit the form
-        fireEvent.click(screen.getByText("Save"));
+        submitForm();
 
         await waitFor(() => {
             expect(authService.getAuthenticatedRequest).toHaveBeenCalled();
@@ -157,18 +148,7 @@ describe("CreateNewList", () => {
         });
 
         setup();
-
-        const titleInput = screen.getByPlaceholderText("Enter list title");
-        const isShared = screen.getByRole("checkbox");
-
-        fireEvent.change(titleInput, { target: { value: "New List" } });
-        fireEvent.click(isShared);
-
-        expect(titleInput.value).toBe("New List");
-        expect(isShared.checked).toBe(true);
-
-        // Submit the form
-        fireEvent.click(screen.getByText("Save"));
+        submitForm();
 
         await waitFor(() => {
             expect(authService.getAuthenticatedRequest).toHaveBeenCalled();
