@@ -7,6 +7,8 @@ import ToDoList from '../pages/ToDoList';
 import GroupStudyRoom from '../pages/GroupStudyPage';
 import Analytics from './Analytics';
 
+import { getAuthenticatedRequest } from "./utils/authService";
+
 function Dashboard() {
 
     // Web socket handling
@@ -14,22 +16,13 @@ function Dashboard() {
     const [joined, setJoined] = useState(false);
 
     const createRoom = async () => {
-        const token = localStorage.getItem("access_token"); // Get the access token from localStorage
+        console.log("Saving room...");
 
-                if (!token) {
-                    console.error("No access token found. Please log in.");
-                    return;
-                }
         try {
-            const res = await axios.post("http://localhost:8000/api/create-room/", {},
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`, // Include the access token in the request
-                        },
-                        withCredentials: true,
-                    }
-                    );
-            setRoomCode(res.data.roomCode);
+            
+            const response = await getAuthenticatedRequest("/create-room/", "POST", {
+            });
+            setRoomCode(response.data.roomCode);
             setJoined(true);
         }
 
