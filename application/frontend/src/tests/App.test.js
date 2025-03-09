@@ -1,8 +1,10 @@
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import App from '../App';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+jest.mock('../firebase-config.js') ;
+test('renders welcome heading', () => {
+    render(<App />);
+    const headingElement = screen.getByText(/The Study Spot/i); // Or any text present in Welcome.js
+    expect(headingElement).toBeInTheDocument();
 });

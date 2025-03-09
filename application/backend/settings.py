@@ -29,6 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "localhost",  # For local development
     "127.0.0.1",  # Localhost IP
+    "https://virtual-study-room-phi.vercel.app", # real website
 ]
 
 
@@ -69,9 +70,11 @@ REST_FRAMEWORK = {
 
 ROOT_URLCONF = 'backend.urls'
 
+CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React frontend
-    "https://virtual-study-room-phi.vercel.app", #eral
+    "https://virtual-study-room-phi.vercel.app", # real website
+    "https://studyspot.pythonanywhere.com"
 ]
 
 TEMPLATES = [
@@ -105,6 +108,7 @@ CORS_ALLOW_METHODS = [
     'GET',
     'POST',
     'PUT',
+    'PATCH',
     'DELETE',
     'OPTIONS',
 ]
@@ -157,6 +161,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
@@ -168,5 +173,5 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-#User custom User model instead of default
+# User custom User model instead of default
 AUTH_USER_MODEL = "api.User"

@@ -25,16 +25,43 @@ from rest_framework.routers import DefaultRouter
 # router = DefaultRouter()
 # router.register('appointments', AppointmentViewset, basename='appointments')
 
+from django.conf import settings
+from django.conf.urls.static import static
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from api import views
+from api.views.profile_view import get_logged_in_user, save_description, get_user_badges
+
+from api.views.analytics import get_analytics
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
     # path('api/events/', get_events),
     # path('api/events/', create_event, name='create_event'),
     path('', TemplateView.as_view(template_name='index.html')),
-    path('appointments/', create_appointment, name='create-appointment'),
-    #path('appointments/', appointments_list, name='appointments-list'),
-    #path('calendar/', AppointmentViewset.as_view({'get': 'list'}), name='calendar'), 
-    path('api/signup/', views.signup, name='signup'),
-] 
+    
+    path('api/signup/', views.SignUpView.as_view(), name='signup'),
+    path("api/analytics/", get_analytics, name="analytics"),  # Default for logged-in user
+    path('api/login/', views.login, name='login'),
+    
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
-# urlpatterns += router.urls
+    path('api/todolists/<str:is_shared>/', views.ViewToDoList.as_view(), name='to_do_list'),
+    
+    path('api/update_task/<int:task_id>/', views.ViewToDoList.as_view(), name='update_task_status'),
+    path('api/new_task/', views.ViewToDoList.as_view(), name='create_new_task'),
+    path('api/delete_task/<int:id>/', views.ViewToDoList.as_view(), name='delete_task'),
+
+    path('api/new_list/', views.ViewToDoList.as_view(), name='create_new_list'),
+    path('api/delete_list/<int:id>/',views.ViewToDoList.as_view(), name='delete_list'),
+
+    path('api/motivational-message/', views.motivationalMessage, name='motivation'),
+    path('api/check-email/', views.checkEmailView, name='check_email'),
+    path('api/check-username/', views.checkUsernameView, name='check_username'),
+    path('api/profile/', get_logged_in_user, name='get_logged_in_user'),
+    path('api/description/', save_description, name='save_description'),
+    path('api/badges/', get_user_badges, name='get_user_badges')
+
+    path('appointments/', create_appointment, name='create-appointment'),
+]
