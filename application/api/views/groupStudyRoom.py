@@ -15,19 +15,22 @@ def create_room(request):
     print("Request headers:", request.headers)  # Debugging: Log request headers
     print("Request user:", request.user)  # Debugging: Log the user
     print("Request data:", request.data)  # Debugging: Log the request data
-    print(request)
-    print(request.user)
-    print(request.data)
+
     user = request.user  # To check if the user is logged in
 
     # Add a check to make sure the user is logged in here!
     if not user.is_authenticated:
         return Response({"error": "User must be logged in"}, status=401)
 
-    print("User", user, "is attempting to make a room")
+    # sets the name, if none given, default name is on the right :)
+    session_name = request.data.get('sessionName', "Untitled Study Session - maybe something went wrong?")
+    if session_name == "":
+        session_name = "We couldn't think of anything :)"
+
+
+    print("User", user, "is attempting to make a room called:", session_name)
     # use as default session name for now, later take as input field for user to type in
-    session_name = "Untitled Study Session"
-    #session_name = request.data.get('sessionName', "Untitled Study Session")
+    #session_name = "Untitled Study Session"
 
     try:
         room = StudySession.objects.create(
@@ -35,6 +38,8 @@ def create_room(request):
                 sessionName = session_name
         )
         # is using the study session auto generated ID as the room code
+
+        print("User", user, "has successfully made the room:", session_name, "with code:", room.roomCode)
         return Response({"roomCode" : str(room.id)})
         # returns the room ID as the room code
     except Exception as e:

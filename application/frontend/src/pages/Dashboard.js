@@ -12,15 +12,18 @@ import { getAuthenticatedRequest } from "./utils/authService";
 function Dashboard() {
 
     // Web socket handling
-    const [roomCode, setRoomCode] = useState("")    // Ensure that the room code is defined
+    const [roomCode, setRoomCode] = useState("");   // Ensure that the room code is defined
+    const [roomName, setRoomName] = useState("");
     const [joined, setJoined] = useState(false);
 
     const createRoom = async () => {
         console.log("Saving room...");
 
         try {
-            
+
+            // This stuff gets sent to the backend!
             const response = await getAuthenticatedRequest("/create-room/", "POST", {
+                sessionName: roomName,  // Sends the room name to the backend
             });
             setRoomCode(response.data.roomCode);
             setJoined(true);
@@ -70,7 +73,18 @@ function Dashboard() {
                         <div>
                             {!joined ? (
                                 <>
+                                    {/* To create a study room, text field to enter a room name ( NOT CODE, code is auto generated ) */}
+
+                                    <input
+                                        type = "text"
+                                        placeholder = "What do we feel like studying? :D"
+                                        value = {roomName}
+                                        onChange={(e) => setRoomName(e.target.value)}
+                                    />
                                     <button onClick={createRoom}>Create Room</button>
+
+                                    {/* For joining the room, there is also a text input for the room code"*/}
+
                                     <input value={roomCode} onChange={(e) => setRoomCode(e.target.value)} />
                                     <button onClick={joinRoom}>Join Room</button>
                                 </>
