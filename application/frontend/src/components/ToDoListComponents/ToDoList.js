@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { getAuthenticatedRequest } from "../utils/authService";
-import "../styles/ToDoList.css";
+import { getAuthenticatedRequest } from "../../utils/authService";
+import "../../styles/ToDoList.css";
 import AddTaskModal from "./CreateNewTask";
 import AddListModal from "./CreateNewList";
 

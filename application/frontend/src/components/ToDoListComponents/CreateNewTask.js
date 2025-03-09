@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import "../styles/CreateNewTask.css";
+import "../../styles/CreateNewTask.css";
 
-import { getAuthenticatedRequest } from "../pages/utils/authService";
+import { getAuthenticatedRequest } from "../../pages/utils/authService";
 
 const AddTaskModal = ({ addTaskWindow, setAddTaskWindow, listId, setLists }) => {
     const [formData, setFormData] = useState({ listId: listId, taskTitle: "", taskContent: "", isCompleted: false });
