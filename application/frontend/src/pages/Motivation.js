@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../styles/MotivationalMessage.css";
 
-const MotivationalMessage = () => {
+const MotivationalMessage = ({ "data-testid": dataTestId }) => {
   const [message, setMessage] = useState("Loading...");
 
   useEffect(() => {
@@ -20,8 +20,8 @@ const MotivationalMessage = () => {
   }, []);
 
   return (
-    
-      <div className="message-card">
+
+      <div className="message-card" data-testid={dataTestId}>
         <h4>{message}</h4>
       </div>
     

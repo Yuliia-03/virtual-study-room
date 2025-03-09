@@ -76,8 +76,8 @@ function GroupStudyPage(){
     return (
         <div className='groupStudyRoom-container' data-testid="groupStudyRoom-container">
             {/*1st Column */}
-            <div className="column">
-                <div className="todo-list-container">
+            <div className="column" role='column' data-testid="column-1">
+                <div className="todo-list-container" data-testid="todo-list-container">
                     <h2 className='todo-heading'>To Do: 
                     <div className="checkbox-wrapper-5">
                         <div className="check">
@@ -114,13 +114,13 @@ function GroupStudyPage(){
                     </button>      
                 </div>
 
-                <div className="sharedMaterials-container">Shared Materials</div>
+                <div className="sharedMaterials-container" data-testid="sharedMaterials-container">Shared Materials</div>
             </div>
             {/*2nd Column */}
-            <div className="column">
-                <div className="user-list-container">
+            <div className="column" role='column' data-testid="column-2">
+                <div className="user-list-container" data-testid="user-list-container">
                     <h2 className="heading"> Study Room: </h2>
-                    <div className='utility-bar'>
+                    <div className='utility-bar' data-testid="utility-bar">
                         <button
                             type="button"
                             className={`music-button ${isActiveMusic ? 'active' : ''}`}
@@ -141,7 +141,7 @@ function GroupStudyPage(){
                         </button>
                     </div>
                     <h3 className='gs-heading2'> Code: a2654h </h3>
-                    <div className='utility-bar-2'>
+                    <div className='utility-bar-2' data-testid="utility-bar-2">
                         <button
                             type="button"
                             className={`copy-button ${isActiveCopy ? 'active' : ''}`}
@@ -150,6 +150,7 @@ function GroupStudyPage(){
                             onMouseLeave={() => handleMouseUp('copy')}
                         >
                             <img src={copyLogo} alt="Copy" />
+                            
                         </button>
                         <button
                             type="button"
@@ -190,12 +191,12 @@ function GroupStudyPage(){
                         </div>
                     </div>
                 </div>
-                <MotivationalMessage />
+                <MotivationalMessage data-testid="motivationalMessage-container"/>
             </div>
             {/*3rd Column */}
-            <div className="column">
-                <StudyTimer roomId="yourRoomId" isHost={true} onClose={() => console.log('Timer closed')} />
-                <div className="chatBox-container">Chat Box</div>
+            <div className="column" role='column'  data-testid="column-3">
+                <StudyTimer roomId="yourRoomId" isHost={true} onClose={() => console.log('Timer closed')} data-testid="studyTimer-container"/>
+                <div className="chatBox-container"  data-testid="chatBox-container">Chat Box</div>
             </div>
         </div>
     );
