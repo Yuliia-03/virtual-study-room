@@ -61,7 +61,7 @@ urlpatterns = [
     path('api/check-username/', views.checkUsernameView, name='check_username'),
     path('api/profile/', get_logged_in_user, name='get_logged_in_user'),
     path('api/description/', save_description, name='save_description'),
-    path('api/badges/', get_user_badges, name='get_user_badges')
+    path('api/badges/', get_user_badges, name='get_user_badges'),
 
-    path('appointments/', create_appointment, name='create-appointment'),
+    path('appointments/', create_appointment, name='create-appointment')
 ]

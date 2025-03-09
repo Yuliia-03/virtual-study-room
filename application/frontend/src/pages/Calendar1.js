@@ -2,6 +2,7 @@
 import MyCal from './cal/MyCal';
 import axios from 'axios'; 
 import AxiosInstance from './AxiosInstance';
+import "../styles/calendar.css";
 import React, { useEffect, useState } from 'react';
 
 const Calendar1 = () => {
