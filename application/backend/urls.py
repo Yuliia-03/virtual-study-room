@@ -53,8 +53,7 @@ urlpatterns = [
 
     path('api/get_friends/', views.FriendsView.as_view(), name='friends'),
 
-    path('api/motivational-message/',
-         views.motivationalMessage, name='motivation'),
+    path('api/motivational-message/', views.motivationalMessage, name='motivation'),
     path('api/check-email/', views.checkEmailView, name='check_email'),
     path('api/check-username/', views.checkUsernameView, name='check_username'),
     path('api/profile/', get_logged_in_user, name='get_logged_in_user'),

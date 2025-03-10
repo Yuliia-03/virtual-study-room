@@ -21,6 +21,7 @@ function Dashboard() {
                 <div class = "dashboard-main-panel">
                     <div class="dashboard-panel">Profile</div>
                     <div class="dashboard-panel"><Friends/></div>
+                    {/*<div class="dashboard-panel">Add Friends</div>*/}
                 </div>
                 <div class = "dashboard-right-panel">
                     <div class="dashboard-panel">Generate Group Study Room</div>

@@ -1,4 +1,3 @@
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from api.models import Friends, Status, Permission
 from rest_framework.decorators import api_view

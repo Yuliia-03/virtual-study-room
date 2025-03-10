@@ -40,7 +40,6 @@ export const refreshToken = async (httpClient = axios) => {
     }
 };
 
-// Authenticated request helper
 export const getAuthenticatedRequest = async (url, method = "GET", data = null, httpClient = axios) => {
     let token = storage.getAccessToken();
 
