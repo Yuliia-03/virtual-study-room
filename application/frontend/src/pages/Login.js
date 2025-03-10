@@ -34,6 +34,7 @@ function Login() {
             // Store tokens in localStorage
             localStorage.setItem("access_token", response.data.access);
             localStorage.setItem("refresh_token", response.data.refresh);
+            localStorage.setItem('user_id', response.data.userId);
 
             alert("Login successful!");
             navigate('/dashboard');  // Redirect to dashboard after login

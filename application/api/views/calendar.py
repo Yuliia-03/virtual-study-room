@@ -1,20 +1,21 @@
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
-from ..models import Appointments
-from ..serializers import AppointmentSerializer
-@api_view(['GET', 'POST'])
-def create_appointment(request):
-    if request.method == 'GET':
-        # Fetch all appointments
-        appointments = Appointments.objects.all()
-        serializer = AppointmentSerializer(appointments, many=True)
-        return Response(serializer.data)
+# filepath: /c:/Users/prapt/OneDrive/Documents/UNI/SEG/MGP/virtual-study-room/application/api/views.py
+from rest_framework import viewsets
+from api.models.events import Appointments
+from api.serializers import AppointmentSerializer
 
-    elif request.method == 'POST':
-        # Handle appointment creation
-        serializer = AppointmentSerializer(data=request.data)  # DRF's request.data
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class EventViewSet(viewsets.ModelViewSet):
+    queryset = Appointments.objects.all()
+    serializer_class = AppointmentSerializer
+    # No permission classes specified, allowing all access
+
+# from rest_framework.decorators import api_view
+# from rest_framework.response import Response
+# from api.models.events import Appointments
+# from api.serializers import AppointmentSerializer
+
+# @api_view(['GET'])
+# def list_events(request):
+#     events = Appointments.objects.all()
+#     serializer = AppointmentSerializer(events, many=True)
+#     return Response(serializer.data)

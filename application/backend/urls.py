@@ -17,27 +17,22 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
+from rest_framework.routers import DefaultRouter
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from api.views import *
 from api import views
-from api.views.calendar import *
-from rest_framework.routers import DefaultRouter
-
-# router = DefaultRouter()
-# router.register('appointments', AppointmentViewset, basename='appointments')
-
-from django.conf import settings
-from django.conf.urls.static import static
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from api import views
 from api.views.profile_view import get_logged_in_user, save_description, get_user_badges
-
 from api.views.analytics import get_analytics
+from api.views.calendar import EventViewSet
+
+event_list = EventViewSet.as_view({'get': 'list', 'post': 'create'})  
+event_detail = EventViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
-    # path('api/events/', get_events),
-    # path('api/events/', create_event, name='create_event'),
+   
     path('', TemplateView.as_view(template_name='index.html')),
     
     path('api/signup/', views.SignUpView.as_view(), name='signup'),
@@ -62,6 +57,6 @@ urlpatterns = [
     path('api/profile/', get_logged_in_user, name='get_logged_in_user'),
     path('api/description/', save_description, name='save_description'),
     path('api/badges/', get_user_badges, name='get_user_badges'),
-
-    path('appointments/', create_appointment, name='create-appointment')
+    path('api/events/', event_list, name='event-list'),  
+    path('api/events/<int:pk>/', event_detail, name='event-detail'),  
 ]

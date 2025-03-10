@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Appointments
+from api.models.events import Appointments
 
 class AppointmentSerializer(serializers.ModelSerializer):
     title = serializers.CharField(source='name')  # Maps title → name
@@ -9,10 +9,12 @@ class AppointmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Appointments
-        fields = ['title', 'start', 'end', 'description', 'status']  # Add status
-
+        fields = ['id', 'title','description','start','end','description','status','created', 'modified','user']  # Add status
+        extra_kwargs = {'user': {'read_only': True}}
+    
     def create(self, validated_data):
-        # Ensure 'status' is included (temporary default if missing)
-        if 'status' not in validated_data:
-            validated_data['status'] = 'Pending'  
+        # request = self.context.get('request')
+        # validated_data['user'] = request.user
         return Appointments.objects.create(**validated_data)
+
+    
