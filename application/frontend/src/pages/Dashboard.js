@@ -1,6 +1,7 @@
 import React from 'react';
 import "../styles/Dashboard.css";
-import ToDoList from '../pages/ToDoList';
+import ToDoList from '../components/ToDoListComponents/ToDoList';
+
 import StudyRoomComponent from '../components/StudyRoomComponent';
 import Analytics from './Analytics';
 
