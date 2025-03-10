@@ -3,6 +3,7 @@ import axios from "axios";
 import GroupStudyRoom from '../pages/GroupStudyPage';
 import { getAuthenticatedRequest } from "../pages/utils/authService";
 import { useNavigate } from 'react-router-dom';
+import "../styles/StudyRoomComponent.css";
 
 const StudyRoomComponent = () => {
 
@@ -64,28 +65,30 @@ const StudyRoomComponent = () => {
 
 
     return(
-        <div className="dashboard-panel">Generate Group Study Room
+        <div className="dashboard-panel">
                         <div>
                             {!joined ? (
                                 <>
-                                    {/* To create a study room, text field to enter a room name ( NOT CODE, code is auto generated ) */}
 
+                                    {/* To create a study room, text field to enter a room name ( NOT CODE, code is auto generated ) */}
+                                    <button onClick={createRoom}>Create Room</button>
                                     <input
                                         type = "text"
                                         placeholder = "What do we feel like studying? :D"
                                         value = {roomName}
                                         onChange={(e) => setRoomName(e.target.value)}
                                     />
-                                    <button onClick={createRoom}>Create Room</button>
+
 
                                     {/* For joining the room, there is also a text input for the room code"*/}
-
+                                    <button onClick={joinRoom}>Join Room</button>
                                     <input
+                                    type = "text"
                                         placeholder = "Enter Room Code!"
                                         value={roomCode}
                                         onChange={(e) => setRoomCode(e.target.value)}
                                     />
-                                    <button onClick={joinRoom}>Join Room</button>
+
                                 </>
                             ) : (
                                 <GroupStudyRoom roomCode={roomCode} />
