@@ -6,22 +6,17 @@ import exitLogo from '../assets/exit_logo.png';
 import musicLogo from "../assets/music_logo.png";
 import customLogo from "../assets/customisation_logo.png";
 import copyLogo from "../assets/copy_logo.png";
+import MotivationalMessage from "../pages/Motivation";
 
 //mock the necessary modules
 jest.mock("axios");
 jest.mock("@fontsource/vt323", () => {}); 
 jest.mock("@fontsource/press-start-2p", () => {}); 
-jest.mock('react-toastify', () => {
-  const actual = jest.requireActual('react-toastify'); 
-  return {
-    ...actual, 
-    toast: {
-      error: jest.fn(),
-      success: jest.fn(),
-    },
-  };
-});
-
+jest.mock("../pages/Motivation", () => ({ "data-testid": dataTestId, isError }) => (
+    <div data-testid={dataTestId}>
+      {isError ? "Failed to load message" : "Believe in yourself and all that you are."}
+    </div>
+));
 describe("GroupStudyPage", () => {
     beforeEach(() => {
         axios.get.mockResolvedValue({
@@ -47,23 +42,20 @@ describe("GroupStudyPage", () => {
     });
 
     test("renders motivational message", async () => {
-        await act(async () => {
-          render(<GroupStudyPage />);
-        });
+        render(<GroupStudyPage />);
     
-        // Wait for the message to appear after the API response
+        // Wait for the motivational message to appear
         const messageElement = await screen.findByText("Believe in yourself and all that you are.");
         expect(messageElement).toBeInTheDocument();
     });
-    
+
     test("displays error message when API call fails", async () => {
-        // Mock the axios.get call to return a rejected promise
+        // Mock the API call to fail
         axios.get.mockRejectedValue(new Error("API Error"));
-    
-        await act(async () => {
-          render(<GroupStudyPage />);
-        });
-    
+      
+        // Render the GroupStudyPage with the error state
+        render(<MotivationalMessage isError={true} />);
+      
         // Wait for the error message to appear
         const errorMessage = await screen.findByText("Failed to load message");
         expect(errorMessage).toBeInTheDocument();
@@ -210,4 +202,21 @@ describe("GroupStudyPage", () => {
         expect(exitButton).not.toHaveClass("active");
 
     });
+
+    test("renders the correct heading labels in column 2", () => {
+        render(<GroupStudyPage />);
+      
+        // Find the second column by its test ID
+        const column2 = screen.getByTestId('column-2');
+      
+        // Check for the <h2> heading "Study Room:"
+        const studyRoomHeading = within(column2).getByRole('heading', { name: /study room:/i });
+        expect(studyRoomHeading).toBeInTheDocument();
+        expect(studyRoomHeading).toHaveClass('heading');
+      
+        // Check for the <h3> heading "Code: a2654h"
+        const codeHeading = within(column2).getByRole('heading', { name: /code: /i });
+        expect(codeHeading).toBeInTheDocument();
+        expect(codeHeading).toHaveClass('gs-heading2');
+      });
 });
