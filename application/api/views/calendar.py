@@ -5,6 +5,13 @@ from api.models.events import Appointments
 from api.serializers import AppointmentSerializer
 
 class EventViewSet(viewsets.ModelViewSet):
-    queryset = Appointments.objects.all()
     serializer_class = AppointmentSerializer
-    permission_classes = [permissions.IsAuthenticated]  # Require authentication
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        # Filter events by the currently authenticated user
+        return Appointments.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        # Automatically set the user to the currently authenticated user
+        serializer.save(user=self.request.user)

@@ -1,25 +1,36 @@
- 
+.heading1 {
+    border: 3px solid !important;
+    font-family: 'Inter', sans-serif !important;
+    color: white !important;
+    background-color: #F2BAC9 !important;
+}
+
+.eventbutton {
+    background-color: #BAF2E9 !important;
+    border-radius: 10px !important;
+    color: black !important;
+}
+
 .rounded-event {
     width: 70% !important; /* Adjust width, lower values make it thinner */
     margin: 0 auto !important; /* Center the event */
     border-color: black;
     border-radius: 20px !important; /* Make edges more rounded */
     text-align: center !important; /* Center text horizontally */
-      display: flex !important; /* Use flexbox */
-      align-items: center !important; /* Center text vertically */
-      justify-content: center !important; /* Ensure perfect centering */
-      font-weight: bold !important; /* Make text bold */
-      color: black !important; /* Set text color to black */
-  
-  }
-  .rounded-event * {
+    display: flex !important; /* Use flexbox */
+    align-items: center !important; /* Center text vertically */
+    justify-content: center !important; /* Ensure perfect centering */
+    font-weight: bold !important; /* Make text bold */
+    color: black !important; /* Set text color to black */
+}
+
+.rounded-event * {
     color: black !important; /* Force black text inside the event */
     align-items: center !important; /* Center text vertically */
     justify-content: center !important;
-  
-  }
-  
-  .event-popup {
+}
+
+.event-popup {
     position: fixed;
     top: 0;
     left: 0;
@@ -30,79 +41,9 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
-  }
-  /* Center text inside the event box */
-  .fc-event.custom-event .fc-event-title {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    text-align: center;
-  }
-  
-  /* Adjust the event box padding and margins */
-  .fc-event.custom-event {
-    padding: 0; /* Remove extra padding */
-    margin: 0; /* Remove extra margin */
-  }
-  
-  /* Optional: Set font size and style */
-  .fc-event.custom-event .fc-event-title {
-    font-size: 14px; /* You can adjust the font size here */
-    font-weight: bold;
-  }
-  
-  /* Ensure the toolbar buttons are styled */
-  .fc-toolbar .fc-button {
-    background-color: #BAF2E9 !important;  /* Set background color */
-    color: black !important;  /* Text color */
-    border-radius: 10px !important;  /* Rounded corners */
-    font-weight: bold !important;  /* Make button text bold */
-  }
-  
-  /* Additional styling for previous, next, and today buttons */
-  .fc-prev-button,
-  .fc-next-button,
-  .fc-today-button {
-    background-color: #BAF2E9 !important;
-    border-radius: 10px !important;
-    color: black !important;
-  }
-  
-  /* Styling for individual sections in the toolbar */
-  .fc-left, .fc-center, .fc-right {
-    background-color: #f0f0f0 !important;  /* Toolbar background */
-    padding: 10px !important;
-  }
-  
-  
-  /* 
-  /* Calendar toolbar button styles */
-  .calendar .fc-toolbar .fc-button {
-    background-color: #BAF2E9 !important;  /* Set background color */
-    color: black !important;  /* Text color */
-    border-radius: 10px !important;  /* Rounded corners */
-    font-weight: bold !important;  /* Make button text bold */
-  }
-  
-  /* Specific styling for individual toolbar sections if needed */
-  .calendar .fc-left, .calendar .fc-center, .calendar .fc-right {
-    background-color: #f0f0f0 !important;  /* Toolbar background */
-    padding: 10px !important;
-  }
-  
-  /* Add any additional button styling for other buttons if necessary */
-  .calendar .fc-prev-button,
-  .calendar .fc-next-button,
-  .calendar .fc-today-button {
-    background-color: #BAF2E9 !important;
-    border-radius: 10px !important;
-    color: black !important;
-  } */
-  
-  
-  .popup-content {
+}
+
+.popup-content {
     background-color: white !important;
     padding: 20px;
     border-radius: 8px;
@@ -110,13 +51,13 @@
     max-width: 400px;
     width: 100%;
     text-align: left;
-  }
-  
-  .popup-content h2 {
+}
+
+.popup-content h2 {
     margin-top: 0;
-  }
-  
-  .popup-content button {
+}
+
+.popup-content button {
     background-color: #F2E2BA; /* Red background for button */
     color: white;
     padding: 10px;
@@ -124,8 +65,31 @@
     cursor: pointer;
     border-radius: 5px;
     margin-top: 10px;
-  }
-  
-  .popup-content button:hover {
+}
+
+.popup-content button:hover {
     background-color: #BAF2E9; /* Darker red for button hover */
-  }
+}
+
+/* Calendar toolbar button styles */
+.fc-toolbar .fc-button {
+    background-color: #BAF2E9 !important;  /* Set background color */
+    color: black !important;  /* Text color */
+    border-radius: 10px !important;  /* Rounded corners */
+    font-weight: bold !important;  /* Make button text bold */
+}
+
+/* Specific styling for individual toolbar sections if needed */
+.fc-left, .fc-center, .fc-right {
+    background-color: #f0f0f0 !important;  /* Toolbar background */
+    padding: 10px !important;
+}
+
+/* Additional styling for previous, next, and today buttons */
+.fc-prev-button,
+.fc-next-button,
+.fc-today-button {
+    background-color: #BAF2E9 !important;
+    border-radius: 10px !important;
+    color: black !important;
+}
