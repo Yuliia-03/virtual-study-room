@@ -100,7 +100,12 @@ class SessionUser(models.Model):
             user=user, 
             session=session
         ).count() + 1
-        
+
+        # Add user to participants if not already
+        if user not in session.participants.all():
+            session.participants.add(user)
+            session.save()
+
         # Create and return new session
         return cls.objects.create(
             user=user,
