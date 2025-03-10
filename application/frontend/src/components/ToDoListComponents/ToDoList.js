@@ -106,7 +106,7 @@ const ToDoList = () => {
             <div className="todo-header">
                 <h3>To-Do Lists</h3>
                 <div className="header-buttons">
-                    <button onClick={handleAddList} className="btn btn-success btn-sm">
+                    <button onClick={handleAddList} className="btn btn-success btn-sm" aria-label="Add List">
                         <i className="bi bi-plus-circle"></i>
                     </button>
                     <button onClick={toggleFullScreen} className="full-screen-btn">
@@ -127,7 +127,7 @@ const ToDoList = () => {
                 {lists.map((list) => (
                     <div className="todo-card" key={list.id}>
                         <div className="todo-card-header">
-                            <button onClick={() => handleAddTask(list.id)} className="btn btn-success btn-sm">
+                            <button onClick={() => handleAddTask(list.id)} className="btn btn-success btn-sm" aria-label="Add Task">
                                 <i className="bi bi-plus-circle"></i>
                             </button>
                             <button onClick={() => handleDeleteList(list.id)} className="btn btn-danger btn-sm">
@@ -157,7 +157,7 @@ const ToDoList = () => {
                                                 <i className="bi bi-trash"></i>
                                             </button>
                                             {/* Expand/Collapse Button for Task Details */}
-                                            <button onClick={() => toggleTaskDetails(task.id)} className="btn btn-info btn-sm">
+                                            <button onClick={() => toggleTaskDetails(task.id)} className="btn btn-info btn-sm" aria-label="Task Details">
                                                 {expandedTasks[task.id] ? (
                                                     <>
                                                         <i className="bi bi-chevron-up"></i> Hide Details
@@ -175,7 +175,6 @@ const ToDoList = () => {
                                 {expandedTasks[task.id] && (
                                     <div className="task-details">
                                         <p><strong>Description:</strong> {task.content || "No details available"}</p>
-                                        {/*<p><strong>Due Date:</strong> {task.date || "Not set"}</p>*/}
                                     </div>
                                 )}
                                 </li>
