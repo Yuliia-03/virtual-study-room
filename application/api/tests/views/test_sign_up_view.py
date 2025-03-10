@@ -25,6 +25,7 @@ class SignupTestCase(APITestCase):
         user = User.objects.get(username='@johndoe')
         self.assertEqual(user.email, 'johndoe@example.com')
 
+<<<<<<< HEAD
     def test_signup_password_mismatch(self):
         """Test if signup fails when passwords do not match."""
         data = {
@@ -98,3 +99,6 @@ class SignupTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('error', response.data)
         self.assertIn('details', response.data)
+=======
+   
+>>>>>>> adfd88d28b0ee1fc100e9547414cd5b34188ff90

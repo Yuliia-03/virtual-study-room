@@ -7,7 +7,7 @@ import AddListModal from "./CreateNewList";
 const ToDoList = () => {
     const [lists, setLists] = useState([]);
     const [loading, setLoading] = useState(true);
-    
+
     const [addTaskWindow, setAddTaskWindow] = useState(false);
     const [selectedListId, setSelectedListId] = useState(null);
     const [addListWindow, setAddListWindow] = useState(false);
@@ -17,7 +17,7 @@ const ToDoList = () => {
     useEffect(() => {
         console.log("Fetching data in useEffect...");
         const fetchData = async () => {
-            
+
             try {
                 const data = await getAuthenticatedRequest("/todolists/false/");
 
@@ -149,7 +149,7 @@ const ToDoList = () => {
                                         <span className={task.is_completed ? "completed" : ""}>
                                             {task.title}
                                         </span>
-                                    
+
                                         <div className="task-item-buttons">
 
                                             {/* Delete Task Button */}
@@ -171,12 +171,12 @@ const ToDoList = () => {
                                         </div>
                                     </div>
 
-                                {/* Task Details (Only visible when expanded) */}
-                                {expandedTasks[task.id] && (
-                                    <div className="task-details">
-                                        <p><strong>Description:</strong> {task.content || "No details available"}</p>
-                                    </div>
-                                )}
+                                    {/* Task Details (Only visible when expanded) */}
+                                    {expandedTasks[task.id] && (
+                                        <div className="task-details">
+                                            <p><strong>Description:</strong> {task.content || "No details available"}</p>
+                                        </div>
+                                    )}
                                 </li>
                             ))}
                         </ul>

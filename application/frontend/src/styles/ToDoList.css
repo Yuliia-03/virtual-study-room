@@ -68,7 +68,8 @@
     max-height: 100%;
     /* Leaves space for header */
     overflow-x: unset;
-    padding: auto;;
+    padding: auto;
+    ;
 }
 
 .todo-list h4 {
@@ -86,7 +87,8 @@
     /* Set a fixed width for each list */
     min-width: 85%;
     max-width: 85%;
-    margin: 2%;;
+    margin: 2%;
+    ;
     /* Prevents lists from shrinking */
     display: flex;
     flex-direction: column;
@@ -94,7 +96,7 @@
 
 /* Header for Each To-Do List */
 .todo-card-header {
-    
+
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -116,7 +118,7 @@
     /* Keep tasks in a vertical column */
 }
 
-.task{
+.task {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -155,7 +157,8 @@
     flex-direction: column;
     align-items: flex-end;
     justify-content: center;
-    margin-left: 1%;;
+    margin-left: 1%;
+    ;
 }
 
 /* Show/Hide Details Button */
@@ -216,7 +219,8 @@
     position: relative;
     cursor: pointer;
     background: white;
-    width: 15%;height: 15%;
+    width: 15%;
+    height: 15%;
 }
 
 /* Custom checkmark */
@@ -241,6 +245,7 @@
     text-decoration: line-through;
     color: gray;
 }
+
 /* Full-Screen Mode for To-Do List */
 .todo-container.full-screen {
     position: fixed;
@@ -281,9 +286,9 @@
 
 /* To-Do List Layout (3 lists per row) */
 .todo-container.full-screen .todo-list {
-        top: 0;
-        left: 0;
-        max-width: 99%;
+    top: 0;
+    left: 0;
+    max-width: 99%;
 
     background-color: rgb(230, 186, 186);
     overflow-x: unset;

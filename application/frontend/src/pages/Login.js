@@ -25,7 +25,8 @@ function Login() {
         setError("");
         try {
             const response = await axios.post(
-                "http://127.0.0.1:8000/api/login/",
+                "https://studyspot.pythonanywhere.com/api/login/",
+                //"http://127.0.0.1:8000/api/login/",
                 formData,  // Contains email and password
                 { headers: { "Content-Type": "application/json" } }  // No Authorization header here
             );
@@ -48,9 +49,9 @@ function Login() {
 
     return (
         <div className="login-container">
-        <h1 className="heading1">The Study Spot</h1>
+        <h1 className="login-heading1">The Study Spot</h1>
         <form className="login-form">
-            <h1 className="heading2">Login</h1>
+            <h1 className="login-heading2">Login</h1>
 
             {error && <p className="error-message">{error}</p>} {/* Show error if login fails */}
 
@@ -72,7 +73,7 @@ function Login() {
             onChange={handleChange}
             />
 
-            <button type="button" className="submit-button" onClick={handleLogin}>LOGIN</button>
+            <button type="button" className="login-submit-button" onClick={handleLogin}>LOGIN</button>
         </form>
         </div>
     );
