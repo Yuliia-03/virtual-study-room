@@ -144,7 +144,7 @@ function Signup() {
         });
 
         setTimeout(() => {
-          navigate("/dashboard");
+          navigate("/login");
         }, 1800)
       }
     } catch (error) {
