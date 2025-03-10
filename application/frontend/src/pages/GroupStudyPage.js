@@ -10,11 +10,11 @@ import { useParams, useLocation } from 'react-router-dom';
 
 function GroupStudyPage(){
 
-    // Import room code
-    const { roomCode } = useParams();
-
     // Location object used for state
     const location = useLocation();
+
+    const { roomCode, roomName } = location.state || { roomCode: '', roomName: '' };
+    // Retrieve roomCode and roomName from state
 
     // Retrieve roomCode from state if not in URL
     const stateRoomCode = location.state?.roomCode;
@@ -168,7 +168,7 @@ function GroupStudyPage(){
             {/*2nd Column */}
             <div className="column">
                 <div className="user-list-container">
-                    <h2 className="heading"> Study Room: </h2>
+                    <h2 className="heading"> Study Room: {roomName} </h2>
                     <h3 className='gs-heading2'> Code: {finalRoomCode}</h3>
                     {/* Debugging messages */}
                     {messages.map((msg, index) => <p key={index}>{msg}</p>)}
