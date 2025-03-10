@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getAuthenticatedRequest } from "./utils/authService";
+import { getAuthenticatedRequest } from "../utils/authService";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useLocation } from 'react-router-dom';
@@ -33,15 +33,17 @@ const CalendarPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        try {
-            const newEvent = {
-                title: eventTitle,
-                description: eventDescription,
-                start: eventStart,
-                end: eventEnd,
-                user: userId
-            };
+        const newEvent = {
+            title: eventTitle,
+            description: eventDescription,
+            start: eventStart,
+            end: eventEnd,
+            user: userId
+        };
 
+        console.log("Sending event:", newEvent); // 🔍 Debugging: Log before sending
+
+        try {
             const response = await getAuthenticatedRequest(backendURL, "POST", newEvent);
 
             if (response) {
@@ -59,6 +61,7 @@ const CalendarPage = () => {
             toast.error('Error connecting to backend.');
         }
     };
+
 
     return (
         <div>
