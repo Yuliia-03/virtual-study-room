@@ -1,13 +1,9 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import ToDoList from '../../ToDoListComponents/ToDoList';
-import * as authService from '../../../utils/authService'; // Import authService
-import axios from 'axios';
+import * as authService from '../../../utils/authService'; 
 
-// Mock axios
-jest.mock('axios');
 
-// Mock the `getAuthenticatedRequest` function to avoid hitting real endpoints and simulate success or failure.
 jest.mock('../../../utils/authService', () => ({
     getAuthenticatedRequest: jest.fn(),
 }));
@@ -58,6 +54,79 @@ describe("ToDoList", () => {
         expect(screen.getByText('List 1')).toBeInTheDocument();
     });
 
+    test('should handle API error and show an alert when fetching tasks fails', async () => {
+
+        authService.getAuthenticatedRequest.mockRejectedValue({
+            response: { data: { error: "Failed to fetch tasks" } },
+        });
+
+        render(<ToDoList />);
+
+        await waitFor(() => screen.queryByText(/Loading To-Do Lists.../i), { timeout: 3000 });
+        expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
+        expect(window.alert).toHaveBeenCalledWith("Failed to fetch tasks");
+        expect(console.error).toHaveBeenCalled();
+        expect(console.error.mock.calls[0][0]).toContain("Error fetching to-do lists");
+
+    });
+
+    test('handles error while fetching lists (without response)', async () => {
+        // Mock API rejection with an error that does NOT have a response
+        authService.getAuthenticatedRequest.mockRejectedValueOnce(new Error('Some network error'));
+
+        render(<ToDoList />);
+
+        expect(screen.getByText('Loading To-Do Lists...')).toBeInTheDocument();
+
+        window.alert = jest.fn(); // Mock alert
+
+        // Ensure alert is NOT called because error.response is missing
+        await waitFor(() => expect(window.alert).not.toHaveBeenCalled());
+    });
+
+
+    test('renders task details correctly with and without content', async () => {
+        const taskWithContent = {
+            id: 1,
+            title: 'Task with content',
+            content: 'Some task content',
+            is_completed: false,
+        };
+
+        const taskWithoutContent = {
+            id: 2,
+            title: 'Task without content',
+            content: '',
+            is_completed: false,
+        };
+
+        const mockListsData = [
+            {
+                id: 1,
+                name: 'List 1',
+                tasks: [taskWithContent, taskWithoutContent],
+            },
+        ];
+
+        authService.getAuthenticatedRequest.mockResolvedValueOnce(mockListsData);
+
+        render(<ToDoList />);
+
+        await screen.findByText('List 1');
+
+        const taskDetailButtonWithContent = screen.getAllByRole('button', { name: /task details/i })[0];
+        fireEvent.click(taskDetailButtonWithContent);
+
+        expect(screen.getAllByText('Description:').length).toBeGreaterThan(0);
+        expect(screen.getByText('Some task content')).toBeInTheDocument();
+        
+        const taskDetailButtonWithoutContent = screen.getAllByRole('button', { name: /task details/i })[1];
+        fireEvent.click(taskDetailButtonWithoutContent);
+
+        expect(screen.getByText('No details available')).toBeInTheDocument();
+    });
+
+
     test('should toggle task completion status correctly', async () => {
         authService.getAuthenticatedRequest.mockResolvedValue(mockListsData);
         render(<ToDoList />);
@@ -74,21 +143,6 @@ describe("ToDoList", () => {
 
     });
 
-    test('should handle API error and show an alert when fetching tasks fails', async () => {
-
-        authService.getAuthenticatedRequest.mockRejectedValue({
-            response: { data: { error: "Failed to fetch tasks" } },
-        });
-
-        render(<ToDoList />);
-
-        await waitFor(() => screen.queryByText(/Loading To-Do Lists.../i), { timeout: 3000 });
-        expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
-        expect(window.alert).toHaveBeenCalledWith("Failed to fetch tasks");
-        expect(console.error).toHaveBeenCalled();
-        expect(console.error.mock.calls[0][0]).toContain("Error fetching to-do lists");
-
-    });
 
     test("should log an error if task update request fails", async () => {
 
@@ -221,7 +275,7 @@ describe("ToDoList", () => {
     });
 
 
-    test("should log an error if API returns status 0", async () => {
+    test("delete task error", async () => {
 
         authService.getAuthenticatedRequest.mockResolvedValueOnce(mockListsData);
 
@@ -273,16 +327,15 @@ describe("ToDoList", () => {
 
         render(<ToDoList />);
 
-        await screen.findByText('List 1'); // Ensure the list is rendered
+        await screen.findByText('List 1'); 
         
         const addTaskButton = screen.getAllByRole('button', { name: /add task/i });
 
         fireEvent.click(addTaskButton[0]);
 
-        const modal = await screen.findByRole('dialog'); // Looks for any dialog
+        const modal = await screen.findByRole('dialog'); 
         expect(modal).toBeInTheDocument();
 
-        // Alternatively, check for the form fields
         const titleInput = screen.getByPlaceholderText("Enter task title");
         const contentInput = screen.getByPlaceholderText("Enter task content");
 
