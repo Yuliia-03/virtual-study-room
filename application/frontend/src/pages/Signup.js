@@ -22,7 +22,8 @@ function Signup() {
   const checkEmailExists = async (email) => {
     try {
       const { data } = await axios.get(
-        `http://127.0.0.1:8000/api/check-email/`,
+      "https://studyspot.pythonanywhere.com/api/check-email/",
+//        `http://127.0.0.1:8000/api/check-email/`,
         {
           params: { email },
         }
@@ -36,7 +37,8 @@ function Signup() {
   const checkUsernameExists = async (username) => {
     try {
       const { data } = await axios.get(
-        `http://127.0.0.1:8000/api/check-username/`,
+      "https://studyspot.pythonanywhere.com/api/check-username/",
+//        `http://127.0.0.1:8000/api/check-username/`,
         {
           params: { username },
         }
@@ -125,7 +127,8 @@ function Signup() {
     try {
       if (validate()) {
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/signup/",
+        "https://studyspot.pythonanywhere.com/api/signup/",
+//          "http://127.0.0.1:8000/api/signup/",
           formData,
           {
             headers: { "Content-Type": "application/json" },
