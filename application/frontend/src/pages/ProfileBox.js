@@ -169,7 +169,7 @@ function ProfileBox() {
                     </div>
                     <div className='container2'>
                         <button type="button" className="logoff-button" onClick={handleLogOff}>LOG OFF</button>
-                        <button type='button' className='show-modal-button' onClick={() => setShowModal(true)}></button>
+                        <button type='button' data-testid="show-more-button" className='show-modal-button' onClick={() => setShowModal(true)}></button>
                     </div>
                 </div>
 
