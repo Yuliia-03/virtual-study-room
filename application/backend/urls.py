@@ -46,6 +46,8 @@ urlpatterns = [
     path('api/new_list/', views.ViewToDoList.as_view(), name='create_new_list'),
     path('api/delete_list/<int:id>/',views.ViewToDoList.as_view(), name='delete_list'),
 
+    path('api/get_friends/', views.FriendsView.as_view(), name='friends'),
+
     path('api/motivational-message/', views.motivationalMessage, name='motivation'),
     path('api/check-email/', views.checkEmailView, name='check_email'),
     path('api/check-username/', views.checkUsernameView, name='check_username'),
