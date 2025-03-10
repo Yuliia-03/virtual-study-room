@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from "axios";
 import GroupStudyRoom from '../pages/GroupStudyPage';
-import { getAuthenticatedRequest } from "../pages/utils/authService";
+import { getAuthenticatedRequest } from "../utils/authService";
 import { useNavigate } from 'react-router-dom';
 import "../styles/StudyRoomComponent.css";
 

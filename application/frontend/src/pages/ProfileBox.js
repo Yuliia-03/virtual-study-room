@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { storage } from "../firebase-config";
 import { Navigate, useNavigate } from 'react-router-dom';
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
-import { getAuthenticatedRequest, getAccessToken } from "./utils/authService";
+import { getAuthenticatedRequest, getAccessToken } from "../utils/authService";
 import defaultAvatar from '../assets/avatars/avatar_2.png';
 import UserAvatar from '../components/UserAvatar';
 import UserBadges from '../components/UserBadges';

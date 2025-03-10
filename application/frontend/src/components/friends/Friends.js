@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { getAuthenticatedRequest } from "../utils/authService";
-import "../styles/Friends.css";
+import { getAuthenticatedRequest } from "../../utils/authService";
+import "../../styles/Friends.css";
 
 const Friends = () => {
     const [friends, setFriends] = useState([]);

@@ -1,0 +1,57 @@
+.friends-container,
+.invitations-container {
+    margin-bottom: 20px;
+}
+
+.friends-list,
+.invitations-list {
+    list-style: none;
+    padding: 0;
+    font-size: 14px;
+    /* Smaller font size */
+}
+
+.friend-card,
+.invitation-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f4f4f4;
+    padding: 8px;
+    /* Reduced padding */
+    margin: 4px 0;
+    border-radius: 6px;
+    /* Slightly smaller border-radius */
+    font-size: 13px;
+    /* Smaller text for a compact look */
+}
+
+.invitation-name {
+    flex-grow: 1;
+    font-size: 13px;
+    /* Smaller text */
+}
+
+.invitation-actions {
+    display: flex;
+    gap: 8px;
+    /* Reduced gap for tighter layout */
+}
+
+.accept-btn,
+.reject-btn {
+    background: none;
+    border: none;
+    font-size: 16px;
+    /* Slightly smaller icons */
+    cursor: pointer;
+    padding: 2px 5px;
+}
+
+.accept-btn:hover {
+    color: green;
+}
+
+.reject-btn:hover {
+    color: red;
+}

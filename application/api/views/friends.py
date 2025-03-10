@@ -8,14 +8,34 @@ from django.views import View
 from rest_framework.permissions import IsAuthenticated
 
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from api.models import List, toDoList, Permission
+from rest_framework.decorators import api_view
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.views import View
+from rest_framework.permissions import IsAuthenticated
+
 class FriendsView(APIView):
 
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+
+        url_name = request.resolver_match.view_name
+
+        if url_name == "friends":
+            return self.get_friends(request)
+        elif url_name == "pending_friends":
+            return self.get_friends(request, friend_status=Status.PENDING)
+        return Response({"error": "Invalid action"}, status=status.HTTP_400_BAD_REQUEST)
+
+    def get_friends(self, request, friend_status=Status.ACCEPTED):
+
         user = request.user
         friendships = Friends.get_friends_with_status(
-            user_1=user, status=Status.ACCEPTED)
+            user_1=user, status=friend_status)
         friends = [friend.user2 if friend.user1 ==
                    user else friend.user1 for friend in friendships]
 

@@ -4,7 +4,8 @@ import ToDoList from '../components/ToDoListComponents/ToDoList';
 
 import StudyRoomComponent from '../components/StudyRoomComponent';
 import Analytics from './Analytics';
-import Friends from '../components/Friends';
+import Friends from '../components/friends/Friends';
+import PendingFriends from '../components/friends/PendingFriends';
 
 
 function Dashboard() {
@@ -18,8 +19,8 @@ function Dashboard() {
             <div className = "dashboard-content">
                 <div className = "dashboard-left-panel" data-testid="left-panel">
                     <Analytics />
-                    <div className="dashboard-panel">Calendar</div>
-                    <div className="dashboard-panel">Invites</div>
+                    {/*<div className="dashboard-panel">Calendar</div>*/}
+                    <div className="dashboard-panel"><PendingFriends/></div>
                 </div>
                 <div class = "dashboard-main-panel">
                     <div class="dashboard-panel">Profile</div>
@@ -28,7 +29,7 @@ function Dashboard() {
                 </div>
                 <div className = "dashboard-right-panel" data-testid="right-panel">
                     <StudyRoomComponent />
-                    <div className="dashboard-panel"><ToDoList/></div>
+                    <div><ToDoList/></div>
                 </div>
 
                 </div>

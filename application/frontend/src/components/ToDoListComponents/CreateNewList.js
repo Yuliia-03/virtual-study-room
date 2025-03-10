@@ -1,7 +1,7 @@
     import React, { useState } from "react";
     import "../../styles/CreateNewList.css";
 
-    import { getAuthenticatedRequest } from "../../pages/utils/authService";
+    import { getAuthenticatedRequest } from "../../utils/authService";
 
 const AddListModal = ({ addListWindow, setAddListWindow, setLists }) => {
         const [formData, setFormData] = useState({ name: "", isShared: false});
