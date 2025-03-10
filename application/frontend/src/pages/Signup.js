@@ -131,8 +131,8 @@ function Signup() {
       const isValid = await validate();
       if (isValid) {
         const response = await axios.post(
-        "https://studyspot.pythonanywhere.com/api/signup/",
-//          "http://127.0.0.1:8000/api/signup/",
+        // "https://studyspot.pythonanywhere.com/api/signup/",
+         "http://127.0.0.1:8000/api/signup/",
           formData,
           {
             headers: { "Content-Type": "application/json" },
