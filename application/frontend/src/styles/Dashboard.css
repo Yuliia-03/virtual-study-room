@@ -11,7 +11,7 @@
     width: 100vw; /* Ensures it takes up the full width */
     box-sizing: border-box; /* Ensure padding/border don't increase its size */
     background-color: #F6F0F0;
-    padding-top: 100px;
+    padding-top: 150px;
 }
 
 .dashboard-heading {

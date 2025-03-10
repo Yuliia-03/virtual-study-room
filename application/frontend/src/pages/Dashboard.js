@@ -1,10 +1,13 @@
-
-import React, { useState } from 'react';
+import React from 'react';
 import "../styles/Dashboard.css";
 import ToDoList from '../components/ToDoListComponents/ToDoList';
+
+import StudyRoomComponent from '../components/StudyRoomComponent';
 import Analytics from './Analytics';
 
+
 function Dashboard() {
+
     return (
         <div className='dashboard-container'>
             <h1 className="dashboard-heading">Dashboard</h1> {/* A simple heading */}
@@ -23,13 +26,13 @@ function Dashboard() {
                     <div className="dashboard-panel">Add Friends</div>
                 </div>
                 <div className = "dashboard-right-panel" data-testid="right-panel">
-                    <div className="dashboard-panel">Generate Group Study Room</div>
+                    <StudyRoomComponent />
                     <div className="dashboard-panel"><ToDoList/></div>
                 </div>
-            </div>
 
-        </div>
-    );
+                </div>
+            </div>
+         );
 }
 
 export default Dashboard;

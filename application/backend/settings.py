@@ -37,6 +37,7 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
     'api.apps.ApplicationConfig',
     'django_seed',
     'corsheaders',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -77,13 +79,19 @@ REST_FRAMEWORK = {
     )
 }
 
+ASGI_APPLICATION = "backend.asgi.application"
+CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer", # when we deploy change to redis?
+        }
+}
+
 ROOT_URLCONF = 'backend.urls'
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React frontend
     "https://virtual-study-room-phi.vercel.app", # real website
-    "https://studyspot.pythonanywhere.com"
 ]
 
 TEMPLATES = [
