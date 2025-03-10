@@ -71,23 +71,26 @@ const StudyRoomComponent = () => {
                                 <>
 
                                     {/* To create a study room, text field to enter a room name ( NOT CODE, code is auto generated ) */}
-                                    <button onClick={createRoom}>Create Room</button>
+                                    <div className = "input-group">
                                     <input
                                         type = "text"
-                                        placeholder = "What do we feel like studying? :D"
+                                        placeholder = "I want to study..."
                                         value = {roomName}
                                         onChange={(e) => setRoomName(e.target.value)}
                                     />
-
+                                    <button onClick={createRoom}>Create Room</button>
+                                    </div>
 
                                     {/* For joining the room, there is also a text input for the room code"*/}
-                                    <button onClick={joinRoom}>Join Room</button>
+                                    <div className = "input-group">
                                     <input
                                     type = "text"
-                                        placeholder = "Enter Room Code!"
+                                        placeholder = "Room Code... "
                                         value={roomCode}
                                         onChange={(e) => setRoomCode(e.target.value)}
                                     />
+                                    <button onClick={joinRoom}>Join Room</button>
+                                    </div>
 
                                 </>
                             ) : (
