@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "../styles/Signup.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Signup() {
   //fields that the user will input
@@ -121,7 +123,7 @@ function Signup() {
   //when the signup button is clicked - send form data to backend django form
   const handleSignup = async () => {
     if (!formData.acceptTerms) {
-      alert("You must accept the terms and conditions.");
+      toast.error("You must accept the terms and conditions.");
       return;
     }
 
@@ -136,16 +138,23 @@ function Signup() {
             headers: { "Content-Type": "application/json" },
           }
         );
-        alert(response.data.message);
-        navigate("/dashboard");
+
+        toast.success(response.data.message, {
+          hideProgressBar: true
+        });
+
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1800)
       }
     } catch (error) {
-      alert("An error occurred. Please try again.");
+      toast.error("An error occurred. Please try again.");
     }
   };
 
   return (
     <div className="login-container">
+      <ToastContainer position='top-center'/>
       <h1 className="heading1">The Study Spot</h1>
       <form className="signup-form">
         <div className="field">

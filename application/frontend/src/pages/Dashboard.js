@@ -4,6 +4,7 @@ import ToDoList from '../components/ToDoListComponents/ToDoList';
 
 import StudyRoomComponent from '../components/StudyRoomComponent';
 import Analytics from './Analytics';
+import ProfileBox from './ProfileBox';
 
 
 function Dashboard() {
@@ -21,7 +22,7 @@ function Dashboard() {
                     <div className="dashboard-panel">Invites</div>
                 </div>
                 <div className = "dashboard-main-panel" data-testid="main-panel">
-                    <div className="dashboard-panel">Profile</div>
+                    <div className="dashboard-panel"><ProfileBox /></div>
                     <div className="dashboard-panel">Friends List</div>
                     <div className="dashboard-panel">Add Friends</div>
                 </div>
