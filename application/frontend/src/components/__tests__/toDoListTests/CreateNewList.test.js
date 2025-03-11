@@ -1,9 +1,9 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import AddListModal from "../../ToDoListComponents/CreateNewList";
-import * as authService from "../../../pages/utils/authService";
+import * as authService from "../../../utils/authService";
 
-jest.mock("../../../pages/utils/authService", () => ({
+jest.mock("../../../utils/authService", () => ({
     getAuthenticatedRequest: jest.fn(),
 }));
 describe("CreateNewList", () => {
