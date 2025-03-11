@@ -41,11 +41,13 @@ class Command(BaseCommand):
         try:
             call_command('loaddata', 'api/tests/fixtures/default_user.json')
             call_command('loaddata', 'api/tests/fixtures/default_friends.json')
-            call_command('loaddata', 'api/tests/fixtures/default_study_session.json')
-            call_command('loaddata', 'api/tests/fixtures/default_session_users.json')
+
             call_command('loaddata', 'api/tests/fixtures/default_lists.json')
             call_command('loaddata', 'api/tests/fixtures/default_permissions.json')
             call_command('loaddata', 'api/tests/fixtures/default_list_task.json')
+            
+            call_command('loaddata', 'api/tests/fixtures/default_study_session.json')
+            call_command('loaddata', 'api/tests/fixtures/default_session_users.json')
         except Exception as e:
             self.stdout.write(self.style.ERROR(f'Error while seeding database: {e}'))
       
@@ -82,7 +84,8 @@ class Command(BaseCommand):
                 'user1': user1,
                 'user2': user2,
                 'status': status,
-                'created_at': created_at
+                'created_at': created_at,
+                'requested_by': user1
             })
 
     def create_friends(self, data):
@@ -91,7 +94,8 @@ class Command(BaseCommand):
                 user1=data["user1"],
                 user2=data["user2"],
                 status=data["status"],
-                created_at=data["created_at"]
+                created_at=data["created_at"],
+                requested_by=data["requested_by"]
             )
             return friends
         except:
