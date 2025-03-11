@@ -53,7 +53,11 @@ urlpatterns = [
     path('api/delete_list/<int:id>/', views.ViewToDoList.as_view(), name='delete_list'),
 
     path('api/get_friends/', views.FriendsView.as_view(), name='friends'),
+    path('api/get_made_requests/', views.FriendsView.as_view(), name='friends_requested'),
     path('api/get_pending_friends/', views.FriendsView.as_view(), name='pending_friends'),
+    path('api/accept_friend/<int:id>/', views.FriendsView.as_view(), name='accept_friend'),
+    path('api/reject_friend/<int:id>/', views.FriendsView.as_view(), name='reject_friend'),
+
 
     path('api/motivational-message/', views.motivationalMessage, name='motivation'),
     path('api/check-email/', views.checkEmailView, name='check_email'),

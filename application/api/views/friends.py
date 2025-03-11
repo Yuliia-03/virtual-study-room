@@ -8,15 +8,6 @@ from django.views import View
 from rest_framework.permissions import IsAuthenticated
 
 
-from django.contrib.auth.mixins import LoginRequiredMixin
-from api.models import List, toDoList, Permission
-from rest_framework.decorators import api_view
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from django.views import View
-from rest_framework.permissions import IsAuthenticated
-
 class FriendsView(APIView):
 
     permission_classes = [IsAuthenticated]
@@ -24,28 +15,54 @@ class FriendsView(APIView):
     def get(self, request):
 
         url_name = request.resolver_match.view_name
+        user = request.user
 
+        friends = []
         if url_name == "friends":
-            return self.get_friends(request)
+            friends = Friends.get_friends_with_status(user, Status.ACCEPTED)
         elif url_name == "pending_friends":
-            return self.get_friends(request, friend_status=Status.PENDING)
-        return Response({"error": "Invalid action"}, status=status.HTTP_400_BAD_REQUEST)
+            print("Pending friends")
+            friends = Friends.get_invitations_received(user)
 
-    def get_friends(self, request, friend_status=Status.ACCEPTED):
+        elif url_name == "friends_requested":
+            print("Friends requested")
+            friends = Friends.get_invitations_sent(user)
+        else:
+            return Response({"error": "Invalid action"}, status=status.HTTP_400_BAD_REQUEST)
+        return self.get_friends(request, friends)
+
+    def get_friends(self, request, data):
 
         user = request.user
-        friendships = Friends.get_friends_with_status(
-            user_1=user, status=friend_status)
-        friends = [friend.user2 if friend.user1 ==
-                   user else friend.user1 for friend in friendships]
+        friends = [(friend.pk, friend.user2) if friend.user1 == user else 
+                    (friend.pk, friend.user1) 
+                   for friend in data]
+
 
         response_data = []
-        for user in friends:
+        for friend in friends:
             response_data.append({
-                "id": user.id,
-                "name": user.firstname,
-                "surname": user.lastname,
-                "username": user.username
+                    "id": friend[0],
+                    "name": friend[1].firstname,
+                    "surname": friend[1].lastname,
+                    "username": friend[1].username
             })
-
+        print(response_data)
         return Response(response_data, status=status.HTTP_200_OK)
+
+    def patch(self, request, id):
+        url_name = request.resolver_match.view_name
+
+        if url_name == "accept_friend":
+            Friends.update_status(id, Status.ACCEPTED)
+        
+        return Response(status=status.HTTP_200_OK)
+
+    def delete(self, request, id):
+        url_name = request.resolver_match.view_name
+        user = request.user
+
+        if url_name == "reject_friend":
+            Friends.delete_friend(id, user)
+
+        return Response(status=status.HTTP_200_OK)
