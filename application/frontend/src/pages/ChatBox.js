@@ -1,56 +1,54 @@
-import React, { Component} from "react";
-import { w3websocket as W3CWebSocket } from "websocket";
+import React, { Component } from "react";
+import { w3cwebsocket as W3CWebSocket } from "websocket";
 
-
-const Analytics = () => {
-    // useEffect(() => {
-    //     const fetchAnalytics = async () => {
-    //         const token = localStorage.getItem("access_token"); // Get the access token from localStorage
-
-    //         if (!token) {
-    //             console.error("No access token found. Please log in.");
-    //             return;
-    //         }
-
-    //         try {
-    //             const response = await axios.get(
-    //                 // "https://studyspot.pythonanywhere.com/api/analytics/",
-    //                 "http://127.0.0.1:8000/api/chatbox/", // Endpoint for fetching analytics
-    //                 {
-    //                     headers: {
-    //                         Authorization: `Bearer ${token}`, // Include the access token in the request
-    //                     },
-    //                     withCredentials: true,
-    //                 }
-    //             );
-    //             setAnalytics(response.data); // Set the analytics data
-    //         } catch (error) {
-    //             console.error(
-    //                 "Error fetching analytics:",
-    //                 error.response ? error.response.status : error.message
-    //             );
-    //         }
-    //     };
-
-    //     fetchAnalytics();
-    // }, []); // Empty dependency array ensures this runs only once when the component mounts
-
-    state =  {
+class ChatBox extends Component {
+    state = {
         isLoggedIn: false,
         messages: [],
-        value:'',
-        name:'',
+        value: '',
+        name: '',
         room: 'testRoom',
+    };
+
+    client = null;
+
+    componentDidMount() {
+        // Initialize WebSocket after the component mounts
+        this.client = new W3CWebSocket(`ws://127.0.0.1:8000/ws/chat/${this.state.room}/`);
+
+        this.client.onopen = () => {
+            console.log("WebSocket Client Connected");
+        };
+
+        // this.client.onmessage = (message) => {
+        //     this.setState((prevState) => ({
+        //         messages: [...prevState.messages, message.data],
+        //     }));
+        // };
+
+        // this.client.onclose = () => {
+        //     console.log("WebSocket Disconnected");
+        // };
     }
+
+    // componentWillUnmount() {
+    //     if (this.client) {
+    //         this.client.close();
+    //     }
+    // }
+
     render() {
         return (
-            <Container component="main" maxWidth="xs">
-                 {this.state.isLoggedIn ? : }
-
-            </Container>
-         );
+            <div className="chat-box">
+                <h2>Chat Room: {this.state.room}</h2>
+                <div>
+                    {this.state.messages.map((msg, index) => (
+                        <p key={index}>{msg}</p>
+                    ))}
+                </div>
+            </div>
+        );
     }
-    
-};
+}
 
 export default ChatBox;
