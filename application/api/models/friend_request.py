@@ -73,27 +73,18 @@ class Friends(models.Model):
 
     @staticmethod
     def get_invitations_sent(user):
-        try:
-            all_friends = Friends.get_friends_with_status(user, Status.PENDING)
-            return [request for request in all_friends if request.requested_by == user]
-        except Friends.DoesNotExist:
-            raise ValueError("Friendship not found.")
+        all_friends = Friends.get_friends_with_status(user, Status.PENDING)
+        return [request for request in all_friends if request.requested_by == user]
 
     @staticmethod
     def get_invitations_received(user):
-        try:
-            all_friends = Friends.get_friends_with_status(user, Status.PENDING)
-            return [request for request in all_friends if request.requested_by != user]
-        except Friends.DoesNotExist:
-            raise ValueError("Friendship not found.")
+        all_friends = Friends.get_friends_with_status(user, Status.PENDING)
+        return [request for request in all_friends if request.requested_by != user]
 
     @staticmethod
     def get_all_friends(user):
-        try:
-            requests = Friends.objects.all()
-            return [request for request in requests if request.user1 == user or request.user2 == user]
-        except Friends.DoesNotExist:
-            raise ValueError("Friendship not found.")
+        requests = Friends.objects.all()
+        return [request for request in requests if request.user1 == user or request.user2 == user]
 
     @staticmethod
     def update_status(friendsId, status):

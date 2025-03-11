@@ -16,7 +16,7 @@
         "fields": {
             "user1": 2,
             "user2": 3,
-            "status": "Pending",
+            "status": "Rejected",
             "created_at": "2025-02-01T12:00:00Z",
             "requested_by": 2
         }

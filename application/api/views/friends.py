@@ -20,6 +20,7 @@ class FriendsView(APIView):
         friends = []
         if url_name == "friends":
             friends = Friends.get_friends_with_status(user, Status.ACCEPTED)
+        
         elif url_name == "pending_friends":
             print("Pending friends")
             friends = Friends.get_invitations_received(user)
@@ -47,7 +48,7 @@ class FriendsView(APIView):
                     "surname": friend[1].lastname,
                     "username": friend[1].username
             })
-        print(response_data)
+        #print(response_data)
         return Response(response_data, status=status.HTTP_200_OK)
 
     def patch(self, request, id):
