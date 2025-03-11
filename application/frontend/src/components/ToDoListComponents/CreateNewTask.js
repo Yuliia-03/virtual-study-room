@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../../styles/CreateNewTask.css";
+import "../../styles/toDoList/CreateNewTask.css";
 
 import { getAuthenticatedRequest } from "../../utils/authService";
 
