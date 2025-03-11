@@ -1,0 +1,93 @@
+/* Container for pending friend requests */
+.pending-friends {
+    max-width: 100%;
+    margin: 20px auto;
+    padding: 15px;
+    border-radius: 8px;
+    background: #f9f9f9;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* Scrollable list wrapper */
+.invitations-container {
+    max-height: 300px;
+    /* Adjust height as needed */
+    overflow-y: auto;
+    width: 100%;
+    padding-right: 5px;
+}
+
+/* Custom scrollbar styling */
+.invitations-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.invitations-container::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 6px;
+}
+
+/* Invitations list */
+.invitations-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+/* Each request - keeps all elements in one row */
+.invitation-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    width: 100%;
+    white-space: nowrap;
+    /* Prevents wrapping */
+    overflow: hidden;
+    /* Ensures no extra spacing */
+}
+
+/* Name and username inside request */
+.invitation-name {
+    flex-grow: 1;
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* Adds "..." if text is too long */
+    padding-right: 10px;
+    /* Spacing between name and buttons */
+}
+
+/* Buttons for Accept/Reject */
+.invitation-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Button styling */
+.accept-btn,
+.reject-btn {
+    background: none;
+    border: none;
+    font-size: 12px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.accept-btn:hover {
+    color: green;
+}
+
+.reject-btn:hover {
+    color: red;
+}
