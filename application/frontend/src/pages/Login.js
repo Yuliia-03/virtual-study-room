@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
 import "../styles/Login.css";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Login() {
     // TODO: TEST THIS FILE?
@@ -25,6 +27,7 @@ function Login() {
         setError("");
         try {
             const response = await axios.post(
+                // "https://studyspot.pythonanywhere.com/api/login/",
                 "http://127.0.0.1:8000/api/login/",
                 formData,  // Contains email and password
                 { headers: { "Content-Type": "application/json" } }  // No Authorization header here
@@ -34,13 +37,19 @@ function Login() {
             localStorage.setItem("access_token", response.data.access);
             localStorage.setItem("refresh_token", response.data.refresh);
 
-            alert("Login successful!");
-            navigate('/dashboard');  // Redirect to dashboard after login
+            toast.success("Login Successful!", {
+                hideProgressBar: true
+            });
+
+            setTimeout(() => {
+                navigate('/dashboard');
+            }, 1500)
+            
         } catch (error) {
             if (error.response && error.response.data && error.response.data.error) {
-                alert(error.response.data.error);
+                toast.error(error.response.data.error);
             } else {
-                alert("An error occurred. Please try again.");
+                toast.error("An error occurred. Please try again.")
             }
         }
     };
@@ -48,9 +57,10 @@ function Login() {
 
     return (
         <div className="login-container">
-        <h1 className="heading1">The Study Spot</h1>
+        <ToastContainer position='top-center'/>
+        <h1 className="login-heading1">The Study Spot</h1>
         <form className="login-form">
-            <h1 className="heading2">Login</h1>
+            <h1 className="login-heading2">Login</h1>
 
             {error && <p className="error-message">{error}</p>} {/* Show error if login fails */}
 
@@ -72,7 +82,7 @@ function Login() {
             onChange={handleChange}
             />
 
-            <button type="button" className="submit-button" onClick={handleLogin}>LOGIN</button>
+            <button type="button" className="login-submit-button" onClick={handleLogin}>LOGIN</button>
         </form>
         </div>
     );

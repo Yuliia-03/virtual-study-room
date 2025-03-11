@@ -3,7 +3,7 @@
     justify-content: center;  /* center horizontally */
     align-items: center;
     margin: 0;
-    background-color: #F2E2BA;
+    background-color: #00000;
     min-height: 100vh; /* ensures it takes the full viewport height */
     width: 100vw; /* ensures it spans the full width */
     flex-direction: column;

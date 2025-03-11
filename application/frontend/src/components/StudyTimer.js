@@ -5,7 +5,7 @@ import 'tailwindcss';
 import '@fontsource/vt323';
 import '@fontsource/press-start-2p';
 
-const StudyTimer = ({ roomId, isHost, onClose }) => {
+const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
   const [position, setPosition] = useState({ x: 100, y: 100 });
   const [dragging, setDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -178,43 +178,47 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
   const renderContent = () => {
     if (currentPage === 'completed') {
       return (
-        <div className="p-4 w-80 h-[500px] flex flex-col bg-[#F0F3FC] timer-handle">
-          <div className="flex-grow flex flex-col items-center px-8">
-            <div className="text-2xl mt-8 text-center" style={{ color: '#bac6f1', fontFamily: '"Press Start 2P", monospace' }}>
-              Well done!
-              <br />
-              Here, have a blueberry
-            </div>
-            
-            <div className="flex-grow"></div>
-            
-            <div className="w-full mb-4">
-              <button
-                onClick={() => {
-                  setCurrentPage('welcome');
-                  setCurrentRound(1);
-                  setIsBreak(false);
-                  setTimeLeft(studyLength);
-                  setIsRunning(false);
-                }}
-                className="w-full px-4 py-2 text-white rounded-lg transition-colors duration-200 text-sm"
-                style={{ 
-                  backgroundColor: '#d1cbed', 
-                  fontFamily: '"Press Start 2P", monospace',
-                  transition: 'background-color 0.3s, transform 0.3s',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#8e99e3';
-                  e.currentTarget.style.transform = 'scale(1.05)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = '#d1cbed';
-                  e.currentTarget.style.transform = 'scale(1)';
-                }}
-              >
-                Start New Session
-              </button>
-            </div>
+        <div className="p-4 w-80 flex flex-col bg-[#F0F3FC] timer-handle" style={{ height: "350px", position: "relative" }}>
+          <div className="text-2xl mt-8 text-center" style={{ color: '#bac6f1', fontFamily: '"Press Start 2P", monospace' }}>
+            Well done!
+            <br />
+            Here, have a blueberry
+          </div>
+          
+          <div style={{ 
+            position: "absolute", 
+            bottom: "0", 
+            left: "0", 
+            width: "100%",
+            padding: "0 20px 20px 20px"
+          }}>
+            <button
+              onClick={() => {
+                setCurrentPage('welcome');
+                setCurrentRound(1);
+                setIsBreak(false);
+                setTimeLeft(studyLength);
+                setIsRunning(false);
+              }}
+              className="w-full px-4 py-2 text-white rounded-lg"
+              style={{ 
+                backgroundColor: '#d1cbed', 
+                fontFamily: '"Press Start 2P", monospace',
+                transition: 'background-color 0.3s, transform 0.3s',
+                color: 'white',
+                borderRadius: '0.5rem'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#8e99e3';
+                e.currentTarget.style.transform = 'scale(1.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#d1cbed';
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            >
+              Start New Session
+            </button>
           </div>
         </div>
       );
@@ -326,29 +330,30 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
               </div>
             </div>
 
-            <div className="flex flex-col items-center space-y-2">
-              <label className="vt323 text-sm" style={{ color: '#d1cbed' }}>Rounds</label>
-              <input
-                type="number"
-                value={rounds}
-                onChange={(e) => setRounds(parseInt(e.target.value) || 1)}
-                min="1"
-                placeholder="4"
-              />
-            </div>
-
-            <div className="flex items-center justify-center space-x-2">
-              <span 
-                className="heart-toggle"
-                onClick={() => setPlaySound(!playSound)}
-                role="button"
-                aria-label="Toggle sound"
-              >
-                {playSound ? '💜' : '🤍'}
-              </span>
-              <span className="vt323 text-sm" style={{ color: '#d1cbed' }}>
-                Play sound when timer ends
-              </span>
+            <div className="flex flex-col items-center">
+              <label className="vt323 text-sm text-center mb-2" style={{ color: '#d1cbed' }}>Rounds</label>
+              
+              <div className="flex flex-row items-center"> 
+                <input
+                  type="number"
+                  value={rounds}
+                  onChange={(e) => setRounds(parseInt(e.target.value) || 1)}
+                  min="1"
+                  placeholder="4"
+                />
+                
+                <span 
+                  className="heart-toggle ml-6"
+                  onClick={() => setPlaySound(!playSound)}
+                  role="button"
+                  aria-label="Toggle sound"
+                >
+                  {playSound ? '💜' : '🤍'}
+                </span>
+                <span className="vt323 text-sm ml-2" style={{ color: '#d1cbed' }}>
+                  Play sound when timer ends
+                </span>
+              </div>
             </div>
           </div>
 
@@ -538,7 +543,7 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
             pointer-events: auto !important;
             z-index: 1000 !important;
             width: 315px !important;
-            height: 400px !important;
+            height: 370px !important;
             display: flex !important;
             flex-direction: column !important;
             align-items: center !important;
@@ -562,18 +567,12 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
             color: #b2b2b2 !important;
             font-family: "Press Start 2P", monospace !important;
             font-size: 0.875rem !important;
-            margin: 0 1.2rem !important;
-            box-shadow: 
-              0 0 0 2px #F0F3FC,
-              0 0 0 4px #d1cbed !important;
+            margin: 0 0.5rem !important;
             outline: none !important;
           }
 
           .study-timer-wrapper input[type="number"]:focus {
             border-color: #bac6f1 !important;
-            box-shadow: 
-              0 0 0 2px #F0F3FC,
-              0 0 0 4px #bac6f1 !important;
           }
 
           .study-timer-wrapper .input-label {
@@ -654,43 +653,47 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
       >
         <div className="timer-content">
           {currentPage === 'completed' ? (
-            <div className="p-4 w-80 min-height flex flex-col bg-[#F0F3FC] timer-handle">
-              <div className="flex-grow flex flex-col items-center px-8">
-                <div className="text-2xl mt-8 text-center" style={{ color: '#bac6f1', fontFamily: '"Press Start 2P", monospace' }}>
-                  Well done!
-                  <br />
-                  Here, have a blueberry
-                </div>
-                
-                <div className="flex-grow"></div>
-                
-                <div className="w-full mb-4">
-                  <button
-                    onClick={() => {
-                      setCurrentPage('welcome');
-                      setCurrentRound(1);
-                      setIsBreak(false);
-                      setTimeLeft(studyLength);
-                      setIsRunning(false);
-                    }}
-                    className="w-full px-4 py-2 text-white rounded-lg transition-colors duration-200 text-sm"
-                    style={{ 
-                      backgroundColor: '#d1cbed', 
-                      fontFamily: '"Press Start 2P", monospace',
-                      transition: 'background-color 0.3s, transform 0.3s',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = '#8e99e3';
-                      e.currentTarget.style.transform = 'scale(1.05)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = '#d1cbed';
-                      e.currentTarget.style.transform = 'scale(1)';
-                    }}
-                  >
-                    Start New Session
-                  </button>
-                </div>
+            <div className="p-4 w-80 flex flex-col bg-[#F0F3FC] timer-handle" style={{ height: "350px", position: "relative" }}>
+              <div className="text-2xl mt-8 text-center" style={{ color: '#bac6f1', fontFamily: '"Press Start 2P", monospace' }}>
+                Well done!
+                <br />
+                Here, have a blueberry
+              </div>
+              
+              <div style={{ 
+                position: "absolute", 
+                bottom: "0", 
+                left: "0", 
+                width: "100%",
+                padding: "0 20px 20px 20px"
+              }}>
+                <button
+                  onClick={() => {
+                    setCurrentPage('welcome');
+                    setCurrentRound(1);
+                    setIsBreak(false);
+                    setTimeLeft(studyLength);
+                    setIsRunning(false);
+                  }}
+                  className="w-full px-4 py-2 text-white rounded-lg"
+                  style={{ 
+                    backgroundColor: '#d1cbed', 
+                    fontFamily: '"Press Start 2P", monospace',
+                    transition: 'background-color 0.3s, transform 0.3s',
+                    color: 'white',
+                    borderRadius: '0.5rem'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#8e99e3';
+                    e.currentTarget.style.transform = 'scale(1.05)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#d1cbed';
+                    e.currentTarget.style.transform = 'scale(1)';
+                  }}
+                >
+                  Start New Session
+                </button>
               </div>
             </div>
           ) : !isRunning ? (
@@ -795,9 +798,10 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                     </div>
                   </div>
 
-                  <div className="flex flex-col items-center space-y-2">
-                    <label className="vt323 text-sm" style={{ color: '#d1cbed' }}>Rounds</label>
-                    <div className="flex justify-center gap-4">
+                  <div className="flex flex-col items-center">
+                    <label className="vt323 text-sm text-center mb-2" style={{ color: '#d1cbed' }}>Rounds</label>
+                    
+                    <div className="flex flex-row items-center"> 
                       <input
                         type="number"
                         value={rounds}
@@ -805,21 +809,19 @@ const StudyTimer = ({ roomId, isHost, onClose }) => {
                         min="1"
                         placeholder="4"
                       />
-                      </div>
-                  </div>
-
-                  <div className="flex items-center justify-center space-x-2">
-                    <span 
-                      className="heart-toggle"
-                      onClick={() => setPlaySound(!playSound)}
-                      role="button"
-                      aria-label="Toggle sound"
-                    >
-                      {playSound ? '💜' : '🤍'}
-                    </span>
-                    <span className="vt323 text-sm" style={{ color: '#d1cbed' }}>
-                      Play sound when timer ends
-                    </span>
+                      
+                      <span 
+                        className="heart-toggle ml-6"
+                        onClick={() => setPlaySound(!playSound)}
+                        role="button"
+                        aria-label="Toggle sound"
+                      >
+                        {playSound ? '💜' : '🤍'}
+                      </span>
+                      <span className="vt323 text-sm ml-2" style={{ color: '#d1cbed' }}>
+                        Play sound when timer ends
+                      </span>
+                    </div>
                   </div>
                 </div>
 

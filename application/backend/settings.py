@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,13 +30,14 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "localhost",  # For local development
     "127.0.0.1",  # Localhost IP
-    "https://virtual-study-room-bljpp8i67-gummybearamnesias-projects.vercel.app", # real website
+    "https://virtual-study-room-phi.vercel.app", # real website
 ]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -49,6 +51,7 @@ INSTALLED_APPS = [
     'api.apps.ApplicationConfig',
     'django_seed',
     'corsheaders',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -62,10 +65,25 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),  # Access token expires after 5 minutes
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),  # Refresh token expires after 1 day
+    "ROTATE_REFRESH_TOKENS": True,  # Issues a new refresh token on each refresh
+    "BLACKLIST_AFTER_ROTATION": True,  # Blacklists old refresh tokens after rotation
+    "AUTH_HEADER_TYPES": ("Bearer",),  # Authorization: Bearer <token>
+}
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
+}
+
+ASGI_APPLICATION = "backend.asgi.application"
+CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer", # when we deploy change to redis?
+        }
 }
 
 ROOT_URLCONF = 'backend.urls'
@@ -73,7 +91,7 @@ ROOT_URLCONF = 'backend.urls'
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React frontend
-    "https://virtual-study-room-bljpp8i67-gummybearamnesias-projects.vercel.app", # real website
+    "https://virtual-study-room-phi.vercel.app", # real website
 ]
 
 TEMPLATES = [
