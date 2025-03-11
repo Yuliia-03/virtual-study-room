@@ -166,13 +166,13 @@ function GroupStudyPage(){
                 <div className="sharedMaterials-container" data-testid="sharedMaterials-container">Shared Materials</div>
             </div>
             {/*2nd Column */}
-            <div className="column"> role='column' data-testid="column-2">
-                <div className="user-list-container"> data-testid="user-list-container">
+            <div className="column" role='column' data-testid="column-2">
+                <div className="user-list-container" data-testid="user-list-container">
                     <h2 className="heading"> Study Room: {roomName} </h2>
                     <h3 className='gs-heading2'> Code: {finalRoomCode}</h3>
                     {/* Debugging messages */}
                     {messages.map((msg, index) => <p key={index}>{msg}</p>)}
-                    <div className='utility-bar'> data-testid="utility-bar">
+                    <div className='utility-bar' data-testid="utility-bar">
                         <button
                             type="button"
                             className={`music-button ${isActiveMusic ? 'active' : ''}`}
@@ -245,7 +245,7 @@ function GroupStudyPage(){
                 <MotivationalMessage data-testid="motivationalMessage-container"/>
             </div>
             {/*3rd Column */}
-            <div className="column"> role='column'  data-testid="column-3">
+            <div className="column" role='column'  data-testid="column-3">
                 <div className="timer-container">Timer</div>
                 <div className="custom-container">
                     {/*This is the button for music and customisation, needs functionality */}

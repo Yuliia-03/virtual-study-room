@@ -14,7 +14,7 @@ class ChatBox extends Component {
 
     componentDidMount() {
         // Initialize WebSocket after the component mounts
-        this.client = new W3CWebSocket(`ws://127.0.0.1:8000/ws/chat/${this.state.room}/`);
+        this.client = new W3CWebSocket('ws://127.0.0.1:8000/ws/room/' + this.state.room + '/');
 
         this.client.onopen = () => {
             console.log("WebSocket Client Connected");
