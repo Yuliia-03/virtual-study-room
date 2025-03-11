@@ -26,7 +26,7 @@ from api.views.profile_view import get_logged_in_user, save_description, get_use
 
 from api.views.analytics import get_analytics
 from api.views.groupStudyRoom import create_room, join_room
-from api import views
+from api.views.views import room, index
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -58,8 +58,7 @@ urlpatterns = [
     path('api/profile/', get_logged_in_user, name='get_logged_in_user'),
     path('api/description/', save_description, name='save_description'),
     path('api/badges/', get_user_badges, name='get_user_badges'),
-
-    path('<str:room_name>/', views.room, name='room'),
-    path('chat/', include('chat.urls')),
+    path('', index, name='index'),
+    path('<str:room_name>/', room, name='room'),
 
 ]
