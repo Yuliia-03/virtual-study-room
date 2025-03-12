@@ -10,11 +10,12 @@
     text-align: center; 
 }
 
-.container22{
+.profile-button-container{
     display: flex;
     flex-direction: row;
-    gap: 20px;
-    padding: 20px;
+    gap: 10px;
+    margin-top: 20px;
+    align-items: center;
 }
 
 .profile-box {
@@ -40,6 +41,12 @@
     font-family: 'Inter', sans-serif;
     font-size: 25px;
     margin: 10px 0px;
+}
+
+.container1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .upload-button {
@@ -85,6 +92,9 @@
     text-align: center;
     resize: none;
     width: 90%;
+    color: black;
+    font-weight: 900;
+    font-family: 'Inter', sans-serif;
 }
 
 .save-desc-button {
@@ -113,7 +123,7 @@
     font-size: 15px;
 }
 
-.modal {
+.modal, .inventory-content {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -132,6 +142,20 @@
     padding: 20px;
     border: 5px solid #f2bac9;
     width: 80%;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 2001; /*ensures it is on top of dashboard heading*/
+}
+
+.inventory-display-content {
+    margin: auto;
+    padding: 20px;
+    border: 5px solid #f2bac9;
+    background-color: white;
+    width: auto;
     border-radius: 20px;
     display: flex;
     justify-content: center;
@@ -199,9 +223,6 @@
     width: 100%;
 }
 
-.inventory-button {
-    margin-top: 30px;
-}
 
 .inventory-content {
     width: 100%;
@@ -214,15 +235,49 @@
 .picture-container {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: start;
     gap: 20px;
 }
 
-.container2 {
+.main-profile-container {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
+
+.description-text-label {
+    color: black;
+    font-weight: 900;
+    font-family: 'Inter', sans-serif;
+    font-size: 20px;
+    margin: 10px 0px;
+}
+
+.description-display-container {
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: 5px solid #bad7f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 200px; /* adjust width */
+}
+
+.description-display {
+    color: black;
+    font-weight: 900;
+    font-family: 'Inter', sans-serif;
+    font-size: 20px;
+    text-align: center;
+    max-height: 100px; /* strict height limit */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3; /* ensures 3-line ellipsis */
+    word-wrap: break-word;
+    white-space: normal;
+}
+
 
 
 
