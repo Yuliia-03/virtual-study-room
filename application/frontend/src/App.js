@@ -9,6 +9,7 @@ import Analytics from './pages/Analytics';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MotivationalMessage from "./pages/Motivation";
 import ProfileBox from "./pages/ProfileBox";
+import SharedMaterials from "./pages/SharedMaterials";
 //import ToDoList from './pages/ToDoList';
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/profile" element={<ProfileBox />} />
+        <Route path="/shared-materials" element={<SharedMaterials />} />
       </Routes>
     </Router>
   );
