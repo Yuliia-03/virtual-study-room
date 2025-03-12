@@ -36,7 +36,6 @@
 .dashboard-content {
     display: flex;
     flex-grow: 1;
-    gap: 10px;
 }
 
 .dashboard-left-panel, .dashboard-right-panel {
@@ -58,7 +57,7 @@
     align-items: center;
     justify-content: center;
     padding: 30px;
-    gap: 30px;
+    gap: 10px;
     height: 100%; /* Ensure panels stretch to fill the full height of their container */
     box-sizing: border-box; /* Ensure padding/border don't increase its size */
 }
@@ -99,8 +98,7 @@
    color: red;
 }
 /*There is a minimum size, after which it cannot get any smaller because as of now*/
-.dashboard-left-panel .dashboard-panel:last-child {
-   height: 40px; /* Set a larger height for the invites panel*/
-   color: purple;
+.dashboard-left-panel .dashboard-panel:first-child { /* Set a larger height for the invites panel*/
+    height: 9vh;
 }
 

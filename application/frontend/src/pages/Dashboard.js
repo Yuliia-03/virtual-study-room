@@ -33,12 +33,10 @@ function Dashboard() {
                     <div className="dashboard-panel">
                     <button onClick={gotoCalendar}>Go to Calendar</button>   
                     </div>
-                    <div className="dashboard-panel">Invites</div>
                 </div>
                 <div className = "dashboard-main-panel" data-testid="main-panel">
                     <div className="dashboard-panel"><ProfileBox /></div>
-                    <div className="dashboard-panel">Friends List</div>
-                    <div className="dashboard-panel">Add Friends</div>
+                    <div className="dashboard-panel">Friends</div>
                 </div>
                 <div className = "dashboard-right-panel" data-testid="right-panel">
                     <StudyRoomComponent />
