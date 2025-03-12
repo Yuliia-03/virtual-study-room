@@ -28,8 +28,6 @@ class FriendsView(APIView):
         elif url_name == "friends_requested":
             print("Friends requested")
             friends = Friends.get_invitations_sent(user)
-        else:
-            return Response({"error": "Invalid action"}, status=status.HTTP_400_BAD_REQUEST)
         return self.get_friends(request, friends)
 
     def get_friends(self, request, data):

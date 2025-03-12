@@ -3,9 +3,7 @@ from django.test import RequestFactory
 from rest_framework import status
 from rest_framework.test import APITestCase
 from api.models import User,Friends, Status
-from api.views.friends import FriendsView
-from random import choice
-
+from api.views import FriendsView
 
 class FriendsViewTestCase(APITestCase):
     fixtures = ['api/tests/fixtures/default_user.json',
@@ -65,3 +63,24 @@ class FriendsViewTestCase(APITestCase):
         self.assertEqual(list_data['name'], check_data[0].user2.firstname)
         self.assertEqual(list_data['surname'], check_data[0].user2.lastname)
         self.assertEqual(list_data['username'], check_data[0].user2.username)
+        
+    def test_accept_friend(self):
+
+        self.assertEqual(Friends.objects.get(pk=4).status, Status.PENDING)
+        response = self.client.patch('/api/accept_friend/4/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Friends.objects.get(pk=4).status, Status.ACCEPTED)
+    
+    def test_delete_user(self):
+
+        self.assertEqual(Friends.objects.get(pk=1).status, Status.ACCEPTED)
+        response = self.client.delete('/api/reject_friend/1/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Friends.objects.get(pk=1).status, Status.PENDING)
+
+    
+    def test_get_invalid_request(self):
+        """Simulate an invalid action by sending a request with an unknown view name."""
+
+        request = self.client.get('/api/pending_friends/')
