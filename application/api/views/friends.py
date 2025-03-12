@@ -46,7 +46,6 @@ class FriendsView(APIView):
                     "surname": friend[1].lastname,
                     "username": friend[1].username
             })
-        #print(response_data)
         return Response(response_data, status=status.HTTP_200_OK)
 
     def patch(self, request, id):

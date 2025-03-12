@@ -9,7 +9,6 @@ const PendingFriends = () => {
 
     return (
         <div className="pending-friends">
-            <h3 className="invitations-title">Friend Requests</h3>
             <div className="invitations-container">
                 {friendRequests.length === 0 ? (
                     <p className="no-invitations">No pending invitations.</p>

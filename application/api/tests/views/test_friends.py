@@ -3,7 +3,6 @@ from django.test import RequestFactory
 from rest_framework import status
 from rest_framework.test import APITestCase
 from api.models import User,Friends, Status
-from api.views import FriendsView
 
 class FriendsViewTestCase(APITestCase):
     fixtures = ['api/tests/fixtures/default_user.json',

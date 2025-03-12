@@ -9,7 +9,6 @@ const AllFriends = () => {
 
     return (
         <div className="friends-list-container">
-            <h3 className="friends-title">Friends</h3>
             <div className="friends-list-wrapper">
                 <ul className="friends-list">
                     {friends.length === 0 ? (

@@ -9,7 +9,6 @@ const PendingFriends = () => {
 
     return (
         <div className="pending-friends">
-            <h3 className="invitations-title">Friend Requests</h3>
             <div className="invitations-container">
                 {invitationsRequests.length === 0 ? (
                     <p className="no-invitations">No pending invitations.</p>
@@ -17,7 +16,7 @@ const PendingFriends = () => {
                     <ul className="invitations-list">
                         {invitationsRequests.map((inv) => (
                             <li key={inv.id} className="invitation-card">
-                                <span className="invitation-name">
+                                <span >
                                     {inv.name} {inv.surname} ({inv.username})
                                 </span>
                                 <div className="invitation-actions">
