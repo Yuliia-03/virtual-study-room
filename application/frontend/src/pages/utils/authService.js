@@ -1,7 +1,6 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
-
 const API_BASE_URL = "http://127.0.0.1:8000/api"; // Change if needed
 
 // Local storage helpers (can be mocked in tests)

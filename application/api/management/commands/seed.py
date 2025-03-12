@@ -5,7 +5,7 @@ from api.models.motivational_message import MotivationalMessage
 
 from django.core.management import call_command
 
-from api.models import Friends, User, Status, toDoList, Permission, MotivationalMessage, Rewards, StudySession, SessionUser, List
+from api.models import Friends, events, User, Status, toDoList, Permission, MotivationalMessage, Rewards, StudySession, SessionUser, List
 
 
 import pytz
@@ -48,15 +48,25 @@ class Command(BaseCommand):
       
         self.seed_motivationalMessage()
         self.generating_users()
+        User.objects.create_user(
+            email = "testuser@email.com",
+            firstname = "Test",
+            lastname = "User",
+            username = "TestUser1",
+            password = "Password123",
+            description = "This is a test user"
+        )
         self.generate_random_friends()
         self.generating_rewards()
         self.generate_random_Lists()
         self.generate_random_toDoLists()
         self.generate_toDoListUsers()
+        #self.generate_events()
         self.generating_study_sessions()
         self.generating_session_users()
 
 
+    
     def generate_random_friends(self):
         friends_count = Friends.objects.count()
         while friends_count < self.FRIENDS_COUNT:
@@ -266,6 +276,50 @@ class Command(BaseCommand):
             )
         except Exception as e:
             self.stdout.write(self.style.ERROR(f'Error creating ToDoListUser: {str(e)}'))
+    
+    # def generate_events(self):
+    #         titles = [
+    #             "Django Workshop",
+    #             "Python Developer Meetup",
+    #             "Frontend Development Conference",
+    #             "Tech Talk: Artificial Intelligence",
+    #             "Web Development Bootcamp"
+    #         ]
+    #         descriptions = [
+    #             "A workshop on Django for beginners.",
+    #             "Join us for a Python meetup with interesting talks.",
+    #             "Learn about the latest in frontend development.",
+    #             "Discover the power of AI in this tech talk.",
+    #             "An intensive bootcamp focused on web development skills."
+    #         ]
+    #         locations = [
+    #             "Room A, Tech Hub",
+    #             "Room B, Main Building",
+    #             "Online",
+    #             "Room C, Innovation Center",
+    #             "Room D, Conference Hall"
+    #         ]
+
+    #         # Seed 10 sample events
+    #         for _ in range(10):
+    #             title = random.choice(titles)
+    #             description = random.choice(descriptions)
+    #             location = random.choice(locations)
+    #             start_time = datetime.now() + timedelta(days=random.randint(1, 10))
+    #             end_time = start_time + timedelta(hours=random.randint(1, 4))
+                
+    #             # Create the Event object
+    #             event = Event.objects.create(
+    #                 users = list(User.objects.create())
+    #                 title=title,
+    #                 description=description,
+    #                 start_time=start_time,
+    #                 end_time=end_time,
+    #                 location=location,
+    #                 is_completed=random.choice([True, False])
+    #             )
+
+    #             self.stdout.write(self.style.SUCCESS(f'Successfully created event: {event.title}'))
 
     """Seeder for Study Sessions"""
     def generating_study_sessions(self):
