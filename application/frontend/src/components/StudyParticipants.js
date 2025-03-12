@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import axios from "axios";
-import GroupStudyRoom from '../pages/GroupStudyPage';
 import { getAuthenticatedRequest } from "../pages/utils/authService";
 import { useNavigate } from 'react-router-dom';
-import "../styles/StudyRoomComponent.css";
 
 const StudyRoomComponent = () => {
 
@@ -34,7 +32,6 @@ const StudyRoomComponent = () => {
 
             // Redirect to the Group Study Room page with the Room Code
             console.log("Joining .. . .");
-
             navigate(`/group-study/${response.roomCode}`, {
                 state: { roomCode: response.roomCode, roomName: roomName },
             });
@@ -48,24 +45,22 @@ const StudyRoomComponent = () => {
 
     // Methods to join room
     const joinRoom = async () => {
-        try {
+
             // This stuff gets sent to the backend!
-            const response = await getAuthenticatedRequest("/join-room/", "POST", {
-                roomCode: roomCode,  // Sends the room name to the backend
+            const response = await getAuthenticatedRequest("/create-room/", "POST", {
+                sessionName: roomName,  // Sends the room name to the backend
             });
 
-            console.log("Joining .. . .");
+        try {
+            const res = await axios.post("http://localhost:8000/api/join-room/", {
+                roomCode
+            }, {
+                headers: { "Content-Type" : "application/json" }
+            });
 
-            console.log("ROOM CODE", roomCode)
-            // To get the room name
-            const response1 = await getAuthenticatedRequest(`/get-room-details/?roomCode=${roomCode}`, "GET");
-
-            if (response.status === 200) setJoined(true);
+            if (res.status === 200) setJoined(true);
                 // Redirect to the Group Study Room page with the roomCode
-                navigate(`/group-study/${roomCode}`, {
-                state: { roomCode: roomCode , roomName: response1.sessionName},
-            });
-            console.log("User has joined the room")
+                navigate(`/group-study-room/${roomCode}`);
         }
 
         catch (error) {

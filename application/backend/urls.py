@@ -43,6 +43,7 @@ urlpatterns = [
     path('api/motivational-message/', views.motivationalMessage, name='motivation'),
     path('api/create-room/', create_room),
     path('api/join-room/', join_room),
+    path('api/get-room-details/', get_room_details),
 
 
     path('api/todolists/<str:is_shared>/', views.ViewToDoList.as_view(), name='to_do_list'),
