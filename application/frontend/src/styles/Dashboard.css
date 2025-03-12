@@ -36,7 +36,6 @@
 .dashboard-content {
     display: flex;
     flex-grow: 1;
-    gap: 10px;
 }
 
 .dashboard-left-panel, .dashboard-right-panel {
@@ -58,7 +57,7 @@
     align-items: center;
     justify-content: center;
     padding: 30px;
-    gap: 30px;
+    gap: 10px;
     height: 100%; /* Ensure panels stretch to fill the full height of their container */
     box-sizing: border-box; /* Ensure padding/border don't increase its size */
 }
