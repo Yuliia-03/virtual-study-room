@@ -78,7 +78,7 @@ const StudyRoomComponent = () => {
                                         value = {roomName}
                                         onChange={(e) => setRoomName(e.target.value)}
                                     />
-                                    <button onClick={createRoom}>Create Room</button>
+                                    <button className = "gsr" onClick={createRoom}>Create Room</button>
                                     </div>
 
                                     {/* For joining the room, there is also a text input for the room code"*/}
@@ -89,7 +89,7 @@ const StudyRoomComponent = () => {
                                         value={roomCode}
                                         onChange={(e) => setRoomCode(e.target.value)}
                                     />
-                                    <button onClick={joinRoom}>Join Room</button>
+                                    <button className = "gsr" onClick={joinRoom}>Join Room</button>
                                     </div>
 
                                 </>

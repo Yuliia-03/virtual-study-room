@@ -168,8 +168,12 @@ function ProfileBox() {
                         <input type="file" accept="image/*" data-testid='file-input' id='change-avatar' onChange={handleChangeAvatar} className="change-avatar-button" style={{ display: 'none' }} />
                     </div>
                     <div className='container2'>
-                        <button type="button" className="logoff-button" onClick={handleLogOff}>LOG OFF</button>
-                        <button type='button' className='show-modal-button' onClick={() => setShowModal(true)}></button>
+                        <p>Description:</p>
+                        <p className='description-display'>{userData.description}</p>
+                        <div className= 'container22'>
+                            <button type="button" className="logoff-button" onClick={handleLogOff}>LOG OFF</button>
+                            <button type='button' data-testid="show-more-button" className='logoff-button' onClick={() => setShowModal(true)}>EDIT</button>
+                        </div>
                     </div>
                 </div>
 

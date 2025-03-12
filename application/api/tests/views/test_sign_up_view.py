@@ -58,7 +58,7 @@ class SignupTestCase(APITestCase):
         response = self.client.post('/api/signup/', data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data['error'], 'Username already taken')
+        self.assertEqual(response.data['error'], 'Username or email already exists')
 
     def test_signup_email_taken(self):
         """Test if signup fails when the email is already taken."""
@@ -79,7 +79,7 @@ class SignupTestCase(APITestCase):
         response = self.client.post('/api/signup/', data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data['error'], 'Email already taken')
+        self.assertEqual(response.data['error'], 'Username or email already exists')
 
     def test_signup_invalid_data(self):
         """Test if signup fails when the data is invalid (missing required fields)."""

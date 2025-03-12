@@ -17,7 +17,7 @@ class MotivationalMessageViewTestCase(TestCase):
         self.motivation1 = MotivationalMessage.objects.create(text = "Always make sure you’re doing little experiments every day to move yourself forward on the things you’re interested in.")
         self.motivation2 = MotivationalMessage.objects.create(text = "The sun will come out tomorrow!")
         self.motivation3 = MotivationalMessage.objects.create(text = "Just do it!")
-        self.url = reverse("motivational_message")
+        self.url = reverse("motivation")
         self.client = APIClient()
 
     def test_display_motivational_message(self):

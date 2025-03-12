@@ -52,6 +52,10 @@ describe('ProfileBox', () => {
 
       expect(screen.getByText('Profile')).toBeInTheDocument();
       await waitFor(() => expect(screen.getByText('testuser')).toBeInTheDocument());
+
+      const showMoreButton = screen.getByTestId('show-more-button');
+      fireEvent.click(showMoreButton);
+      
       expect(screen.getByPlaceholderText('Please Enter Description')).toBeInTheDocument();
     });
 
@@ -62,12 +66,15 @@ describe('ProfileBox', () => {
         </Router>
       );
 
+      const showMoreButton = screen.getByTestId('show-more-button');
+      fireEvent.click(showMoreButton);
+
       const descriptionTextarea = screen.getByPlaceholderText('Please Enter Description');
       fireEvent.change(descriptionTextarea, { target: { value: 'New Description' } });
 
       expect(descriptionTextarea.value).toBe('New Description');
 
-      const saveButton = screen.getByText('Save');
+      const saveButton = screen.getByText('SAVE DESCRIPTION');
       fireEvent.click(saveButton);
 
       await waitFor(() => expect(getAuthenticatedRequest).toHaveBeenCalledWith('/description/', 'PUT', { description: 'New Description' }));
@@ -80,9 +87,12 @@ describe('ProfileBox', () => {
         </Router>
       );
 
+      const showMoreButton = screen.getByTestId('show-more-button');
+      fireEvent.click(showMoreButton);
+
       const file = new File(['avatar'], 'avatar.png', { type: 'image/png' });
 
-      const uploadLabel = screen.getByText('Upload Avatar');
+      const uploadLabel = screen.getByText('UPLOAD AVATAR');
       await act(async () => {
           fireEvent.click(uploadLabel); 
       });
@@ -103,7 +113,10 @@ describe('ProfileBox', () => {
         </Router>
       );
 
-      const defaultAvatarButton = screen.getByText('Default Avatars');
+      const showMoreButton = screen.getByTestId('show-more-button');
+      fireEvent.click(showMoreButton);
+
+      const defaultAvatarButton = screen.getByText('DEFAULT AVATARS');
       fireEvent.click(defaultAvatarButton);
 
       const avatarImage = screen.getByAltText('Avatar 1');
@@ -126,6 +139,9 @@ describe('ProfileBox', () => {
         </Router>
       );
 
+      const showMoreButton = screen.getByTestId('show-more-button');
+      fireEvent.click(showMoreButton);
+
       const inventoryButton = screen.getByLabelText('View Badge Collection');
       fireEvent.click(inventoryButton);
 
@@ -141,7 +157,7 @@ describe('ProfileBox', () => {
         </Router>
       );
 
-      const logoffButton = screen.getByText('Log Off');
+      const logoffButton = screen.getByText('LOG OFF');
       fireEvent.click(logoffButton);
 
       await waitFor(() => expect(localStorage.removeItem).toHaveBeenCalledWith('access_token'));
@@ -167,7 +183,10 @@ describe('ProfileBox', () => {
         </Router>
       );
 
-      const uploadLabel = screen.getByText('Upload Avatar');
+      const showMoreButton = screen.getByTestId('show-more-button');
+      fireEvent.click(showMoreButton);
+
+      const uploadLabel = screen.getByText('UPLOAD AVATAR');
       await act(async () => {
           fireEvent.click(uploadLabel); 
       });
@@ -191,7 +210,10 @@ describe('ProfileBox', () => {
 
       const file = new File(['avatar'], 'avatar.png', { type: 'image/png' });
 
-      const uploadLabel = screen.getByText('Upload Avatar');
+      const showMoreButton = screen.getByTestId('show-more-button');
+      fireEvent.click(showMoreButton);
+
+      const uploadLabel = screen.getByText('UPLOAD AVATAR');
       await act(async () => {
           fireEvent.click(uploadLabel); 
       });
@@ -217,10 +239,13 @@ describe('ProfileBox', () => {
         </Router>
       );
 
+      const showMoreButton = screen.getByTestId('show-more-button');
+      fireEvent.click(showMoreButton);
+
       const descriptionTextarea = screen.getByPlaceholderText('Please Enter Description');
       fireEvent.change(descriptionTextarea, { target: { value: 'New Description' } });
 
-      const saveButton = screen.getByText('Save');
+      const saveButton = screen.getByText('SAVE DESCRIPTION');
       fireEvent.click(saveButton);
 
       await waitFor(() => expect(toast.error).toHaveBeenCalledWith('error updating description'));
@@ -235,7 +260,10 @@ describe('ProfileBox', () => {
         </Router>
       );
 
-      const defaultAvatarButton = screen.getByText('Default Avatars');
+      const showMoreButton = screen.getByTestId('show-more-button');
+      fireEvent.click(showMoreButton);
+
+      const defaultAvatarButton = screen.getByText('DEFAULT AVATARS');
       fireEvent.click(defaultAvatarButton);
 
       const avatarImage = screen.getByAltText('Avatar 1');
@@ -256,6 +284,9 @@ describe('ProfileBox', () => {
           <ProfileBox />
         </Router>
       );
+
+      const showMoreButton = screen.getByTestId('show-more-button');
+      fireEvent.click(showMoreButton);
 
       const inventoryButton = screen.getByLabelText('View Badge Collection');
       fireEvent.click(inventoryButton);
