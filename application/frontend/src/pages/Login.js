@@ -46,8 +46,6 @@ function Login() {
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-
-
   }, []);
 
   // when the username/password fields are edited, update form data
