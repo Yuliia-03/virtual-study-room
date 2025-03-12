@@ -11,9 +11,9 @@ from ..models.study_session import StudySession
 def get_participants(request):
     print("API is being called")
     print("Request headers:", request.headers)  # Debugging: Log request headers
-    print("Request room_code:", request.data)  # Debugging: Log the room_code
+    print("Request query params:", request.query_params)  # Debugging: Log the query parameters
 
-    room_code = request.data.get('roomCode')
+    room_code = request.query_params.get('roomCode')  # Extract roomCode from query params
 
     print("Retrieving participants for the study room", room_code)
 

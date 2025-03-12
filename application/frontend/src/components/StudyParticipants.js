@@ -1,108 +1,88 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import { getAuthenticatedRequest } from "../pages/utils/authService";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import "../styles/StudyParticipants.css";
+import { storage } from "../firebase-config";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import defaultAvatar from '../assets/avatars/avatar_2.png';
+import { ToastContainer, toast } from 'react-toastify';
 
-const StudyRoomComponent = () => {
+const StudyParticipants = () => {
 
     // Web socket handling
     const [roomCode, setRoomCode] = useState("");   // Ensure that the room code is defined
     const [roomName, setRoomName] = useState("");
-    const [joined, setJoined] = useState(false);
+    const [participants, setParticipants] = useState([]); // State to store participants
 
     // Use to navigate to the created room / joined room
     const navigate = useNavigate(); // initialise
 
-    // Method to create Room
-    const createRoom = async () => {
-        console.log("Creating room...");
+    const { roomCode: urlRoomCode } = useParams(); // Get roomCode from URL params
 
-        try {
-
-            // This stuff gets sent to the backend!
-            const response = await getAuthenticatedRequest("/create-room/", "POST", {
-                sessionName: roomName,  // Sends the room name to the backend
-            });
-
-            console.log("Testing here")
-            console.log(response);
-            console.log(response.roomCode);
-            setRoomCode(response.roomCode);
-            setJoined(true);
-
-            // Redirect to the Group Study Room page with the Room Code
-            console.log("Joining .. . .");
-            navigate(`/group-study/${response.roomCode}`, {
-                state: { roomCode: response.roomCode, roomName: roomName },
-            });
+    console.log("the room code is:, ", roomCode)
+    // Fetch participants when the component mounts or roomCode changes
+    useEffect(() => {
+        if (urlRoomCode) {
+            setRoomCode(urlRoomCode); // Set the roomCode state
+            fetchParticipants(urlRoomCode);
+            fetchUserData()
         }
+    }, [urlRoomCode]);
 
-        catch (error) {
-            console.error("Error creating room: ", error)
+    // Function to fetch participants
+    const fetchParticipants = async (roomCode) => {
+        try {
+            const response = await getAuthenticatedRequest(`/get-participants/?roomCode=${roomCode}`, "GET");
+            console.log("Participants",response.participantsList)
+
+            // Fetch profile pictures for each participant
+            const participantsWithImages = await Promise.all(
+                response.participantsList.map(async (participant) => {
+                    const imageUrl = await fetchUserData(participant.username);
+                    return { ...participant, imageUrl }; // Add imageUrl to the participant object
+                })
+            );
+
+            setParticipants(participantsWithImages); // Update participants state with image URLs
+
+        } catch (error) {
+            console.error("Error fetching participants:", error);
         }
     };
 
+    // Function to get user profiles
 
-    // Methods to join room
-    const joinRoom = async () => {
-
-            // This stuff gets sent to the backend!
-            const response = await getAuthenticatedRequest("/create-room/", "POST", {
-                sessionName: roomName,  // Sends the room name to the backend
-            });
-
+    const fetchUserData = async (username) => {
         try {
-            const res = await axios.post("http://localhost:8000/api/join-room/", {
-                roomCode
-            }, {
-                headers: { "Content-Type" : "application/json" }
-            });
+            const data = await getAuthenticatedRequest("/profile/", "GET");
 
-            if (res.status === 200) setJoined(true);
-                // Redirect to the Group Study Room page with the roomCode
-                navigate(`/group-study-room/${roomCode}`);
+            //fetch profile picture from firebase using user_id
+            const imageRef = ref(storage, `avatars/${username}`);
+            const imageUrl = await getDownloadURL(imageRef).catch(() => defaultAvatar); //default image if not found
+            return imageUrl;    // Return the imageUrl
         }
-
         catch (error) {
-            console.error("Error joining room:", error)}
+            toast.error("error fetching user data");
+            return defaultAvatar;   // IF there is an error return default avatar
+        }
     };
 
 
     return(
-        <div className="dashboard-panel">
-                        <div>
-                            {!joined ? (
-                                <>
-
-                                    {/* To create a study room, text field to enter a room name ( NOT CODE, code is auto generated ) */}
-                                    <div className = "input-group">
-                                    <input
-                                        type = "text"
-                                        placeholder = "I want to study..."
-                                        value = {roomName}
-                                        onChange={(e) => setRoomName(e.target.value)}
-                                    />
-                                    <button className = "gsr" onClick={createRoom}>Create Room</button>
-                                    </div>
-
-                                    {/* For joining the room, there is also a text input for the room code"*/}
-                                    <div className = "input-group">
-                                    <input
-                                    type = "text"
-                                        placeholder = "Room Code... "
-                                        value={roomCode}
-                                        onChange={(e) => setRoomCode(e.target.value)}
-                                    />
-                                    <button className = "gsr" onClick={joinRoom}>Join Room</button>
-                                    </div>
-
-                                </>
-                            ) : (
-                                <GroupStudyRoom roomCode={roomCode} />
-                            )}
-                        </div>
+        <div className="users">
+            {/* Dynamically render participants */}
+            {participants.map((participant, index) => (
+                <div key={index} className="user-circle">
+                    <div className="user-image">
+                        <img src={participant.imageUrl} alt="profile" className="user-image" />
                     </div>
-    );
-};
+                    <div className="user-name">
+                        {participant.username}
+                    </div>
+                </div>
+            ))}
+        </div>)
+    };
 
-export default StudyRoomComponent;
+export default StudyParticipants;

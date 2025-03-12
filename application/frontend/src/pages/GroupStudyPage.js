@@ -6,6 +6,7 @@ import customLogo from "../assets/customisation_logo.png";
 import copyLogo from "../assets/copy_logo.png";
 import exitLogo from "../assets/exit_logo.png";
 import StudyTimer from '../components/StudyTimer.js';
+import StudyParticipants from '../components/StudyParticipants.js';
 import { useParams, useLocation } from 'react-router-dom';
 
 function GroupStudyPage(){
@@ -213,34 +214,7 @@ function GroupStudyPage(){
                             <img src={exitLogo} alt="Exit" />
                         </button>
                     </div>
-                    <div className='users'>
-                        {/*These are examples of how the user profiles are displayed. 
-                        user-image has the white circle, user-name is for the name at the bottom of the user. Can be changed, this is just an example.*/}
-                        <div className="user-circle"> 
-                            <div className="user-image">JD</div>
-                            <div className="user-name">John Doe</div>
-                        </div>
-                        <div className="user-circle">
-                            <div className="user-image">JD</div>
-                            <div className="user-name">John Doe</div>
-                        </div>
-                        <div className="user-circle">
-                            <div className="user-image">JD</div>
-                            <div className="user-name">John Doe</div>
-                        </div>
-                        <div className="user-circle">
-                            <div className="user-image">JD</div>
-                            <div className="user-name">John Doe</div>
-                        </div>
-                        <div className="user-circle">
-                            <div className="user-image">JD</div>
-                            <div className="user-name">John Doe</div>
-                        </div>
-                        <div className="user-circle">
-                            <div className="user-image">JD</div>
-                            <div className="user-name">John Doe</div>
-                        </div>
-                    </div>
+                    <StudyParticipants/>
                 </div>
                 <MotivationalMessage data-testid="motivationalMessage-container"/>
             </div>
