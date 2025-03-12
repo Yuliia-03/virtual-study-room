@@ -3,7 +3,7 @@ import "../styles/Dashboard.css";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import ToDoList from '../pages/ToDoList';
+// import ToDoList from '../pages/ToDoList';
 import CalendarPage from '../pages/Calendar1';
 import ToDoList from '../components/ToDoListComponents/ToDoList';
 import StudyRoomComponent from '../components/StudyRoomComponent';
