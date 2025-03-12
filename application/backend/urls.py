@@ -60,6 +60,8 @@ urlpatterns = [
     path('api/get_pending_friends/', views.FriendsView.as_view(), name='pending_friends'),
     path('api/accept_friend/<int:id>/', views.FriendsView.as_view(), name='accept_friend'),
     path('api/reject_friend/<int:id>/', views.FriendsView.as_view(), name='reject_friend'),
+    
+    path('api/find_friend/', views.FriendsView.as_view(), name='find_friend'),
 
 
     path('api/motivational-message/', views.motivationalMessage, name='motivation'),
