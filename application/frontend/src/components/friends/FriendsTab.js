@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import AllFriends from "./AllFriends";
 import PendingRequests from "./PendingRequests";
 import FriendsRequested from "./FriendsRequested";
+import SearchFriends from "./SearchFriends";
 import "../../styles/friends/FriendsTab.css";
 
 import { FriendsProvider } from './FriendsContext';
@@ -22,6 +23,9 @@ const FriendsTab = () => {
                 </button>
                 <button className={activeTab === "sent" ? "active" : ""} onClick={() => setActiveTab("sent")}>
                     Sent Requests
+                    </button>
+                    <button className={activeTab === "search" ? "active" : ""} onClick={() => setActiveTab("search")}>
+                    Search Friends
                 </button>
             </div>
 
@@ -30,6 +34,7 @@ const FriendsTab = () => {
                 {activeTab === "all" && <AllFriends />}
                 {activeTab === "pending" && <PendingRequests />}
                 {activeTab === "sent" && <FriendsRequested />}
+                {activeTab === "search" && <SearchFriends />}
             </div>
             </div>
         </FriendsProvider>
