@@ -60,13 +60,25 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
     is_active = models.BooleanField(default=True)   #Allows users to be disabled if needed
+    is_staff = models.BooleanField(default=False)   # Required for admin access
+    is_superuser = models.BooleanField(default=False)  # Required for superuser privileges
     
     objects = UserManager()     #Uses UserManager as custom manager
 
     USERNAME_FIELD = 'email'    #Uses email instead of username for authentication i.e. for login
+    REQUIRED_FIELDS = ['firstname', 'lastname', 'username']
 
     def __str__(self):
         return self.username
+    
+    # Required methods for admin and permissions
+    def has_perm(self, perm, obj=None):
+        """Does the user have a specific permission?"""
+        return True
+
+    def has_module_perms(self, app_label):
+        """Does the user have permissions to view the app `app_label`?"""
+        return True
 
     def full_name(self):
         """Return a string containing the user's full name."""

@@ -29,6 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "localhost",  # For local development
+    ##"http://127.0.0.1:8000/api", # Localhost IP
     "127.0.0.1",  # Localhost IP
     "https://virtual-study-room-phi.vercel.app", # real website
 ]
@@ -91,8 +92,22 @@ ROOT_URLCONF = 'backend.urls'
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React frontend
+    #"http://127.0.0.1:8000/api",
     "https://virtual-study-room-phi.vercel.app", # real website
 ]
+
+# Security settings
+CSRF_COOKIE_HTTPONLY = True  # Enable HTTPOnly for CSRF cookie
+
+# Optional: If you're using JWT, you can also disable CSRF for API requests
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",  # If your frontend is running on localhost:3000 (adjust as needed)
+    
+
+]
+
+# If you don't want to require CSRF tokens for your API calls (use with caution)
+CSRF_COOKIE_SECURE = False  # Ensures CSRF cookie is sent over HTTP (set to True for production)
 
 TEMPLATES = [
     {
