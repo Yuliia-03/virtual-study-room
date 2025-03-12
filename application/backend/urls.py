@@ -23,11 +23,10 @@ from api.views import *
 from api import views
 from api.views.profile_view import get_logged_in_user, save_description, get_user_badges
 from api.views.analytics import get_analytics
+from api.views.groupStudyRoom import create_room, join_room
 from api.views.calendar import EventViewSet
-
 event_list = EventViewSet.as_view({'get': 'list', 'post': 'create'})  
 event_detail = EventViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})
-
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -38,12 +37,16 @@ urlpatterns = [
     path('api/signup/', views.SignUpView.as_view(), name='signup'),
     path("api/analytics/", get_analytics, name="analytics"),  # Default for logged-in user
     path('api/login/', views.login, name='login'),
-    
+
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/motivational-message/', views.motivationalMessage, name='motivation'),
+    path('api/create-room/', create_room),
+    path('api/join-room/', join_room),
+
 
     path('api/todolists/<str:is_shared>/', views.ViewToDoList.as_view(), name='to_do_list'),
-    
+
     path('api/update_task/<int:task_id>/', views.ViewToDoList.as_view(), name='update_task_status'),
     path('api/new_task/', views.ViewToDoList.as_view(), name='create_new_task'),
     path('api/delete_task/<int:id>/', views.ViewToDoList.as_view(), name='delete_task'),
