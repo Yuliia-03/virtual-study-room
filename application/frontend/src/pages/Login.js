@@ -61,7 +61,7 @@ function Login() {
                 hideProgressBar: true
             });
 
-            console.log(" LOok here: ", userName)
+            console.log(" Look here: ", userName)
             setTimeout(() => {
                 navigate(`/dashboard/${userName.username}`, {
                         state: { userName: userName},
