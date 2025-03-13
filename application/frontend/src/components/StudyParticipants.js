@@ -7,6 +7,7 @@ import { storage } from "../firebase-config";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import defaultAvatar from '../assets/avatars/avatar_2.png';
 import { ToastContainer, toast } from 'react-toastify';
+import io from 'socket.io-client';
 
 const StudyParticipants = () => {
 
@@ -20,13 +21,34 @@ const StudyParticipants = () => {
 
     const { roomCode: urlRoomCode } = useParams(); // Get roomCode from URL params
 
-    console.log("the room code is:, ", roomCode)
+    console.log("The room code is: ", roomCode)
     // Fetch participants when the component mounts or roomCode changes
     useEffect(() => {
         if (urlRoomCode) {
             setRoomCode(urlRoomCode); // Set the roomCode state
             fetchParticipants(urlRoomCode);
             fetchUserData()
+
+            // Set up WebSocket connection
+            const socket = new WebSocket(`ws://localhost:8000/ws/room/${urlRoomCode}/`);
+
+            // Listen for participants updates
+            socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.type === 'participants_update') {
+                setParticipants(data.participants);
+            }
+            };
+
+            // Handle WebSocket errors
+            socket.onerror = (error) => {
+                console.error("WebSocket error:", error);
+            };
+
+            // Cleanup WebSocket connection on unmount
+            return () => {
+                socket.close();
+            };
         }
     }, [urlRoomCode]);
 

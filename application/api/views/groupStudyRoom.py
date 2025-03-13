@@ -1,3 +1,4 @@
+from asgiref.sync import async_to_sync
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -5,6 +6,10 @@ from rest_framework.permissions import IsAuthenticated
 
 from ..models import SessionUser, User
 from ..models.study_session import StudySession
+
+# for websockets
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 # These are APIs related to the group study room!
 # create_room will send create a study session, use the room_id as the room code, and created_by user
@@ -87,6 +92,12 @@ def join_room(request):
         study_session.participants.add(user)
         study_session.save()
 
+        # Notify all clients in the room
+        participants = study_session.participants.all()
+        notify_participants(room_code, participants)
+
+        print(f"Notifying participants in room {room_code}: {participants}")
+
         # create an instance of session user
         if SessionUser.objects.filter(user=user, session=study_session).exists():
             print("User is already in the session. Updating join sequence.")
@@ -122,6 +133,7 @@ def get_room_details(request):
         # returns the room name
     except Exception as e:
         return Response({"error": f"Failed to retrieve room details: {str(e)}"}, status=400)
+
 
 
 @api_view(['POST'])
@@ -160,3 +172,15 @@ def leave_room(request):
 
         return Response({"message": "Left successfully!"})
     return Response({"error": "Room not found"}, status=404)
+
+# update the participants in real time as someone joins the room, and leaves the room
+def notify_participants(room_code, participants):
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"room_{room_code}",
+        {
+            'type' : 'send_participants',
+            'participants' : participants,
+        }
+    )
+
