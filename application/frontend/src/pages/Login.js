@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import axios from "axios"
-import { useNavigate } from "react-router-dom"
+import { Navigate, useNavigate } from 'react-router-dom';
 import "../styles/Login.css";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { getAuthenticatedRequest, getAccessToken } from "./utils/authService";
 
 function Login() {
     // TODO: TEST THIS FILE?
@@ -20,6 +21,25 @@ function Login() {
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
+
+    // to retrieve the username
+    const [userName, setUserName] = useState("");
+    useEffect(() => {
+        const fetchUserName = async () => {
+            try {
+                const data = await getAuthenticatedRequest("/profile/", "GET");
+                console.log("Login: ", data.username)
+                //update user data
+                setUserName({
+                    username: data.username || "N/A",
+                });
+            }
+            catch (error) {
+                toast.error("error fetching user data");
+            }
+        };
+        fetchUserName();
+    }, []);
 
 
     // when the login button is clicked - send form data to backend django form
@@ -41,8 +61,11 @@ function Login() {
                 hideProgressBar: true
             });
 
+            console.log(" LOok here: ", userName)
             setTimeout(() => {
-                navigate('/dashboard');
+                navigate(`/dashboard/${userName.username}`, {
+                        state: { userName: userName},
+      });
             }, 1500)
             
         } catch (error) {
