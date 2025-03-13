@@ -87,6 +87,8 @@ def join_room(request):
         participants = study_session.participants.all()
         notify_participants(room_code, participants)
 
+        print(f"Notifying participants in room {room_code}: {participants}")
+
         # create an instance of session user
         session_user = SessionUser.objects.create(
             user = request.user,
@@ -121,7 +123,7 @@ def get_room_details(request):
 def notify_participants(room_code, participants):
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
-        room_code,
+        f"room_{room_code}",
         {
             'type' : 'send_participants',
             'participants' : participants,

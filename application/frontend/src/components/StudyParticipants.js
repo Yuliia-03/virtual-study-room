@@ -30,20 +30,24 @@ const StudyParticipants = () => {
             fetchUserData()
 
             // Set up WebSocket connection
-            const socket = io(`ws://localhost:8000`, {
-                path: "/ws/socket.io/", // backend WebSocket path
-                query: { roomCode: urlRoomCode }, // Pass the roomCode to the backend
-            });
+            const socket = new WebSocket(`ws://localhost:8000/ws/room/${urlRoomCode}/`);
 
             // Listen for participants updates
-            socket.on('participants_update', (data) => {
-                console.log("Received participants update:", data);
+            socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.type === 'participants_update') {
                 setParticipants(data.participants);
-            });
+            }
+            };
+
+            // Handle WebSocket errors
+            socket.onerror = (error) => {
+                console.error("WebSocket error:", error);
+            };
 
             // Cleanup WebSocket connection on unmount
             return () => {
-                socket.disconnect();
+                socket.close();
             };
         }
     }, [urlRoomCode]);
