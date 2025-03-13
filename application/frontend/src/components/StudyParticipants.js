@@ -21,7 +21,7 @@ const StudyParticipants = () => {
 
     const { roomCode: urlRoomCode } = useParams(); // Get roomCode from URL params
 
-    console.log("the room code is:, ", roomCode)
+    console.log("The room code is: ", roomCode)
     // Fetch participants when the component mounts or roomCode changes
     useEffect(() => {
         if (urlRoomCode) {
@@ -31,7 +31,7 @@ const StudyParticipants = () => {
 
             // Set up WebSocket connection
             const socket = io(`ws://localhost:8000`, {
-                path: "/wss/socket.io/", // backend WebSocket path
+                path: "/ws/socket.io/", // backend WebSocket path
                 query: { roomCode: urlRoomCode }, // Pass the roomCode to the backend
             });
 
