@@ -47,3 +47,13 @@
 .chat-message:last-child {
     border-bottom: none;
 }
+
+.current-user {
+    color: #FFC107;
+    text-align: right;
+}
+
+.other-user {
+    color: gray;
+    text-align: left;
+}

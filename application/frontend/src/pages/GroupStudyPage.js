@@ -9,7 +9,9 @@ import StudyTimer from '../components/StudyTimer.js';
 import { useParams, useLocation } from 'react-router-dom';
 import "../styles/ChatBox.css";
 import { getAuthenticatedRequest } from "./utils/authService";
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
 
 function GroupStudyPage(){
 
@@ -39,6 +41,7 @@ function GroupStudyPage(){
 
     const [username, setUsername] = useState("ANON_USER");   // Default to 'ANON_USER' before fetching. Stores username fetched from the backend
 
+    const navigate = useNavigate();
 
     useEffect(() => {
         //Fetches logged in user's username when component mounts
@@ -161,6 +164,29 @@ function GroupStudyPage(){
         setTodos(newTodos);
     };
 
+    const handleCopy = () => {
+        if (finalRoomCode) {
+            navigator.clipboard.writeText(finalRoomCode)
+                .then(() => {
+                    toast.success("Code copied to clipboard!", {
+                        position: "top-center",
+                        autoClose: 1000,  
+                        closeOnClick: true,
+                        pauseOnHover: true, 
+                    });
+                })
+                .catch(err => {
+                    console.error("Failed to copy: ", err);
+                    toast.error("Failed to copy code!");
+                });
+        }
+    };
+
+    const handleExit = () => {
+        navigate("/dashboard")
+    }
+    
+
     //page is designed in columns
     //First Column: todoList, shared materials 
     //Second Column: users listes, motivational message
@@ -240,16 +266,18 @@ function GroupStudyPage(){
                         <button
                             type="button"
                             className={`copy-button ${isActiveCopy ? 'active' : ''}`}
+                            onClick={handleCopy} 
                             onMouseDown={() => handleMouseDown('copy')}
                             onMouseUp={() => handleMouseUp('copy')}
                             onMouseLeave={() => handleMouseUp('copy')}
                         >
                             <img src={copyLogo} alt="Copy" />
-                            
                         </button>
+                        <ToastContainer />
                         <button
                             type="button"
                             className={`exit-button ${isActiveExit ? 'active' : ''}`}
+                            onClick={handleExit}
                             onMouseDown={() => handleMouseDown('exit')}
                             onMouseUp={() => handleMouseUp('exit')}
                             onMouseLeave={() => handleMouseUp('exit')}
@@ -290,35 +318,13 @@ function GroupStudyPage(){
             </div>
             {/*3rd Column */}
             <div className="column" role='column'  data-testid="column-3">
-                <div className="timer-container">Timer</div>
-                <div className="custom-container">
-                    {/*This is the button for music and customisation, needs functionality */}
-                    <button
-                        type="button"
-                        className={`music-button ${isActiveMusic ? 'active' : ''}`}
-                        onMouseDown={() => handleMouseDown('music')}
-                        onMouseUp={() => handleMouseUp('music')}
-                        onMouseLeave={() => handleMouseUp('music')}
-                        >Music
-                    </button>
-                    <button
-                        type="button"
-                        className={`customisation-button ${isActiveCustom ? 'active' : ''}`}
-                        onMouseDown={() => handleMouseDown('custom')}
-                        onMouseUp={() => handleMouseUp('custom')}
-                        onMouseLeave={() => handleMouseUp('custom')}
-                        >Customisation
-                    </button>
-                    <input value={customInput} onChange={(e) => setCustomInput(e.target.value)} />
-
-                </div>
                 <StudyTimer roomId="yourRoomId" isHost={true} onClose={() => console.log('Timer closed')} data-testid="studyTimer-container" />
                 {/* Chat Box */}
                 <div className="chatBox-container" data-testid="chatBox-container">
                     {/* Chat Messages */}
                     <div className="chat-messages">
                         {messages.map((msg, index) => (
-                        <div key={index} className="chat-message">
+                        <div key={index} className={`chat-message ${msg.sender === username ? "current-user" : "other-user"}`}>
                             <strong>{msg.sender}:</strong> {msg.text}
                         </div>
                         ))}
@@ -326,7 +332,8 @@ function GroupStudyPage(){
                     {/* Chat Input */}
                     <input 
                         value={chatInput} 
-                        onChange={(e) => setChatInput(e.target.value)} 
+                        onChange={(e) => setChatInput(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && sendMessage(e)}
                         placeholder="Type a message..." 
                     />
                     <button onClick={sendMessage}>Send</button>

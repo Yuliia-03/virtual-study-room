@@ -71,6 +71,7 @@ function Login() {
             className="password-field"
             value={formData.password}
             onChange={handleChange}
+            onKeyDown={(e) => e.key === "Enter" && handleLogin(e)}
             />
 
             <button type="button" className="login-submit-button" onClick={handleLogin}>LOGIN</button>
