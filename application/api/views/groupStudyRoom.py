@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
-from ..models import SessionUser
+from ..models import SessionUser, User
 from ..models.study_session import StudySession
 
 # These are APIs related to the group study room!
@@ -29,7 +29,6 @@ def create_room(request):
     if session_name == "":
         session_name = "We couldn't think of anything :)"
 
-
     print("User", user, "is attempting to make a room called:", session_name)
     # use as default session name for now, later take as input field for user to type in
     #session_name = "Untitled Study Session"
@@ -40,10 +39,20 @@ def create_room(request):
                 sessionName = session_name
         )
         # is using the study session auto generated ID as the room code
-
         # Add the user to the participants field
         room.participants.add(user)
         room.save()
+
+        if SessionUser.objects.filter(user=user, session=room).exists():
+            print("User is already in the session. Updating join sequence.")
+            session_user = SessionUser.objects.filter(user=user, session=room).first()
+            session_user.rejoin_session(user, room)
+        else:
+            print("Creating new SessionUser instance.")
+            session_user = SessionUser.objects.create(
+                user=user,
+                session=room,
+            )
 
         print("User", user, "has successfully made the room:", session_name, "with code:", room.roomCode)
         return Response({"roomCode" : room.roomCode})
@@ -79,10 +88,16 @@ def join_room(request):
         study_session.save()
 
         # create an instance of session user
-        session_user = SessionUser.objects.create(
-            user = request.user,
-            session = study_session,
-        )
+        if SessionUser.objects.filter(user=user, session=study_session).exists():
+            print("User is already in the session. Updating join sequence.")
+            session_user = SessionUser.objects.filter(user=user, session=study_session).first()
+            session_user.rejoin_session(user, study_session)
+        else:
+            print("Creating new SessionUser instance.")
+            session_user = SessionUser.objects.create(
+                user=user,
+                session=study_session,
+            )
         return Response({"message": "Joined successfully!"})
     return Response({"error": "Room not found"}, status=404)
 
@@ -107,3 +122,41 @@ def get_room_details(request):
         # returns the room name
     except Exception as e:
         return Response({"error": f"Failed to retrieve room details: {str(e)}"}, status=400)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def leave_room(request):
+    print("API is being called")
+    print("Request headers:", request.headers)  # Debugging: Log request headers
+    print("Request user:", request.user)  # Debugging: Log the user
+    print("Request room code:", request.data)
+
+    user = request.user  # To check if the user is logged in
+
+    # Add a check to make sure the user is logged in here!
+    if not user.is_authenticated:
+        return Response({"error": "User must be logged in"}, status=401)
+
+    print("User", user, "is attempting to leave room :", request.data.get("roomCode"))
+    # takes the room code
+
+    room_code = request.data.get('roomCode')
+    if StudySession.objects.filter(roomCode=room_code).exists():
+        print("room found")
+        # Fetch the study session using the room code
+        study_session = StudySession.objects.get(roomCode=room_code)
+
+        # Add the user to the participants field
+        study_session.participants.remove(user)
+        study_session.save()
+
+        try:
+            session_user = SessionUser.objects.get(user=user, session=study_session)
+            session_user.leave_session()
+            return Response({"message": "Left successfully!"})
+        except SessionUser.DoesNotExist:
+            return Response({"error": "User is not in the session"}, status=404)
+
+        return Response({"message": "Left successfully!"})
+    return Response({"error": "Room not found"}, status=404)
