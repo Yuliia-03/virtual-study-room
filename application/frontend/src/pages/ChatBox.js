@@ -2,33 +2,10 @@ import React, { Component } from "react";
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import "../styles/ChatBox.css";
 
-
-
-// const styles = {
-//     paper: {
-//       marginTop: "64px",
-//       display: "flex",
-//       flexDirection: "column",
-//       alignItems: "center",
-//     },
-//     avatar: {
-//       margin: "8px",
-//       backgroundColor: "#f50057",
-//     },
-//     form: {
-//       width: "100%",
-//       marginTop: "8px",
-//     },
-//     submit: {
-//       margin: "24px 0 16px",
-//     },
-//     root: {
-//       boxShadow: "none",
-//     },
-//   };
 class ChatBox extends Component {
+    //maintains state for all these features
     state = {
-        isLoggedIn: true,
+        isLoggedIn: false,
         messages: [],
         value: '',
         name: '',
@@ -37,17 +14,9 @@ class ChatBox extends Component {
 
     client = null;
 
-    // componentDidMount() {
-    //     // Initialize WebSocket after the component mounts
-    //     this.client = new W3CWebSocket('ws://127.0.0.1:8000/ws/room/' + this.state.room + '/');
-
-    //     this.client.onopen = () => {
-    //         console.log("WebSocket Client Connected");
-    //     };
-    // }
-
+    //websocket connnection happens when component is rendered
     componentDidMount() {
-        this.client = new W3CWebSocket('ws://127.0.0.1:8000/ws/room/' + this.state.room + '/');
+        this.client = new W3CWebSocket('ws://127.0.0.1:8001/ws/room/' + this.state.room + '/'); //websocket server it is connecting to
     
         this.client.onopen = () => {
             console.log("WebSocket Client Connected");
@@ -61,6 +30,7 @@ class ChatBox extends Component {
         };
     }
 
+    //sends message to server when user submits the form
     onSendMessage = (e) => {
         e.preventDefault();
         if (this.state.value.trim() === "") return;
@@ -68,7 +38,7 @@ class ChatBox extends Component {
         this.client.send(
             JSON.stringify({
                 type: "message",
-                message: this.state.value,
+                message: this.state.value,  //receive message from the server and updates the messages state
                 name: this.state.name || "Anonymous",
             })
         );
@@ -76,20 +46,11 @@ class ChatBox extends Component {
         this.setState({ value: "" });
     };
     
-    
-    // render() {
-    //     const { classes } = this.props; 
-    //     return (
-    //         <div className="chat-box">
-    //             {this.state.isLoggedIn ? <div>a</div> : <div>b</div>}
-    //         </div>
-    //     );
-    // }
 
     render() {
         return (
             <div className="chat-box">
-                {this.state.isLoggedIn ? (
+                {this.state.isLoggedIn ? (  //display chat room ui if user is logged in *change this *
                     <div>
                         <h2>Room: {this.state.room}</h2>
                         <div className="messages">

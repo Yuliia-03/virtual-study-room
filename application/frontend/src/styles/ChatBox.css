@@ -1,29 +1,49 @@
-.chat-box {
-    width: 300px;
+.chatBox-container {
+    width: 100%;
+    max-width: 325px;
     margin: 20px auto;
     border: 1px solid #ccc;
     padding: 10px;
     border-radius: 5px;
+    background: #f9f9f9;
 }
 
-.messages {
+.chat-messages {
     height: 200px;
     overflow-y: auto;
     border-bottom: 1px solid #ccc;
     margin-bottom: 10px;
     padding: 5px;
+    background: white;
 }
 
-input {
-    width: 80%;
-    padding: 5px;
+.chatBox-container input {
+    width: 75%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-right: 5px;
 }
 
-button {
-    width: 15%;
-    padding: 5px;
-    background: blue;
+.chatBox-container button {
+    width: 20%;
+    padding: 8px;
+    background: #BAD7F1;
     color: white;
     border: none;
+    border-radius: 3px;
     cursor: pointer;
+    transition: 0.3s;
+}
+
+.chatBox-container button:hover {
+    background: darkblue;
+}
+
+.chat-message {
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+}
+.chat-message:last-child {
+    border-bottom: none;
 }
