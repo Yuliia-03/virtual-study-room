@@ -20,7 +20,7 @@ const PendingFriends = () => {
                                     {inv.name} {inv.surname} ({inv.username})
                                 </span>
                                 <div className="invitation-actions">
-                                    <button className="accept-btn" onClick={() => onAccept(inv.id)}>✅</button>
+                                    <button className="accept-btn" onClick={() => onAccept(inv.id, 'accept_friend', "PATCH")}>✅</button>
                                     <button className="reject-btn" onClick={() => onReject(inv.id)}>❌</button>
                                 </div>
                             </li>

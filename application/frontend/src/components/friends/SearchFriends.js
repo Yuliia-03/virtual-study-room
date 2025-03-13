@@ -44,32 +44,43 @@ const PendingFriends = () => {
                             {friend.name} {friend.surname} ({friend.username})
                         </span>
                         <div className="invitation-actions">
-                            {friendRequests.some(request => request.username === friend.username) ? (
-                                friendRequests.filter(request => request.username === friend.username).map((request) => (
+                            {
+                            friendRequests.some(request => request.username === friend.username) ? (
+                                friendRequests.filter(r => r.username === friend.username).map((r) => (
                                 <div>
-                                    
                                     <span> (user sent you request)   </span>
-                                    <button onClick={() => onAccept(request.id)} className="btn btn-success btn-sm" aria-label="Add Friend">
+                                    <button onClick={() => onAccept(r.id, 'accept_friend', "PATCH")} className="btn btn-success btn-sm" aria-label="Add Friend">
                                         <i class="bi bi-check2-circle"></i>
                                     </button>
-                                    <button className="btn btn-danger" onClick={() => onReject(friend.id)}>
+                                    <button className="btn btn-danger" onClick={() => onReject(r.id)}>
                                         <i className="bi bi-x-circle"></i>
                                     </button>
                                 </div>
                                 ))
                             ) : invitationsRequests.some(request => request.username === friend.username) ? (
-                                <button onClick={() => onAccept(friend.id)} className="btn btn-success btn-sm" aria-label="Add Friend">
-                                    { /*link with friend-request*/}
-                                    <i class="bi bi-person-plus"></i>
-                                </button>
+                                    invitationsRequests.filter(request => request.username === friend.username).map((request) => (
+                                        <div>
+                                            <span> (you sent request to that user)   </span>
+                                            <button onClick={() => onReject(request.id)} className="btn btn-danger" aria-label="Add Friend">
+                                                <i className="bi bi-x-circle"></i>
+                                            </button>
+                                        </div>
+                                    ))
                             ) : friends.some(request => request.username === friend.username) ? (
-                                <button onClick={() => onReject(friend.id)} className="btn btn-danger" aria-label="Add Friend">
-                                    { /*link with friend-request*/}
-                                    <i className="bi bi-x-circle"></i>
-                                </button>   
+                                friends.filter(request => request.username === friend.username).map((request) => (
+                                    <div>
+                                        <span> (you are already a friends)   </span>
+                                        <button onClick={() => onReject(request.id)} className="btn btn-danger" aria-label="Add Friend">    
+                                            <i className="bi bi-x-circle"></i>
+                                        </button>   
+                                    </div>
+                                        
+                                ))
                             ) : (
-                                <button onClick={() => onAccept(friend.id)} className="btn btn-danger" aria-label="Add Friend">
-                                    { /*create pending friends request - both front and back */}
+                                <button onClick={() => onAccept(friend.id, 'create_friend_request', "POST")} className="btn btn-danger" aria-label="Add Friend">
+                                                    { /*create pending friends request - both front and back */}
+                                                    <p>{friend.id}</p>
+                                                <span>not a friends</span>
                                     <i className="bi bi-person-plus"></i>
                                 </button>       
                                             

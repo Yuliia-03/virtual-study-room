@@ -61,6 +61,7 @@ class FriendsView(APIView):
                     "surname": friend[1].lastname,
                     "username": friend[1].username
             })
+        print(response_data)
         return Response(response_data, status=status.HTTP_200_OK)
 
     def patch(self, request, id):
@@ -79,3 +80,28 @@ class FriendsView(APIView):
             Friends.delete_friend(id, user)
 
         return Response(status=status.HTTP_200_OK)
+
+    def post(self, request, id):
+        url_name = request.resolver_match.view_name
+        user = request.user
+        user2 = User.objects.get(pk=id)
+        if url_name == "create_friend_request":
+            friend = Friends.objects.create(
+                user1 = user,
+                user2 = user2,
+                status = Status.PENDING,
+                requested_by = user
+            )
+            friend.save()
+            response_data = {
+                    "id": friend.pk,
+                    "name": user2.firstname,
+                    "surname": user2.lastname,
+                    "username": user2.username
+            }
+            print(response_data)
+            return Response(response_data, status=status.HTTP_200_OK)
+
+
+
+

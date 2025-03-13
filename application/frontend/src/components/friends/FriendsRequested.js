@@ -17,7 +17,7 @@ const PendingFriends = () => {
                         {invitationsRequests.map((inv) => (
                             <li key={inv.id} className="invitation-card">
                                 <span >
-                                    {inv.name} {inv.surname} ({inv.username})
+                                    {inv.name} {inv.surname} {inv.username}
                                 </span>
                                 <div className="invitation-actions">
                                     <button className="reject-btn" onClick={() => onReject(inv.id)}>❌</button>
