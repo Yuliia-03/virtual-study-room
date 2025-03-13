@@ -11,7 +11,7 @@ class RoomConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         self.room_id = self.scope["url_route"]["kwargs"]["room_id"]
-        self.room_group_name = f"room_{self.room_id}"
+        #self.room_group_name = f"room_{self.room_id}"
 
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         await self.accept()
@@ -27,6 +27,14 @@ class RoomConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             {"type": "chat_message", "message": message}
         )
+
+    # send an updated list of room participants when someone joins
+    async def send_participants(self, event):
+        participants = event['participants']
+        await self.send(text_data=json.dumps({
+            'type': 'participants_update',
+            'participants': participants,
+        }))
 
     async def chat_message(self, event):
         message = event["message"]

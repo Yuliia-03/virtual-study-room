@@ -7,6 +7,7 @@ import { storage } from "../firebase-config";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import defaultAvatar from '../assets/avatars/avatar_2.png';
 import { ToastContainer, toast } from 'react-toastify';
+import io from 'socket.io-client';
 
 const StudyParticipants = () => {
 
@@ -27,6 +28,23 @@ const StudyParticipants = () => {
             setRoomCode(urlRoomCode); // Set the roomCode state
             fetchParticipants(urlRoomCode);
             fetchUserData()
+
+            // Set up WebSocket connection
+            const socket = io(`ws://localhost:8000`, {
+                path: "/wss/socket.io/", // backend WebSocket path
+                query: { roomCode: urlRoomCode }, // Pass the roomCode to the backend
+            });
+
+            // Listen for participants updates
+            socket.on('participants_update', (data) => {
+                console.log("Received participants update:", data);
+                setParticipants(data.participants);
+            });
+
+            // Cleanup WebSocket connection on unmount
+            return () => {
+                socket.disconnect();
+            };
         }
     }, [urlRoomCode]);
 
