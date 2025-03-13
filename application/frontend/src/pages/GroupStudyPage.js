@@ -8,6 +8,8 @@ import exitLogo from "../assets/exit_logo.png";
 import StudyTimer from '../components/StudyTimer.js';
 import { useParams, useLocation } from 'react-router-dom';
 import "../styles/ChatBox.css";
+import { getAuthenticatedRequest } from "./utils/authService";
+
 
 function GroupStudyPage(){
 
@@ -35,7 +37,22 @@ function GroupStudyPage(){
     const [customInput, setCustomInput] = useState(""); // For the customisation box
     const [chatInput, setChatInput] = useState(""); //Fot chat box
 
+    const [username, setUsername] = useState("ANON_USER");   // Default to 'ANON_USER' before fetching. Stores username fetched from the backend
+
+
     useEffect(() => {
+        //Fetches logged in user's username when component mounts
+        //Updates username state with fetched data or defaults to 'anonymous'
+        const fetchUserData = async () => {
+            try {
+                const data = await getAuthenticatedRequest("/profile/", "GET");
+                setUsername(data.username || "Anonymous"); // Fallback in case username is missing
+            } catch (error) {
+                console.error("Error fetching user data", error);
+            }
+        };
+        fetchUserData();
+
         if (!finalRoomCode) {   //Ensure room code is given
             console.error("Room code is missing.");
             return;
@@ -43,47 +60,48 @@ function GroupStudyPage(){
 
         const ws = new WebSocket(`ws://localhost:8000/ws/room/${finalRoomCode}/`);
     
+        //Logs when connection is established
         ws.onopen = () => {
             console.log("Connected to Websocket");
             setSocket(ws);
         };
         
+        //Handles incoming messages.
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            // setMessages((prev) => [...prev, data.message]);
-            if (data.type === "chat_message") {
+            if (data.type === "chat_message") { //if message type is 'chat_message' then add to messages state
                 // Ensure the message is structured as an object with `sender` and `text`
-                // setMessages((prev) => [...prev, { sender: data.sender, text: data.message }]);
                 setMessages((prev) => [...prev, { sender: data.sender, text: data.message }]);
-
             }
         };
     
+        //Logs when the connection is closed
         ws.onclose = () => console.log("Disconnected from Websocket");
     
-        // Cleanup function
+        // Cleanup function -> closes the websocket connection when the component unmounts
         return () => {
             ws.close();
         };
     }, [finalRoomCode]);
 
+    //Sends chat message through websocket connection
     const sendMessage = () => {
-        
         if (!socket || socket.readyState !== WebSocket.OPEN) {
             console.error("WebSocket not connected.");
             return;
         }
 
+        //construct a message with type, message and sender
         const messageData = { 
             type: "chat_message", 
             message: chatInput, 
-            sender: "USER" // Replace with actual user name laterr
+            sender: username
         };
     
         console.log("Sending message to WebSocket:", messageData); // Debugging log
     
         socket.send(JSON.stringify(messageData));
-        setChatInput("");
+        setChatInput("");   //resets chatinput field after sending message
 
        
     };
@@ -295,7 +313,9 @@ function GroupStudyPage(){
 
                 </div>
                 <StudyTimer roomId="yourRoomId" isHost={true} onClose={() => console.log('Timer closed')} data-testid="studyTimer-container" />
+                {/* Chat Box */}
                 <div className="chatBox-container" data-testid="chatBox-container">
+                    {/* Chat Messages */}
                     <div className="chat-messages">
                         {messages.map((msg, index) => (
                         <div key={index} className="chat-message">
@@ -303,6 +323,7 @@ function GroupStudyPage(){
                         </div>
                         ))}
                     </div>
+                    {/* Chat Input */}
                     <input 
                         value={chatInput} 
                         onChange={(e) => setChatInput(e.target.value)} 
