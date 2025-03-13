@@ -147,7 +147,6 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
       }, 1000);
     } else if (timeLeft === 0) {
       if (!isBreak && currentRound >= rounds) {
-        // All rounds completed - including the current one
         setIsRunning(false);
         setCurrentPage('completed');
         if (playSound) {
@@ -157,16 +156,14 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
       }
       
       if (playSound) {
-        completionSound.play(); // Play sound at the end of each period
+        completionSound.play();
       }
       
       if (!isBreak) {
-        // If not on break, switch to break
         setIsBreak(true);
         setTimeLeft(breakLength);
         setCurrentRound((prevRound) => prevRound + 1);
       } else {
-        // If on break, switch back to study
         setIsBreak(false);
         setTimeLeft(studyLength);
       }
@@ -174,277 +171,6 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
   
     return () => clearInterval(timer);
   }, [isRunning, isPaused, timeLeft, isBreak, studyLength, breakLength, rounds, playSound, currentRound]);
-
-  const renderContent = () => {
-    if (currentPage === 'completed') {
-      return (
-        <div className="p-4 w-80 flex flex-col bg-[#F0F3FC] timer-handle" style={{ height: "350px", position: "relative" }}>
-          <div className="text-2xl mt-8 text-center" style={{ color: '#bac6f1', fontFamily: '"Press Start 2P", monospace' }}>
-            Well done!
-            <br />
-            Here, have a blueberry
-          </div>
-          
-          <div style={{ 
-            position: "absolute", 
-            bottom: "0", 
-            left: "0", 
-            width: "100%",
-            padding: "0 20px 20px 20px"
-          }}>
-            <button
-              onClick={() => {
-                setCurrentPage('welcome');
-                setCurrentRound(1);
-                setIsBreak(false);
-                setTimeLeft(studyLength);
-                setIsRunning(false);
-              }}
-              className="w-full px-4 py-2 text-white rounded-lg"
-              style={{ 
-                backgroundColor: '#d1cbed', 
-                fontFamily: '"Press Start 2P", monospace',
-                transition: 'background-color 0.3s, transform 0.3s',
-                color: 'white',
-                borderRadius: '0.5rem'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#8e99e3';
-                e.currentTarget.style.transform = 'scale(1.05)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#d1cbed';
-                e.currentTarget.style.transform = 'scale(1)';
-              }}
-            >
-              Start New Session
-            </button>
-          </div>
-        </div>
-      );
-    }
-
-    if (!isRunning) {
-      return (
-        <div className="flex flex-col items-center space-y-6 p-4">
-          <div className="vt323 text-xl" style={{ color: '#b2b2b2' }}>
-            Study Timer
-          </div>
-          
-          <div className="text-2xl press-start text-center" style={{ color: '#bac6f1' }}>
-            Set Your
-            <br />
-            Study
-            <br />
-            Timer
-          </div>
-          
-          <div className="w-full space-y-8">
-            <div className="flex flex-col items-center space-y-2">
-              <label className="vt323 text-sm" style={{ color: '#d1cbed' }}>Study Time</label>
-              <div className="flex justify-center gap-4">
-                <input
-                  type="number"
-                  value={studyTime.hours}
-                  onChange={(e) => {
-                    const value = parseInt(e.target.value) || 0;
-                    if (value >= 0 && value <= 99) {
-                      setStudyTime({...studyTime, hours: value});
-                    }
-                  }}
-                  min="0"
-                  max="99"
-                  placeholder="0"
-                />
-                <input
-                  type="number"
-                  value={studyTime.minutes}
-                  onChange={(e) => {
-                    const value = parseInt(e.target.value) || 0;
-                    if (value >= 0 && value <= 59) {
-                      setStudyTime({...studyTime, minutes: value});
-                    }
-                  }}
-                  min="0"
-                  max="59"
-                  placeholder="0"
-                />
-                <input
-                  type="number"
-                  value={studyTime.seconds}
-                  onChange={(e) => {
-                    const value = parseInt(e.target.value) || 0;
-                    if (value >= 0 && value <= 59) {
-                      setStudyTime({...studyTime, seconds: value});
-                    }
-                  }}
-                  min="0"
-                  max="59"
-                  placeholder="0"
-                />
-              </div>
-            </div>
-
-            <div className="flex flex-col items-center space-y-2">
-              <label className="vt323 text-sm" style={{ color: '#d1cbed' }}>Break Time</label>
-              <div className="flex justify-center gap-4">
-                <input
-                  type="number"
-                  value={breakTime.hours}
-                  onChange={(e) => {
-                    const value = parseInt(e.target.value) || 0;
-                    if (value >= 0 && value <= 99) {
-                      setBreakTime({...breakTime, hours: value});
-                    }
-                  }}
-                  min="0"
-                  max="99"
-                  placeholder="0"
-                />
-                <input
-                  type="number"
-                  value={breakTime.minutes}
-                  onChange={(e) => {
-                    const value = parseInt(e.target.value) || 0;
-                    if (value >= 0 && value <= 59) {
-                      setBreakTime({...breakTime, minutes: value});
-                    }
-                  }}
-                  min="0"
-                  max="59"
-                  placeholder="0"
-                />
-                <input
-                  type="number"
-                  value={breakTime.seconds}
-                  onChange={(e) => {
-                    const value = parseInt(e.target.value) || 0;
-                    if (value >= 0 && value <= 59) {
-                      setBreakTime({...breakTime, seconds: value});
-                    }
-                  }}
-                  min="0"
-                  max="59"
-                  placeholder="0"
-                />
-              </div>
-            </div>
-
-            <div className="flex flex-col items-center">
-              <label className="vt323 text-sm text-center mb-2" style={{ color: '#d1cbed' }}>Rounds</label>
-              
-              <div className="flex flex-row items-center"> 
-                <input
-                  type="number"
-                  value={rounds}
-                  onChange={(e) => setRounds(parseInt(e.target.value) || 1)}
-                  min="1"
-                  placeholder="4"
-                />
-                
-                <span 
-                  className="heart-toggle ml-6"
-                  onClick={() => setPlaySound(!playSound)}
-                  role="button"
-                  aria-label="Toggle sound"
-                >
-                  {playSound ? '💜' : '🤍'}
-                </span>
-                <span className="vt323 text-sm ml-2" style={{ color: '#d1cbed' }}>
-                  Play sound when timer ends
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <button
-            onClick={startTimer}
-            className="start-timer-button"
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#8e99e3';
-              e.currentTarget.style.transform = 'scale(1.05)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#d1cbed';
-              e.currentTarget.style.transform = 'scale(1)';
-            }}
-          >
-            Start Timer
-          </button>
-        </div>
-      );
-    }
-
-    return (
-      <>
-        <div className="text-[#FFB5C5] text-2xl mt-8 press-start">
-          {isBreak ? 'Break Time!' : 'Lock in or else!'}
-        </div>
-
-        <div className="text-[48px] font-bold text-[#FFB5C5] mb-2 press-start">
-          {formatTime(timeLeft)}
-        </div>
-
-        <div style={{ color: '#d1cbed', fontFamily: 'VT323, monospace' }} className="mb-4">
-          Round {currentRound}/{rounds}
-        </div>
-
-        <div className="flex justify-center items-center mb-4 px-4">
-          <button 
-            onClick={handleBack}
-            className="hover:text-[#bac6f1] transition-colors duration-200"
-            style={{ fontFamily: 'VT323, monospace', fontSize: '24px', color: '#d1cbed' }}
-          >
-            ⬅
-          </button>
-          <div className="flex gap-4 mx-4">
-            <button 
-              onClick={toggleTimer}
-              style={{
-                backgroundColor: '#d1cbed',
-                color: 'white',
-                fontFamily: 'VT323, monospace',
-                padding: '0.5rem 1rem',
-                borderRadius: '0.375rem',
-                transition: 'background-color 0.3s, transform 0.3s',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#8e99e3';
-                e.currentTarget.style.transform = 'scale(1.05)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#d1cbed';
-                e.currentTarget.style.transform = 'scale(1)';
-              }}
-            >
-              {isPaused ? 'Resume' : 'Pause'}
-            </button>
-            <button 
-              onClick={resetTimer}
-              style={{
-                backgroundColor: '#d1cbed',
-                color: 'white',
-                fontFamily: 'VT323, monospace',
-                padding: '0.5rem 1rem',
-                borderRadius: '0.375rem',
-                transition: 'background-color 0.3s, transform 0.3s',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#8e99e3';
-                e.currentTarget.style.transform = 'scale(1.05)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#d1cbed';
-                e.currentTarget.style.transform = 'scale(1)';
-              }}
-            >
-              Reset
-            </button>
-          </div>
-        </div>
-      </>
-    );
-  };
 
   const formatTime = (seconds) => {
     const hours = Math.floor(seconds / 3600);
@@ -456,19 +182,6 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
     }
     return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
-
-  useEffect(() => {
-    const unsubscribe = onValue(ref(database, `rooms/${roomId}/timer`), (snapshot) => {
-      const data = snapshot.val();
-      if (!data && isHost) {
-        // Initialise data if it doesn't exist
-      } else if (data) {
-        // Update local state with Firebase data
-      }
-    });
-
-    return () => unsubscribe(); // Clean up the listener on unmount
-  }, [roomId, isHost]);
 
   const toggleTimer = () => {
     setIsPaused(!isPaused);
@@ -504,7 +217,7 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
     if (errorMessage) {
       const timer = setTimeout(() => {
         setErrorMessage('');
-      }, 3000); // 3 seconds
+      }, 3000);
       
       return () => clearTimeout(timer);
     }
@@ -610,7 +323,6 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
         `}
       </style>
       
-      {/* Error message positioned abovethe timer */}
       {errorMessage && (
         <div 
           className="fixed p-3 z-50 flex items-center justify-center"
@@ -786,7 +498,7 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                         type="number"
                         value={breakTime.seconds}
                         onChange={(e) => {
-                          const value = parseInt(e.target.value) || 0;
+                          const                           value = parseInt(e.target.value) || 0;
                           if (value >= 0 && value <= 59) {
                             setBreakTime({...breakTime, seconds: value});
                           }
@@ -844,96 +556,125 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
               </div>
             </div>
           ) : (
-            <div className="p-4 w-80 min-height flex flex-col bg-[#F0F3FC] timer-handle">
-              <div className="timer-handle mb-6 px-8 mt-2 flex justify-between items-center">
-                <h1 className="text-2xl vt323" style={{ color: '#b2b2b2' }}>Study Timer</h1>
+            <div className="p-4 w-80 min-height bg-[#F0F3FC] timer-handle" style={{ height: '370px', position: 'relative' }}>
+              <div 
+                className="absolute left-0 right-0 mx-auto text-center flex justify-center items-center" 
+                style={{ 
+                  top: '8px', 
+                  height: '50px',
+                  width: '180px'
+                }}
+              >
+                <h2 className="press-start w-full text-center" style={{ 
+                  color: '#bac6f1',
+                  fontSize: '20px',
+                  lineHeight: 1.2
+                }}>
+                  {isBreak ? 'Break Time!' : 'Lock in or else!'}
+                </h2>
+              </div>
+              
+              <div className="absolute left-0 right-0 text-center" style={{ 
+                top: '80px',
+                color: '#bac6f1',
+                fontFamily: '"Press Start 2P", monospace',
+                fontSize: '50px',
+                fontWeight: 'bold'
+              }}>
+                {formatTime(timeLeft)}
+              </div>
+
+              <div className="absolute left-0 right-0 text-center flex justify-center" style={{ 
+                top: '180px',
+                width: '100%'
+              }}>
+                <span style={{ 
+                  color: '#d1cbed', 
+                  fontFamily: 'VT323, monospace',
+                  fontSize: '24px',
+                  textAlign: 'center'
+                }}>
+                  Round {currentRound}/{rounds}
+                </span>
+              </div>
+
+              <div className="absolute left-0 right-0 flex justify-center" style={{ 
+                top: '240px',
+                width: '100%',
+                gap: '20px'
+              }}>
                 <button 
-                  onClick={handleBack}
-                  className="transition-colors duration-200"
-                  style={{ 
-                    fontFamily: 'VT323, monospace', 
-                    fontSize: '24px', 
-                    color: '#d1cbed',
-                    marginRight: '-8px',
-                    padding: '0.5rem',
+                  onClick={toggleTimer}
+                  style={{
+                    backgroundColor: '#d1cbed',
+                    color: 'white',
+                    fontFamily: 'VT323, monospace',
+                    padding: '0.5rem 1.5rem',
                     borderRadius: '0.375rem',
-                    transition: 'background-color 0.3s, transform 0.3s, color 0.3s',
+                    fontSize: '1.25rem',
+                    transition: 'background-color 0.3s, transform 0.3s',
+                    width: '120px',
+                    textAlign: 'center'
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.color = '#8e99e3';
+                    e.currentTarget.style.backgroundColor = '#8e99e3';
                     e.currentTarget.style.transform = 'scale(1.05)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.color = '#d1cbed';
+                    e.currentTarget.style.backgroundColor = '#d1cbed';
                     e.currentTarget.style.transform = 'scale(1)';
                   }}
                 >
-                  ⬅
+                  {isPaused ? 'Resume' : 'Pause'}
+                </button>
+                <button 
+                  onClick={resetTimer}
+                  style={{
+                    backgroundColor: '#d1cbed',
+                    color: 'white',
+                    fontFamily: 'VT323, monospace',
+                    padding: '0.5rem 1.5rem',
+                    borderRadius: '0.375rem',
+                    fontSize: '1.25rem',
+                    transition: 'background-color 0.3s, transform 0.3s',
+                    width: '120px',
+                    textAlign: 'center'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#8e99e3';
+                    e.currentTarget.style.transform = 'scale(1.05)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#d1cbed';
+                    e.currentTarget.style.transform = 'scale(1)';
+                  }}
+                >
+                  Reset
                 </button>
               </div>
-              
-              <div className="flex-grow flex flex-col items-center px-8">
-                <div className="text-2xl mb-6 press-start" style={{ color: '#bac6f1' }}>
-                  {isBreak ? 'Break Time!' : 'Lock in or else!'}
-                </div>
-                
-                <div className="text-[48px] font-bold mb-6 press-start" style={{ color: '#bac6f1' }}>
-                  {formatTime(timeLeft)}
-                </div>
 
-                <div style={{ color: '#d1cbed', fontFamily: 'VT323, monospace' }} className="mb-4">
-                  Round {currentRound}/{rounds}
-                </div>
-
-                <div className="flex-grow"></div>
-
-                <div className="flex justify-center w-full mb-4">
-                  <div className="flex gap-4">
-                    <button 
-                      onClick={toggleTimer}
-                      style={{
-                        backgroundColor: '#d1cbed',
-                        color: 'white',
-                        fontFamily: 'VT323, monospace',
-                        padding: '0.5rem 1rem',
-                        borderRadius: '0.375rem',
-                        transition: 'background-color 0.3s, transform 0.3s',
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#8e99e3';
-                        e.currentTarget.style.transform = 'scale(1.05)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = '#d1cbed';
-                        e.currentTarget.style.transform = 'scale(1)';
-                      }}
-                    >
-                      {isPaused ? 'Resume' : 'Pause'}
-                    </button>
-                    <button 
-                      onClick={resetTimer}
-                      style={{
-                        backgroundColor: '#d1cbed',
-                        color: 'white',
-                        fontFamily: 'VT323, monospace',
-                        padding: '0.5rem 1rem',
-                        borderRadius: '0.375rem',
-                        transition: 'background-color 0.3s, transform 0.3s',
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = '#8e99e3';
-                        e.currentTarget.style.transform = 'scale(1.05)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = '#d1cbed';
-                        e.currentTarget.style.transform = 'scale(1)';
-                      }}
-                    >
-                      Reset
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <button 
+                onClick={handleBack}
+                style={{
+                  position: 'absolute',
+                  left: '20px',
+                  bottom: '20px',
+                  fontFamily: 'VT323, monospace',
+                  fontSize: '24px', 
+                  color: '#d1cbed',
+                  transition: 'color 0.3s',
+                  background: 'none',
+                  border: 'none'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#8e99e3';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = '#d1cbed';
+                }}
+              >
+                ⬅
+              </button>
             </div>
           )}
         </div>
