@@ -9,11 +9,15 @@ import StudyTimer from "../components/StudyTimer.js";
 import StudyParticipants from "../components/StudyParticipants.js";
 import { getAuthenticatedRequest } from "../pages/utils/authService";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 
 function GroupStudyPage() {
   // Location object used for state
   const location = useLocation();
   const navigate = useNavigate(); // initialise
+
+  // Track the logged-in user
+  const [loggedInUser, setLoggedInUser] = useState(null);
 
   const { roomCode, roomName } = location.state || {
     roomCode: "",
