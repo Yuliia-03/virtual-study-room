@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { FriendsContext } from "./FriendsContext";
 import "../../styles/friends/PendingFriends.css";
 
-const PendingFriends = () => {
+const FriendsRequested = () => {
     const { invitationsRequests, onReject, loading } = useContext(FriendsContext);
 
     if (loading) return <div className="loading">Loading Friend Requests...</div>;
@@ -21,7 +21,7 @@ const PendingFriends = () => {
                                     {inv.name} {inv.surname} {inv.username}
                                 </span>
                                 <div className="invitation-actions">
-                                    <button className="reject-btn" onClick={() => onReject(inv.id)}>
+                                    <button className="reject-btn" onClick={() => onReject(inv.id)} aria-label = "remove friend">
                                         <i className="bi bi-x-circle"></i>
                                     </button>
                                 </div>
@@ -34,4 +34,4 @@ const PendingFriends = () => {
     );
 };
 
-export default PendingFriends;
+export default FriendsRequested;

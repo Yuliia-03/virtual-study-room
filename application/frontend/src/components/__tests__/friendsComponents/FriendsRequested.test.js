@@ -1,8 +1,9 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import * as authService from '../../../utils/authService';
 import { FriendsContext } from "../../friends/FriendsContext";
-import { getDownloadURL, uploadBytes } from 'firebase/storage';
-import PendingFriends from '../../friends/PendingRequests';
+import { ref, getDownloadURL, uploadBytes } from 'firebase/storage';
+import FriendsRequested from '../../friends/FriendsRequested';
 
 jest.mock('../../../utils/authService', () => ({
     getAuthenticatedRequest: jest.fn(),
@@ -28,14 +29,13 @@ const mockRequestData = [
 
 describe("PendingRequests", () => {
 
-    const mockOnReject = jest.fn(); // ✅ Use jest.fn() here
     const mockOnAccept = jest.fn();
     const mockLoading = false;
 
     const renderWithContext = (contextValue) => {
         return render(
             <FriendsContext.Provider value={contextValue}>
-                <PendingFriends />
+                <FriendsRequested />
             </FriendsContext.Provider>
         );
     };
@@ -60,9 +60,8 @@ describe("PendingRequests", () => {
 
     test("shows loading state", () => {
         renderWithContext({
-            onReject: mockOnReject,
             onAccept: mockOnAccept,
-            friendRequests: [],
+            invitationsRequests: [],
             loading: true,
         });
         expect(screen.getByText(/Loading Friend Requests.../i)).toBeInTheDocument();
@@ -72,12 +71,11 @@ describe("PendingRequests", () => {
     test('renders the list of friends correctly', async () => {
         renderWithContext({
             onAccept: mockOnAccept,
-            onReject: mockOnReject,
-            friendRequests: mockRequestData,
+            invitationsRequests: mockRequestData,
             loading: mockLoading,
         });
 
-        const friendNames = screen.getAllByText(/Name/i); 
+        const friendNames = screen.getAllByText(/Name/i);
         expect(friendNames[0]).toHaveTextContent('Name1');
         expect(friendNames[1]).toHaveTextContent('Name2');
     });
@@ -85,9 +83,8 @@ describe("PendingRequests", () => {
 
     test('renders the empty list of friends correctly', async () => {
         renderWithContext({
-            onReject: mockOnReject,
             onAccept: mockOnAccept,
-            friendRequests: [],
+            invitationsRequests: [],
             loading: mockLoading,
         });
 
@@ -97,26 +94,19 @@ describe("PendingRequests", () => {
     test('renders the invitation actions and handles accept/reject button clicks', async () => {
         renderWithContext({
             onAccept: mockOnAccept,
-            onReject: mockOnReject,
-            friendRequests: mockRequestData,
+            invitationsRequests: mockRequestData,
             loading: mockLoading,
         });
 
-        const acceptButtons = screen.getAllByRole('button', { name: /add friend/i });
         const rejectButtons = screen.getAllByRole('button', { name: /remove friend/i });
 
-        expect(acceptButtons).toHaveLength(mockRequestData.length);
         expect(rejectButtons).toHaveLength(mockRequestData.length);
 
-        fireEvent.click(acceptButtons[0]);
-
-        expect(mockOnAccept).toHaveBeenCalledWith(mockRequestData[0].id, 'accept_friend', 'PATCH');
-        expect(mockOnAccept).toHaveBeenCalledTimes(1);
         fireEvent.click(rejectButtons[0]);
 
         expect(mockOnReject).toHaveBeenCalledWith(mockRequestData[0].id);
-        expect(mockOnReject).toHaveBeenCalledTimes(1); 
-        
+        expect(mockOnReject).toHaveBeenCalledTimes(1);
+
     });
 
 
