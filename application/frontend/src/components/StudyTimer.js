@@ -6,10 +6,6 @@ import '@fontsource/vt323';
 import '@fontsource/press-start-2p';
 
 const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
-  const [position, setPosition] = useState({ x: 100, y: 100 });
-  const [dragging, setDragging] = useState(false);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-
   const [studyLength, setStudyLength] = useState(25);
   const [breakLength, setBreakLength] = useState(5);
   const [rounds, setRounds] = useState(4);
@@ -105,39 +101,6 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
     setIsRunning(true);
     setCurrentPage('timer');
   };
-
-  const onMouseDown = (e) => {
-    if (e.target.className.includes('timer-handle')) {
-      setDragging(true);
-      setDragOffset({
-        x: e.clientX - position.x,
-        y: e.clientY - position.y
-      });
-    }
-  };
-
-  const onMouseMove = (e) => {
-    if (dragging) {
-      setPosition({
-        x: e.clientX - dragOffset.x,
-        y: e.clientY - dragOffset.y
-      });
-    }
-  };
-
-  const onMouseUp = () => {
-    setDragging(false);
-  };
-
-  useEffect(() => {
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
-    
-    return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
-    };
-  }, [dragging, dragOffset]);
 
   useEffect(() => {
     let timer;
@@ -237,29 +200,36 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
   `;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center" style={{ pointerEvents: 'none', zIndex: 1000 }}>
+    <div className="study-timer-container">
       <style>
         {`
           ${errorMessageAnimation}
           
+          .study-timer-container {
+            width: 100% !important;
+            height: 100% !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+          }
+          
           .study-timer-wrapper {
-            position: absolute !important;
             background-color: #F0F3FC !important;
             border: 4px solid #E2E8FF !important;
-            padding: 20px;
-            border-radius: 30px;
+            padding: 20px !important;
+            border-radius: 30px !important;
             box-shadow: 0 0 10px #E2E8FF, inset 0 0 10px #E2E8FF, 0 0 20px rgba(226, 232, 255, 0.4), 0 0 30px rgba(186, 198, 241, 0.2) !important;
             filter: blur(0.3px) !important;
             outline: 4px solid rgba(186, 198, 241, 0.3) !important;
             outline-offset: 4px !important;
             -webkit-filter: drop-shadow(0 0 40px rgba(186, 198, 241, 0.4)) !important;
-            pointer-events: auto !important;
             z-index: 1000 !important;
             width: 315px !important;
             height: 370px !important;
             display: flex !important;
             flex-direction: column !important;
             align-items: center !important;
+            margin: 0 auto !important;
           }
 
           .study-timer-wrapper .vt323 {
@@ -333,13 +303,11 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
             boxShadow: '0 2px 8px rgba(186, 198, 241, 0.2)',
             width: '300px',
             animation: 'dissolveIn 0.3s ease-out forwards',
-            top: `${position.y - 50}px`,
-            left: `${position.x}px`,  
-            transform: 'translateX(10px)',  
+            top: '10px',
+            left: '50%',
+            transform: 'translateX(-50%)',
             pointerEvents: 'auto',
-            margin: '0 auto',  
-            right: 'auto',
-            marginLeft: '10px',  
+            margin: '0 auto'
           }}
         >
           <span 
@@ -354,15 +322,7 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
         </div>
       )}
       
-      <div 
-        className="study-timer-wrapper timer-handle"
-        style={{ 
-          left: `${position.x}px`,
-          top: `${position.y}px`,
-          cursor: dragging ? 'grabbing' : 'grab',
-        }}
-        onMouseDown={onMouseDown}
-      >
+      <div className="study-timer-wrapper">
         <div className="timer-content">
           {currentPage === 'completed' ? (
             <div className="p-4 w-80 flex flex-col bg-[#F0F3FC] timer-handle" style={{ height: "350px", position: "relative" }}>
@@ -374,10 +334,10 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
               
               <div style={{ 
                 position: "absolute", 
-                bottom: "0", 
+                bottom: "10px",
                 left: "0", 
                 width: "100%",
-                padding: "0 20px 20px 20px"
+                padding: "0 10px 20px 10px"
               }}>
                 <button
                   onClick={() => {
@@ -387,13 +347,15 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                     setTimeLeft(studyLength);
                     setIsRunning(false);
                   }}
-                  className="w-full px-4 py-2 text-white rounded-lg"
+                  className="w-full text-white rounded-lg"
                   style={{ 
                     backgroundColor: '#d1cbed', 
                     fontFamily: '"Press Start 2P", monospace',
                     transition: 'background-color 0.3s, transform 0.3s',
                     color: 'white',
-                    borderRadius: '0.5rem'
+                    borderRadius: '0.5rem',
+                    padding: '12px 4px',
+                    fontSize: '15px'
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.backgroundColor = '#8e99e3';
@@ -557,124 +519,187 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
             </div>
           ) : (
             <div className="p-4 w-80 min-height bg-[#F0F3FC] timer-handle" style={{ height: '370px', position: 'relative' }}>
-              <div 
-                className="absolute left-0 right-0 mx-auto text-center flex justify-center items-center" 
-                style={{ 
-                  top: '8px', 
-                  height: '50px',
-                  width: '180px'
-                }}
-              >
-                <h2 className="press-start w-full text-center" style={{ 
+              <div className="absolute w-full" style={{
+                top: '20px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'flex-start',
+                flexDirection: 'row',
+                flexWrap: 'nowrap'
+              }}>
+                <button 
+                  onClick={handleBack}
+                  style={{
+                    position: 'absolute',
+                    left: '0px',
+                    top: '0px',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: 0,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    height: '20px',
+                    zIndex: 5
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.querySelector('.triangle').style.borderRightColor = '#8e99e3';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.querySelector('.triangle').style.borderRightColor = '#d1cbed';
+                  }}
+                >
+                  <div 
+                    className="triangle" 
+                    style={{
+                      width: 0,
+                      height: 0,
+                      borderTop: '8px solid transparent',
+                      borderRight: '12px solid #d1cbed',
+                      borderBottom: '8px solid transparent',
+                      transition: 'border-right-color 0.3s'
+                    }}
+                  />
+                </button>
+                
+                <h2 className="press-start" style={{ 
                   color: '#bac6f1',
                   fontSize: '20px',
-                  lineHeight: 1.2
+                  lineHeight: 1.2,
+                  margin: 0,
+                  textAlign: 'center',
+                  display: 'inline-block',
+                  minHeight: '48px',
+                  paddingTop: '0px'
                 }}>
-                  {isBreak ? 'Break Time!' : 'Lock in or else!'}
+                  {isBreak ? (
+                    <>
+                      Break<br />
+                      Time!
+                    </>
+                  ) : (
+                    <>
+                      Lock in<br />
+                      or else!
+                    </>
+                  )}
                 </h2>
               </div>
               
-              <div className="absolute left-0 right-0 text-center" style={{ 
-                top: '80px',
-                color: '#bac6f1',
-                fontFamily: '"Press Start 2P", monospace',
-                fontSize: '50px',
-                fontWeight: 'bold'
+              <div className="absolute w-full" style={{
+                bottom: '140px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
               }}>
-                {formatTime(timeLeft)}
-              </div>
-
-              <div className="absolute left-0 right-0 text-center flex justify-center" style={{ 
-                top: '180px',
-                width: '100%'
-              }}>
-                <span style={{ 
-                  color: '#d1cbed', 
-                  fontFamily: 'VT323, monospace',
-                  fontSize: '24px',
+                <div style={{ 
+                  color: '#bac6f1',
+                  fontFamily: '"Press Start 2P", monospace',
+                  fontSize: '50px',
+                  fontWeight: 'bold',
                   textAlign: 'center'
                 }}>
-                  Round {currentRound}/{rounds}
-                </span>
+                  {formatTime(timeLeft)}
+                </div>
               </div>
 
-              <div className="absolute left-0 right-0 flex justify-center" style={{ 
-                top: '240px',
-                width: '100%',
-                gap: '20px'
+              <div style={{
+                position: 'absolute',
+                bottom: '50px',
+                left: '0',
+                right: '0',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                padding: '0 24px'
               }}>
-                <button 
-                  onClick={toggleTimer}
-                  style={{
-                    backgroundColor: '#d1cbed',
-                    color: 'white',
+                <div style={{ 
+                  width: '100%',
+                  marginBottom: '15px',
+                  textAlign: 'center',
+                  transform: 'translateY(10px)',
+                  position: 'relative',
+                }}>
+                  <span style={{ 
+                    color: '#d1cbed', 
                     fontFamily: 'VT323, monospace',
-                    padding: '0.5rem 1.5rem',
-                    borderRadius: '0.375rem',
-                    fontSize: '1.25rem',
-                    transition: 'background-color 0.3s, transform 0.3s',
-                    width: '120px',
-                    textAlign: 'center'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#8e99e3';
-                    e.currentTarget.style.transform = 'scale(1.05)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = '#d1cbed';
-                    e.currentTarget.style.transform = 'scale(1)';
-                  }}
-                >
-                  {isPaused ? 'Resume' : 'Pause'}
-                </button>
-                <button 
-                  onClick={resetTimer}
-                  style={{
-                    backgroundColor: '#d1cbed',
-                    color: 'white',
-                    fontFamily: 'VT323, monospace',
-                    padding: '0.5rem 1.5rem',
-                    borderRadius: '0.375rem',
-                    fontSize: '1.25rem',
-                    transition: 'background-color 0.3s, transform 0.3s',
-                    width: '120px',
-                    textAlign: 'center'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#8e99e3';
-                    e.currentTarget.style.transform = 'scale(1.05)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = '#d1cbed';
-                    e.currentTarget.style.transform = 'scale(1)';
-                  }}
-                >
-                  Reset
-                </button>
-              </div>
+                    fontSize: '20px',
+                    display: 'block',
+                    paddingTop: '5px'
+                  }}>
+                    Round {currentRound}/{rounds}
+                  </span>
+                </div>
 
-              <button 
-                onClick={handleBack}
-                style={{
-                  position: 'absolute',
-                  left: '20px',
-                  bottom: '20px',
-                  fontFamily: 'VT323, monospace',
-                  fontSize: '24px', 
-                  color: '#d1cbed',
-                  transition: 'color 0.3s',
-                  background: 'none',
-                  border: 'none'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#8e99e3';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = '#d1cbed';
-                }}
-              >
-                ⬅
-              </button>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  gap: '24px',
+                  width: '100%'
+                }}>
+                  <button 
+                    onClick={toggleTimer}
+                    style={{
+                      backgroundColor: '#d1cbed',
+                      color: 'white',
+                      fontFamily: 'VT323, monospace',
+                      padding: '7px 0',
+                      width: '95px',
+                      height: '37px',
+                      borderRadius: '8px',
+                      textAlign: 'center',
+                      transition: 'background-color 0.3s, transform 0.3s',
+                      overflow: 'hidden',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#8e99e3';
+                      e.currentTarget.style.transform = 'scale(1.05)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '#d1cbed';
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                  >
+                    <span style={{ fontSize: '22px' }}>
+                      {isPaused ? 'Resume' : 'Pause'}
+                    </span>
+                  </button>
+                  
+                  <button 
+                    onClick={resetTimer}
+                    style={{
+                      backgroundColor: '#d1cbed',
+                      color: 'white',
+                      fontFamily: 'VT323, monospace',
+                      padding: '7px 0',
+                      width: '95px',
+                      height: '37px',
+                      borderRadius: '8px',
+                      textAlign: 'center',
+                      transition: 'background-color 0.3s, transform 0.3s',
+                      overflow: 'hidden',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#8e99e3';
+                      e.currentTarget.style.transform = 'scale(1.05)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '#d1cbed';
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                  >
+                    <span style={{ fontSize: '22px' }}>
+                      Reset
+                    </span>
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </div>

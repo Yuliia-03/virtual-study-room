@@ -245,8 +245,15 @@ function GroupStudyPage(){
                 <MotivationalMessage data-testid="motivationalMessage-container"/>
             </div>
             {/*3rd Column */}
-            <div className="column"> role='column'  data-testid="column-3">
-                <div className="timer-container">Timer</div>
+            <div className="column" role='column' data-testid="column-3">
+                {/* StudyTimer replaces the timer-container div */}
+                <StudyTimer 
+                    roomId={finalRoomCode} 
+                    isHost={true} 
+                    onClose={() => console.log('Timer closed')} 
+                    data-testid="studyTimer-container" 
+                />
+                
                 <div className="custom-container">
                     {/*This is the button for music and customisation, needs functionality */}
                     <button
@@ -255,7 +262,7 @@ function GroupStudyPage(){
                         onMouseDown={() => handleMouseDown('music')}
                         onMouseUp={() => handleMouseUp('music')}
                         onMouseLeave={() => handleMouseUp('music')}
-                        >Music
+                    >Music
                     </button>
                     <button
                         type="button"
@@ -263,14 +270,13 @@ function GroupStudyPage(){
                         onMouseDown={() => handleMouseDown('custom')}
                         onMouseUp={() => handleMouseUp('custom')}
                         onMouseLeave={() => handleMouseUp('custom')}
-                        >Customisation
+                    >Customisation
                     </button>
 
                     <input value={input} onChange={(e) => setInput(e.target.value)} />
                     <button onClick={sendMessage}>Send</button>
-
                 </div>
-                <StudyTimer roomId="yourRoomId" isHost={true} onClose={() => console.log('Timer closed')} data-testid="studyTimer-container" />
+                
                 <div className="chatBox-container" data-testid="chatBox-container">Chat Box</div>
             </div>
         </div>
