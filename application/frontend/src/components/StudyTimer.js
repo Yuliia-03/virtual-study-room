@@ -103,37 +103,36 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
   };
 
   useEffect(() => {
-    let timer;
-    if (isRunning && !isPaused && timeLeft > 0) {
-      timer = setInterval(() => {
-        setTimeLeft((prevTime) => prevTime - 1);
+    let interval;
+    if (isRunning && !isPaused) {
+      interval = setInterval(() => {
+        setTimeLeft((prevTime) => {
+          if (prevTime <= 1) {
+            clearInterval(interval);
+            if (playSound) {
+              completionSound.play();
+            }
+            
+            if (!isBreak) {
+              if (currentRound >= rounds) {
+                setCurrentPage('completed');
+                setIsRunning(false);
+                return 0;
+              }
+              setIsBreak(true);
+              return breakLength;
+            } else {
+              setCurrentRound(prev => prev + 1);
+              setIsBreak(false);
+              return studyLength;
+            }
+          }
+          return prevTime - 1;
+        });
       }, 1000);
-    } else if (timeLeft === 0) {
-      if (!isBreak && currentRound >= rounds) {
-        setIsRunning(false);
-        setCurrentPage('completed');
-        if (playSound) {
-          completionSound.play();
-        }
-        return;
-      }
-      
-      if (playSound) {
-        completionSound.play();
-      }
-      
-      if (!isBreak) {
-        setIsBreak(true);
-        setTimeLeft(breakLength);
-        setCurrentRound((prevRound) => prevRound + 1);
-      } else {
-        setIsBreak(false);
-        setTimeLeft(studyLength);
-      }
     }
-  
-    return () => clearInterval(timer);
-  }, [isRunning, isPaused, timeLeft, isBreak, studyLength, breakLength, rounds, playSound, currentRound]);
+    return () => clearInterval(interval);
+  }, [isRunning, isPaused, isBreak, currentRound, rounds, breakLength, studyLength, playSound]);
 
   const formatTime = (seconds) => {
     const hours = Math.floor(seconds / 3600);
@@ -643,9 +642,9 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                       backgroundColor: '#d1cbed',
                       color: 'white',
                       fontFamily: 'VT323, monospace',
-                      padding: '7px 0',
-                      width: '95px',
-                      height: '37px',
+                      padding: '10px 0',
+                      width: '110px',
+                      height: '45px',
                       borderRadius: '8px',
                       textAlign: 'center',
                       transition: 'background-color 0.3s, transform 0.3s',
@@ -674,9 +673,9 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                       backgroundColor: '#d1cbed',
                       color: 'white',
                       fontFamily: 'VT323, monospace',
-                      padding: '7px 0',
-                      width: '95px',
-                      height: '37px',
+                      padding: '10px 0',
+                      width: '110px',
+                      height: '45px',
                       borderRadius: '8px',
                       textAlign: 'center',
                       transition: 'background-color 0.3s, transform 0.3s',
