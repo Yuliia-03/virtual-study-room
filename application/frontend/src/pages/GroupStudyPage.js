@@ -13,6 +13,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from "react-router-dom";
 
+
 function GroupStudyPage(){
 
     // Location object used for state
@@ -42,6 +43,8 @@ function GroupStudyPage(){
     const [username, setUsername] = useState("ANON_USER");   // Default to 'ANON_USER' before fetching. Stores username fetched from the backend
 
     const navigate = useNavigate();
+    const [isTyping, setIsTyping] = useState(false);
+    const [typingUser, setTypingUser] = useState("");
 
     useEffect(() => {
         //Fetches logged in user's username when component mounts
@@ -75,6 +78,15 @@ function GroupStudyPage(){
             if (data.type === "chat_message") { //if message type is 'chat_message' then add to messages state
                 // Ensure the message is structured as an object with `sender` and `text`
                 setMessages((prev) => [...prev, { sender: data.sender, text: data.message }]);
+            }
+            else if (data.type === "typing") {
+                setTypingUser(data.sender);
+                
+                // Remove "typing" message after 3 seconds
+                setTimeout(() => {
+                    setTypingUser("");
+                }, 3000);
+                
             }
         };
     
@@ -185,6 +197,23 @@ function GroupStudyPage(){
     const handleExit = () => {
         navigate("/dashboard")
     }
+
+    let typingTimeout;
+    const handleTyping = () => {
+        if (!socket || socket.readyState !== WebSocket.OPEN) return;
+        // Send "typing" event to WebSocket
+        socket.send(JSON.stringify({ type: "typing", sender: username }));
+    
+        // Prevent multiple events from being sent too frequently
+        if (isTyping) {
+            setIsTyping(true);
+        }
+        clearTimeout(typingTimeout);
+        typingTimeout =  setTimeout(() =>{
+            setIsTyping(false);
+        }, 3000);
+    };
+    
     
 
     //page is designed in columns
@@ -328,11 +357,18 @@ function GroupStudyPage(){
                             <strong>{msg.sender}:</strong> {msg.text}
                         </div>
                         ))}
+                        {typingUser && (
+        <p className="typing-indicator">
+            <strong>{typingUser}</strong> is typing...
+        </p>
+    )}
                     </div>
                     {/* Chat Input */}
                     <input 
                         value={chatInput} 
-                        onChange={(e) => setChatInput(e.target.value)}
+                        onChange={(e) => {
+                            setChatInput(e.target.value); 
+                            handleTyping();}}
                         onKeyDown={(e) => e.key === "Enter" && sendMessage(e)}
                         placeholder="Type a message..." 
                     />
