@@ -15,13 +15,14 @@ function ProfileBox() {
     const [showAvatarSelector, setShowAvatarSelector] = useState(false);
     const [showInventory, setShowInventory] = useState(false);
     const [userBadges, setUserBadges] = useState([]);
-    const [showModal, setShowModal] = useState(false); 
+    const [showModal, setShowModal] = useState(false);
     const [userData, setUserData] = useState({
         username: null,
         description: "",
         image: defaultAvatar, //default image
         avatarSrc: null, //represents selectable PFPs
     });
+    const [editedDescription, setEditedDescription] = useState(userData.description); 
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -91,19 +92,12 @@ function ProfileBox() {
         navigate("/login");
     }
 
-    const handleChangeDescription = (event) => {
-        const newDescription = event.target.value;
-        setUserData((prevData) => ({
-            ...prevData,
-            description: newDescription,
-        }));
-    }
 
     const handleSaveDescription = async () => {
         try {
             //update new description in the backend
             const data = await getAuthenticatedRequest("/description/", "PUT", {
-                description: userData.description,
+                description: editedDescription,
             });
 
             setUserData((prevData) => ({
@@ -165,33 +159,7 @@ function ProfileBox() {
                     <div className='container1'>
                         <img src={userData.image} alt="logo" className="profile-pic" />
                         <h1 className='profile-username'>{userData.username}</h1>
-                        <input type="file" accept="image/*" data-testid='file-input' id='change-avatar' onChange={handleChangeAvatar} className="change-avatar-button" style={{ display: 'none' }} />
-                    </div>
-                    <div className='container2'>
-                        <button type="button" className="logoff-button" onClick={handleLogOff}>LOG OFF</button>
-                        <button type='button' data-testid="show-more-button" className='show-modal-button' onClick={() => setShowModal(true)}></button>
-                    </div>
-                </div>
-
-                {showModal && (
-                    <div className='modal'>
-                        <div className='modal-content'>
-                            <span className="close-button" onClick={() => setShowModal(false)}>&times;</span>
-                            <div className='button-container'>
-                                <div className='inventory-align'>
-                                    <label htmlFor="change-avatar" className="upload-button">UPLOAD AVATAR</label>
-                                    <button className="default-select-button" onClick={() => setShowAvatarSelector(!showAvatarSelector)}>DEFAULT AVATARS</button>
-                                </div>
-                                {showAvatarSelector && (<div className='avatar-selector'><UserAvatar onSelect={handleDefaultPFP} currentAvatar={userData.avatarSrc}/></div>)}
-                            </div>
-                            <textarea
-                                className="profile-description"
-                                value={userData.description}
-                                onChange={handleChangeDescription}
-                                placeholder="Please Enter Description"
-                            />
-                            <button type="button" className="save-desc-button" onClick={handleSaveDescription}>SAVE DESCRIPTION</button>
-                            <button 
+                        <button 
                                 className='inventory-button'
                                 onClick={() => setShowInventory(!showInventory)}
                                 style={{
@@ -212,15 +180,52 @@ function ProfileBox() {
                                 aria-label={showInventory ? 'Hide Badge Collection' : 'View Badge Collection'}
                                 >🏆
                             </button>
-                            {showInventory && (
-                                <div className='inventory-content'>
-                                    <h2>Your Badge Collection</h2>
-                                    <UserBadges userBadges={userBadges}/>
+                        <input type="file" accept="image/*" data-testid='file-input' id='change-avatar' onChange={handleChangeAvatar} className="change-avatar-button" style={{ display: 'none' }} />
+                    </div>
+                    <div className='main-profile-container'>
+                        <p className='description-text-label'>Description</p>
+                        <div className='description-display-container'>
+                            <p className='description-display'>{userData.description}</p>
+                        </div>
+                        <div className= 'profile-button-container'>
+                            <button type="button" className="logoff-button" onClick={handleLogOff}>LOG OFF</button>
+                            <button type='button' data-testid="show-more-button" className='logoff-button' onClick={() => setShowModal(true)}>EDIT</button>
+                        </div>
+                    </div>
+                </div>
+
+                {showModal && (
+                    <div className='modal'>
+                        <div className='modal-content'>
+                            <span className="close-button" onClick={() => setShowModal(false)}>&times;</span>
+                            <div className='button-container'>
+                                <div className='inventory-align'>
+                                    <label htmlFor="change-avatar" className="upload-button">UPLOAD AVATAR</label>
+                                    <button className="default-select-button" onClick={() => setShowAvatarSelector(!showAvatarSelector)}>DEFAULT AVATARS</button>
                                 </div>
-                            )}
+                                {showAvatarSelector && (<div className='avatar-selector'><UserAvatar onSelect={handleDefaultPFP} currentAvatar={userData.avatarSrc}/></div>)}
+                            </div>
+                            <textarea
+                                className="profile-description"
+                                value={editedDescription}
+                                onChange={(e) => setEditedDescription(e.target.value)}
+                                placeholder="Please Enter Description"
+                            />
+                            <button type="button" className="save-desc-button" onClick={handleSaveDescription}>SAVE DESCRIPTION</button>
                         </div>
                     </div>
                 )}
+
+                {showInventory && (
+                    <div className='inventory-content'>
+                        <div className='inventory-display-content'>
+                            <span className="close-button" onClick={() => setShowInventory(false)}>&times;</span>
+                            <h2>Your Badge Collection</h2>
+                            <UserBadges userBadges={userBadges}/>
+                        </div>
+                    </div>
+                )}
+
             </div>
         </div>
     );

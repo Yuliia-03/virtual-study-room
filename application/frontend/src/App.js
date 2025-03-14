@@ -3,6 +3,7 @@ import React, { Component} from "react";
 
 import "./styles/App.css";
 import Login from "./pages/Login";
+import Calendar1 from "./pages/Calendar1";
 import Signup from "./pages/Signup";
 import Welcome from "./pages/Welcome";
 import Dashboard from "./pages/Dashboard";
@@ -21,6 +22,7 @@ function App() {
         // temporary change ok
         <Route path="/" element={<Welcome />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/calendar" element={<Calendar1 />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/motivational-message" element={<MotivationalMessage />} />
         <Route path="/dashboard/:username" element={<Dashboard />} />

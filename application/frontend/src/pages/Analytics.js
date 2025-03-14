@@ -39,7 +39,7 @@ const Analytics = () => {
     }, []); // Empty dependency array ensures this runs only once when the component mounts
 
     return (
-        <div className="analytics-box">
+        <div className="dashboard-panel analytics">
             <h2>Your Progress</h2>
             <div className="stats">
                 <div className="stat">
@@ -68,16 +68,8 @@ const Analytics = () => {
                 </div>
             </div>
             <div className="share">
-                <div className="share-label">
-                    <p>Share Analytics with Friends?</p>
-                    <div className="tooltip-container">
-                        <span className="info-icon">i</span>
-                        <span className="tooltip">Allow friends to see your study progress</span>
-                    </div>
-                </div>
+                <div className="share-label" ></div>
                 <div className="button-container">
-                    <button className="no-btn">No</button>
-                    <button className="yes-btn">Yes</button>
                 </div>
             </div>
         </div>

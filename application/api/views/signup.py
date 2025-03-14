@@ -31,9 +31,14 @@ class SignUpView( APIView):
 
             return Response({"message": "User registered successfully!"}, status=status.HTTP_201_CREATED)
 
-        except Exception as e:
-            print(e)
-            return Response({"error": e.message_dict, "details": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except IntegrityError:  # Handle duplicate email or username
+            return Response({"error": "Username or email already exists"}, status=status.HTTP_400_BAD_REQUEST)
 
+        except ValidationError as e:  # Handle invalid email format or other validation issues
+            return Response({"error": e.message_dict}, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:  # Catch all other errors
+            return Response({"error": "An unexpected error occurred", "details": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            
     def get(self):
         pass

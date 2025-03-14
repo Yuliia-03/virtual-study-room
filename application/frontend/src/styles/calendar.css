@@ -1,0 +1,95 @@
+.heading1 {
+    border: 3px solid !important;
+    font-family: 'Inter', sans-serif !important;
+    color: white !important;
+    background-color: #F2BAC9 !important;
+}
+
+.eventbutton {
+    background-color: #BAF2E9 !important;
+    border-radius: 10px !important;
+    color: black !important;
+}
+
+.rounded-event {
+    width: 70% !important; /* Adjust width, lower values make it thinner */
+    margin: 0 auto !important; /* Center the event */
+    border-color: black;
+    border-radius: 20px !important; /* Make edges more rounded */
+    text-align: center !important; /* Center text horizontally */
+    display: flex !important; /* Use flexbox */
+    align-items: center !important; /* Center text vertically */
+    justify-content: center !important; /* Ensure perfect centering */
+    font-weight: bold !important; /* Make text bold */
+    color: black !important; /* Set text color to black */
+}
+
+.rounded-event * {
+    color: black !important; /* Force black text inside the event */
+    align-items: center !important; /* Center text vertically */
+    justify-content: center !important;
+}
+
+.event-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    background-color: white !important;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+    text-align: left;
+}
+
+.popup-content h2 {
+    margin-top: 0;
+}
+
+.popup-content button {
+    background-color: #F2E2BA; /* Red background for button */
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.popup-content button:hover {
+    background-color: #BAF2E9; /* Darker red for button hover */
+}
+
+/* Calendar toolbar button styles */
+.fc-toolbar .fc-button {
+    background-color: #BAF2E9 !important;  /* Set background color */
+    color: black !important;  /* Text color */
+    border-radius: 10px !important;  /* Rounded corners */
+    font-weight: bold !important;  /* Make button text bold */
+}
+
+/* Specific styling for individual toolbar sections if needed */
+.fc-left, .fc-center, .fc-right {
+    background-color: #f0f0f0 !important;  /* Toolbar background */
+    padding: 10px !important;
+}
+
+/* Additional styling for previous, next, and today buttons */
+.fc-prev-button,
+.fc-next-button,
+.fc-today-button {
+    background-color: #BAF2E9 !important;
+    border-radius: 10px !important;
+    color: black !important;
+}
