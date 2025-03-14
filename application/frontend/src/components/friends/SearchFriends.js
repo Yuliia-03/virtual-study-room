@@ -1,7 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { FriendsContext } from "./FriendsContext";
 import "../../styles/friends/SearchFriends.css";
+import "../../styles/friends/PendingFriends.css";
 import { getAuthenticatedRequest } from "../../utils/authService";
+
+import defaultAvatar from '../../assets/avatars/avatar_2.png';
+import { storage } from "../../firebase-config";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 
 const PendingFriends = () => {
     const { loading, onAccept, onReject, friendRequests, invitationsRequests, friends  } = useContext(FriendsContext);
@@ -14,12 +19,22 @@ const PendingFriends = () => {
     };
 
     useEffect(() => {
-        
         if (search.length > 2) {
             const fetchData = async () => {
                 try {
                     const friendsData = await getAuthenticatedRequest(`/find_friend/?q=${search}`);
-                    setResult(friendsData);
+
+                    // Process friendsData with images
+                    const friendsWithImages = await Promise.all(
+                        friendsData.map(async (friend) => {
+                            const imageRef = ref(storage, `avatars/${friend.username}`);
+                            const imageUrl = await getDownloadURL(imageRef).catch(() => defaultAvatar); // Default if not found
+                            return { ...friend, image: imageUrl }; // Add profileImage to friend object
+                        })
+                    );
+
+                    // Set the result state with friends including images
+                    setResult(friendsWithImages);
                 } catch (error) {
                     console.error("Error fetching friends:", error);
                 }
@@ -27,19 +42,19 @@ const PendingFriends = () => {
 
             fetchData();
         } else {
-            setResult([]);
+            setResult([]); // Clear the result if search length is less than or equal to 2
         }
-        
-    }, [search])
+    }, [search]);
 
     if (loading) return <div className="loading">Loading Friends...</div>;
 
     return (
         <div className="search-friends">
             <input className="search-input" type="text" value={search} onChange={handleChange} placeholder="Add new friends..." />
-            <ul>
+            <ul className="invitations-container invitations-list">
                 {result.map((friend) => (
                     <li key={friend.id} className="invitation-card">
+                        <img src={friend.image} alt="logo" className="small-pic" />
                         <span >
                             {friend.name} {friend.surname} ({friend.username})
                         </span>
@@ -78,9 +93,6 @@ const PendingFriends = () => {
                                 ))
                             ) : (
                                 <button onClick={() => onAccept(friend.id, 'create_friend_request', "POST")} className="btn btn-danger" aria-label="Add Friend">
-                                                    { /*create pending friends request - both front and back */}
-                                                    <p>{friend.id}</p>
-                                                <span>not a friends</span>
                                     <i className="bi bi-person-plus"></i>
                                 </button>       
                                             

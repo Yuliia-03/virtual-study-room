@@ -1,6 +1,9 @@
 import React, { useContext } from "react";
 import { createContext, useState, useEffect } from "react";
 import { getAuthenticatedRequest } from "../../utils/authService";
+import defaultAvatar from '../../assets/avatars/avatar_2.png';
+import { storage } from "../../firebase-config";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 
 // Create context
 export const FriendsContext = createContext();
@@ -23,21 +26,49 @@ export const FriendsProvider = ({ children }) => {
             const requestsData = await getAuthenticatedRequest("/get_pending_friends/");
             const invitationsData = await getAuthenticatedRequest("/get_made_requests/");
             const friendsData = await getAuthenticatedRequest("/get_friends/");
-            if (userId) {
-                console.log(userId)
-                const createFriends = await getAuthenticatedRequest(`/create_friend_request/${userId}/`, "POST")
-                setInvitations(prevLists => [...prevLists, createFriends]);
-            }
-            
+
+            // Set invitations and requests without images initially
             setInvitations(invitationsData);
             setRequests(requestsData);
-            setFriends(friendsData);
+
+            // Process friends with images
+            const friendsWithImages = await Promise.all(
+                friendsData.map(async (friend) => {
+                    const imageRef = ref(storage, `avatars/${friend.username}`);
+                    const imageUrl = await getDownloadURL(imageRef).catch(() => defaultAvatar); // Default if not found
+                    return { ...friend, image: imageUrl }; // Add profileImage to friend object
+                })
+            );
+
+            // Process invitations with images
+            const invitationsWithImages = await Promise.all(
+                invitationsData.map(async (invitation) => {
+                    const imageRef = ref(storage, `avatars/${invitation.username}`);
+                    const imageUrl = await getDownloadURL(imageRef).catch(() => defaultAvatar); // Default if not found
+                    return { ...invitation, image: imageUrl }; // Add profileImage to invitation object
+                })
+            );
+
+            // Process requests with images
+            const requestsWithImages = await Promise.all(
+                requestsData.map(async (request) => {
+                    const imageRef = ref(storage, `avatars/${request.username}`);
+                    const imageUrl = await getDownloadURL(imageRef).catch(() => defaultAvatar); // Default if not found
+                    return { ...request, image: imageUrl }; // Add profileImage to request object
+                })
+            );
+
+            // Update the state with friends, invitations, and requests with images
+            setFriends(friendsWithImages);
+            setInvitations(invitationsWithImages);
+            setRequests(requestsWithImages);
         } catch (error) {
             console.error("Error fetching data:", error);
         } finally {
             setLoading(false);
         }
     };
+
 
     const manageFriends = async (request, Id, method) => {
         try {

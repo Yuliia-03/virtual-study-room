@@ -16,10 +16,10 @@ const AllFriends = () => {
                     ) : (
                         friends.map((friend) => (
                             <li key={friend.id} className="friend-card">
+                                <img src={friend.image} alt="logo" className="pic" />
                                 <h4>{friend.name} {friend.surname}</h4>
-                                <p className="username">{friend.username}</p>
-
-                                <button className="reject-btn" onClick={() => onReject(friend.id)}>❌</button>
+                                <p className="username">{friend.username}</p> 
+                                <button className="reject-btn" onClick={() => onReject(friend.id)}>Delete Friend</button>
                             </li>
                         ))
                     )}
