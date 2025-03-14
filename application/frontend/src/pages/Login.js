@@ -27,7 +27,6 @@ function Login() {
         setError("");
         try {
             const response = await axios.post(
-                // "https://studyspot.pythonanywhere.com/api/login/",
                 "http://127.0.0.1:8000/api/login/",
                 formData,  // Contains email and password
                 { headers: { "Content-Type": "application/json" } }  // No Authorization header here
@@ -36,6 +35,7 @@ function Login() {
             // Store tokens in localStorage
             localStorage.setItem("access_token", response.data.access);
             localStorage.setItem("refresh_token", response.data.refresh);
+            localStorage.setItem('user_id', response.data.userId);
 
             toast.success("Login Successful!", {
                 hideProgressBar: true

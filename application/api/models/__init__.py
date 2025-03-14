@@ -9,3 +9,4 @@ from .user import User
 from .user import UserManager
 from .motivational_message import *
 from .session_user import SessionUser
+from .events import *
