@@ -3,13 +3,13 @@ import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import ProfileBox from '../pages/ProfileBox';
 import { BrowserRouter as Router } from "react-router-dom";
 import { ref, getDownloadURL, uploadBytes } from 'firebase/storage';
-import { getAuthenticatedRequest } from '../pages/utils/authService';
+import { getAuthenticatedRequest } from '../utils/authService';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import defaultAvatar from '../assets/avatars/avatar_2.png';
 
 //mock the necessary modules
-jest.mock('../pages/utils/authService');
+jest.mock('../utils/authService');
 jest.mock('firebase/storage'); 
 jest.mock('../firebase-config.js');
 jest.mock('react-toastify', () => {

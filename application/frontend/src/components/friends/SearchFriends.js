@@ -55,6 +55,7 @@ const PendingFriends = () => {
                 {result.map((friend) => (
                     <li key={friend.id} className="invitation-card">
                         <img src={friend.image} alt="logo" className="small-pic" />
+                        <div className="invitation-name">
                         <span >
                             {friend.name} {friend.surname} ({friend.username})
                         </span>
@@ -62,7 +63,7 @@ const PendingFriends = () => {
                             {
                             friendRequests.some(request => request.username === friend.username) ? (
                                 friendRequests.filter(r => r.username === friend.username).map((r) => (
-                                <div>
+                                <div >
                                     <span> (user sent you request)   </span>
                                     <button onClick={() => onAccept(r.id, 'accept_friend', "PATCH")} className="btn btn-success btn-sm" aria-label="Add Friend">
                                         <i class="bi bi-check2-circle"></i>
@@ -97,6 +98,7 @@ const PendingFriends = () => {
                                 </button>       
                                             
                             )}
+                            </div>
                         </div>
                     </li>
                 ))}

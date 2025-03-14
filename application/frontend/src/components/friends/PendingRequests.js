@@ -21,10 +21,10 @@ const PendingFriends = () => {
                                     {inv.name} {inv.surname} ({inv.username})
                                 </span>
                                 <div className="invitation-actions">
-                                    <button className="accept-btn" onClick={() => onAccept(inv.id, 'accept_friend', "PATCH")}>
+                                    <button className="accept-btn" onClick={() => onAccept(inv.id, 'accept_friend', "PATCH")} aria-label="Add Friend">
                                         <i class="bi bi-check2-circle"></i>
                                     </button>
-                                    <button className="reject-btn" onClick={() => onReject(inv.id)}>
+                                    <button className="reject-btn" onClick={() => onReject(inv.id)} aria-label="Remove Friend">
                                         <i className="bi bi-x-circle"></i>
                                     </button>
                                 </div>

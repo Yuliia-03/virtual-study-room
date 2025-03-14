@@ -116,7 +116,7 @@ const ToDoList = () => {
                             </>
                         ) : (
                             <>
-                                <i className="bi bi-arrows-fullscreen"></i>
+                                <i className="bi bi-arrows-fullscreen">View All</i>
                             </>
                         )}
                     </button>
