@@ -9,4 +9,5 @@ from .user import User
 from .user import UserManager
 from .motivational_message import *
 from .session_user import SessionUser
+from .spotify_token import SpotifyToken
 from .events import *
