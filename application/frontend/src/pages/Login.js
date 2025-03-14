@@ -22,13 +22,31 @@ function Login() {
 
   // Check if a user is already logged in
   useEffect(() => {
+    const accessToken = localStorage.getItem("access_token");
     const user = JSON.parse(localStorage.getItem("loggedInUser"));
     if (user) {
       setLoggedInUser(user);
       toast.info(
-        `You are already logged in as ${user.username}. Please log out first.`
+        `You are already logged in as ${user.username}. Please log out first, or refresh the page.`
       );
     }
+
+    // Add event listener for beforeunload
+    const handleBeforeUnload = () => {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
+      localStorage.removeItem("user_id");
+      localStorage.removeItem("loggedInUser");
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+
+
   }, []);
 
   // when the username/password fields are edited, update form data
@@ -44,7 +62,7 @@ function Login() {
     const existingUser = JSON.parse(localStorage.getItem("loggedInUser"));
     if (existingUser) {
       toast.error(
-        `You are already logged in as ${existingUser.username}. Please log out first.`
+        `You are already logged in as ${existingUser.username}. Please log out first, or refresh the page`
       );
       return;
     }
