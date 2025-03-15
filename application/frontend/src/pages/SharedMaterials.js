@@ -97,19 +97,19 @@ function SharedMaterials() {
             <div className='shared-materials-content'>
                 <h1 className="sm-title">Shared Materials</h1>
                 <input type="file" accept=".doc,.docx,.ppt,.pptx,.pdf,image/*" data-testid='upload-materials-button' id='upload-materials' onChange={handleUploadFile} className="upload-materials-button" style={{ display: 'none' }} />
-                <label htmlFor="upload-materials" className="upload-materials-label">+</label>
+                <label htmlFor="upload-materials" data-testid="plus-upload-button" className="upload-materials-label">+</label>
                 <div className='display-files-container'>
                     {files.map((file, index) => (
                         <div key={index} className="file-item">
                             <span onClick={() => openFileModal(file)} style={{ cursor: 'pointer' }} className='file-name-label'>{file.name}</span>
-                            <button onClick={() => handleDeleteFile(file.name)} className='file-delete-button'>&times;</button>
+                            <button onClick={() => handleDeleteFile(file.name)} className='file-delete-button' data-testid='material-delete'>&times;</button>
                         </div>
                     ))}
                 </div>
                 {fileModalOpen && (
                     <div className="file-modal-container">
                         <div className="file-modal-content">
-                            <span className="file-close-button" onClick={() => closeFileModal()} style={{ cursor: 'pointer' }}>&times;</span>
+                            <span className="file-close-button" onClick={() => closeFileModal()} style={{ cursor: 'pointer' }} data-testid='modal-materials-close'>&times;</span>
                             <h2 className='file-modal-title'>{selectedFile?.name}</h2>
                             {selectedFile && (
                                 <iframe src={selectedFile.url} title={selectedFile.name} className='file-iframe'></iframe>
