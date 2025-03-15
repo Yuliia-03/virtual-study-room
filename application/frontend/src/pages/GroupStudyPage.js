@@ -317,7 +317,7 @@ function GroupStudyPage(){
                 <MotivationalMessage data-testid="motivationalMessage-container"/>
             </div>
             {/*3rd Column */}
-            <div className="column"> role='column'  data-testid="column-3">
+            <div className="column" role='column' data-testid="column-3">
                 {/* StudyTimer replaces the timer-container div */}
                 <StudyTimer 
                     roomId={finalRoomCode} 
@@ -325,25 +325,7 @@ function GroupStudyPage(){
                     onClose={() => console.log('Timer closed')} 
                     data-testid="studyTimer-container" 
                 />
-                {/* Chat Box */}
-                <div className="chatBox-container" data-testid="chatBox-container">
-                    {/* Chat Messages */}
-                    <div className="chat-messages">
-                        {messages.map((msg, index) => (
-                        <div key={index} className={`chat-message ${msg.sender === username ? "current-user" : "other-user"}`}>
-                            <strong>{msg.sender}:</strong> {msg.text}
-                        </div>
-                        ))}
-                    </div>
-                    {/* Chat Input */}
-                    <input 
-                        value={chatInput} 
-                        onChange={(e) => setChatInput(e.target.value)}
-                        onKeyDown={(e) => e.key === "Enter" && sendMessage(e)}
-                        placeholder="Type a message..." 
-                    />
-                    <button onClick={sendMessage}>Send</button>
-                
+
                 <div className="custom-container">
                     {/*This is the button for music and customisation, needs functionality */}
                     <button
@@ -363,11 +345,30 @@ function GroupStudyPage(){
                         >Customisation
                     </button>
 
-                    <input value={input} onChange={(e) => setInput(e.target.value)} />
-                    <button onClick={sendMessage}>Send</button>
+                    {/* <input value={input} onChange={(e) => setInput(e.target.value)} />
+                    <button onClick={sendMessage}>Send</button> */}
                 </div>
-                <StudyTimer roomId="yourRoomId" isHost={true} onClose={() => console.log('Timer closed')} data-testid="studyTimer-container" />
-                <div className="chatBox-container" data-testid="chatBox-container">Chat Box</div>
+                {/* <StudyTimer roomId="yourRoomId" isHost={true} onClose={() => console.log('Timer closed')} data-testid="studyTimer-container" /> */}
+                {/* Chat Box */}
+                <div className="chatBox-container" data-testid="chatBox-container">
+                    {/* Chat Messages */}
+                    <div className="chat-messages">
+                        {messages.map((msg, index) => (
+                        <div key={index} className={`chat-message ${msg.sender === username ? "current-user" : "other-user"}`}>
+                            <strong>{msg.sender}:</strong> {msg.text}
+                        </div>
+                        ))}
+                    </div>
+                    {/* Chat Input */}
+                    <input 
+                        value={chatInput} 
+                        onChange={(e) => setChatInput(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && sendMessage(e)}
+                        placeholder="Type a message..." 
+                    />
+                    <button onClick={sendMessage}>Send</button>
+                
+                </div>
             </div>
         </div>
     );
