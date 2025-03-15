@@ -34,6 +34,15 @@ class RoomConsumer(AsyncWebsocketConsumer):
                     "update": data["update"],
                 }
             )
+        elif message_type == "typing":
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    "type": "typing",
+                    "sender":data["sender"],
+                }
+            )
+
 
     async def chat_message(self, event):
         await self.send(text_data=json.dumps({
@@ -46,4 +55,10 @@ class RoomConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             "type": "study_update",
             "update": event["update"],
+        }))
+
+    async def typing(self, event):
+        await self.send(text_data=json.dumps({
+            "type": "typing",
+            "sender" : event["sender"],
         }))
