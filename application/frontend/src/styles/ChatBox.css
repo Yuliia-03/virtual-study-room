@@ -71,7 +71,7 @@
     margin-top: 5px;
 
     position: absolute;  /* Fix position */
-    bottom: 10px;       /* Position it at the bottom */
+    bottom: 0;       /* Position it at the bottom */
     left: 40%;         /* Align it to the left (adjust as needed) */
     width: 100%;        /* Ensure it spans across the width */
     text-align: left;   /* Align text properly */

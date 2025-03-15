@@ -106,6 +106,11 @@ function GroupStudyPage(){
             return;
         }
 
+        if (!chatInput.trim()) { // Prevent empty messages
+            console.error("Cannot send an empty message.");
+            return;
+        }
+
         //construct a message with type, message and sender
         const messageData = { 
             type: "chat_message", 
@@ -117,8 +122,6 @@ function GroupStudyPage(){
     
         socket.send(JSON.stringify(messageData));
         setChatInput("");   //resets chatinput field after sending message
-
-       
     };
     // end of websockets stuff
 
@@ -354,29 +357,6 @@ function GroupStudyPage(){
                     onClose={() => console.log('Timer closed')} 
                     data-testid="studyTimer-container" 
                 />
-
-                <div className="custom-container">
-                    {/*This is the button for music and customisation, needs functionality */}
-                    <button
-                        type="button"
-                        className={`music-button ${isActiveMusic ? 'active' : ''}`}
-                        onMouseDown={() => handleMouseDown('music')}
-                        onMouseUp={() => handleMouseUp('music')}
-                        onMouseLeave={() => handleMouseUp('music')}
-                        >Music
-                    </button>
-                    <button
-                        type="button"
-                        className={`customisation-button ${isActiveCustom ? 'active' : ''}`}
-                        onMouseDown={() => handleMouseDown('custom')}
-                        onMouseUp={() => handleMouseUp('custom')}
-                        onMouseLeave={() => handleMouseUp('custom')}
-                        >Customisation
-                    </button>
-
-                    {/* <input value={input} onChange={(e) => setInput(e.target.value)} />
-                    <button onClick={sendMessage}>Send</button> */}
-                </div>
                 {/* <StudyTimer roomId="yourRoomId" isHost={true} onClose={() => console.log('Timer closed')} data-testid="studyTimer-container" /> */}
                 {/* Chat Box */}
                 <div className="chatBox-container" data-testid="chatBox-container">
@@ -387,11 +367,7 @@ function GroupStudyPage(){
                             <strong>{msg.sender}:</strong> {msg.text}
                         </div>
                         ))}
-                        {typingUser && (
-        <p className="typing-indicator">
-            <strong>{typingUser}</strong> is typing...
-        </p>
-    )}
+                        {typingUser && (<p className="typing-indicator"> <strong>{typingUser}</strong> is typing...</p>)}
                     </div>
                     {/* Chat Input */}
                     <input 

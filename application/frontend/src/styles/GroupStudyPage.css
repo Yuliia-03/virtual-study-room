@@ -23,7 +23,6 @@
     max-width: 100vw;
     box-sizing: border-box;
     margin-left: 0;
-    height: 120vh;
 }
 
 .todo-list-container, .sharedMaterials-container, .motivationMessage-container, .timer-container, .custom-container, .chatBox-container {
