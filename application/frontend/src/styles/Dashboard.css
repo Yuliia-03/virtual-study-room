@@ -1,4 +1,3 @@
-
 .dashboard-container{
     /* Flex to store components in the dashboard */
     display: flex;
@@ -82,6 +81,41 @@
    color: black;
    font-size: 20px;
    font-weight: 600;
+   
+   /* Add these new properties for resizing */
+   resize: both;
+   overflow: auto;
+   min-width: 250px;
+   min-height: 150px;
+}
+
+/* Create a class for panel content to ensure proper scrolling */
+.panel-content {
+   width: 100%;
+   height: 100%;
+   overflow: auto;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+/* Make the dashboard responsive at smaller screen sizes */
+@media (max-width: 1200px) {
+  .dashboard-content {
+    flex-direction: column;
+  }
+  
+  .dashboard-left-panel, .dashboard-main-panel, .dashboard-right-panel {
+    width: 100%;
+  }
+}
+
+/* Fix potentially inconsistent heights for proper resizing */
+.dashboard-left-panel .dashboard-panel,
+.dashboard-main-panel .dashboard-panel,
+.dashboard-right-panel .dashboard-panel {
+    min-height: 150px;
+    position: relative;
 }
 
 /*Customising one specific panel example*/

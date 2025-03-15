@@ -123,10 +123,16 @@ function GroupStudyPage(){
     //Third Column: Timer, customisation, chatbox
     
     return (
-        <div className='groupStudyRoom-container' data-testid="groupStudyRoom-container">
+        <div className='groupStudyRoom-container'>
+            {/* Add this new header section */}
+            <div className="study-room-header">
+                <h2 className="heading">Study Room: {roomName}</h2>
+                <h3 className='gs-heading2'>Code: {finalRoomCode}</h3>
+            </div>
+            
             {/*1st Column */}
-            <div className="column" role='column' data-testid="column-1">
-                <div className="todo-list-container" data-testid="todo-list-container">
+            <div className="column">
+                <div className="todo-list-container">
                     <h2 className='todo-heading'>To Do: 
                     <div className="checkbox-wrapper-5">
                         <div className="check">
@@ -163,16 +169,14 @@ function GroupStudyPage(){
                     </button>      
                 </div>
 
-                <div className="sharedMaterials-container" data-testid="sharedMaterials-container">Shared Materials</div>
+                <div className="sharedMaterials-container">Shared Materials</div>
             </div>
             {/*2nd Column */}
-            <div className="column"> role='column' data-testid="column-2">
-                <div className="user-list-container"> data-testid="user-list-container">
-                    <h2 className="heading"> Study Room: {roomName} </h2>
-                    <h3 className='gs-heading2'> Code: {finalRoomCode}</h3>
+            <div className="column">
+                <div className="user-list-container">
                     {/* Debugging messages */}
                     {messages.map((msg, index) => <p key={index}>{msg}</p>)}
-                    <div className='utility-bar'> data-testid="utility-bar">
+                    <div className='utility-bar'>
                         <button
                             type="button"
                             className={`music-button ${isActiveMusic ? 'active' : ''}`}
@@ -192,7 +196,7 @@ function GroupStudyPage(){
                             <img src={customLogo} alt="Customisation" />
                         </button>
                     </div>
-                    <div className='utility-bar-2' data-testid="utility-bar-2">
+                    <div className='utility-bar-2'>
                         <button
                             type="button"
                             className={`copy-button ${isActiveCopy ? 'active' : ''}`}
@@ -242,42 +246,23 @@ function GroupStudyPage(){
                         </div>
                     </div>
                 </div>
-                <MotivationalMessage data-testid="motivationalMessage-container"/>
+                <MotivationalMessage />
             </div>
             {/*3rd Column */}
-            <div className="column" role='column' data-testid="column-3">
+            <div className="column">
                 {/* StudyTimer replaces the timer-container div */}
                 <StudyTimer 
                     roomId={finalRoomCode} 
                     isHost={true} 
                     onClose={() => console.log('Timer closed')} 
-                    data-testid="studyTimer-container" 
                 />
                 
-                <div className="custom-container">
-                    {/*This is the button for music and customisation, needs functionality */}
-                    <button
-                        type="button"
-                        className={`music-button ${isActiveMusic ? 'active' : ''}`}
-                        onMouseDown={() => handleMouseDown('music')}
-                        onMouseUp={() => handleMouseUp('music')}
-                        onMouseLeave={() => handleMouseUp('music')}
-                    >Music
-                    </button>
-                    <button
-                        type="button"
-                        className={`customisation-button ${isActiveCustom ? 'active' : ''}`}
-                        onMouseDown={() => handleMouseDown('custom')}
-                        onMouseUp={() => handleMouseUp('custom')}
-                        onMouseLeave={() => handleMouseUp('custom')}
-                    >Customisation
-                    </button>
-
+                <div>
                     <input value={input} onChange={(e) => setInput(e.target.value)} />
                     <button onClick={sendMessage}>Send</button>
                 </div>
                 
-                <div className="chatBox-container" data-testid="chatBox-container">Chat Box</div>
+                <div className="chatBox-container">Chat Box</div>
             </div>
         </div>
     );
