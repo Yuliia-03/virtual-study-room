@@ -25,3 +25,13 @@ def login(request):
             'access': str(refresh.access_token)
         })
     return Response({'error': 'Invalid Credentials'}, status=400)
+
+
+def index(request):
+    return render(request, 'chat/index.html', {})
+
+
+def room(request, room_name):
+    return render(request, 'chat/room.html', {
+        'room_name': room_name
+    })

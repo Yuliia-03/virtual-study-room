@@ -64,6 +64,7 @@
     "web-vitals": "^4.2.4",
     "webpack": "^5.64.4",
     "webpack-manifest-plugin": "^4.0.2",
+    "websocket": "^1.0.35",
     "workbox-webpack-plugin": "^6.4.1",
     "wrangler": "^3.111.0"
   },
