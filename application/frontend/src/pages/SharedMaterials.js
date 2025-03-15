@@ -103,7 +103,6 @@ function SharedMaterials() {
                         <div key={index} className="file-item">
                             <span onClick={() => openFileModal(file)} style={{ cursor: 'pointer' }} className='file-name-label'>{file.name}</span>
                             <button onClick={() => handleDeleteFile(file.name)} className='file-delete-button'>&times;</button>
-                            {/* TODO: Add Download Button */}
                         </div>
                     ))}
                 </div>
