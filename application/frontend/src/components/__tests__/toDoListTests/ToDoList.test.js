@@ -342,9 +342,9 @@ describe("ToDoList", () => {
         expect(titleInput).toBeInTheDocument();
         expect(contentInput).toBeInTheDocument();
     });
-
+ 
     test('create new list', async () => {
-
+ 
         authService.getAuthenticatedRequest.mockResolvedValueOnce(mockListsData);
 
         render(<ToDoList />);

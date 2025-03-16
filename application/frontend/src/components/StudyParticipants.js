@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { getAuthenticatedRequest } from "../pages/utils/authService";
+import { getAuthenticatedRequest } from "../utils/authService";
 import { useNavigate, useParams } from "react-router-dom";
 import "../styles/StudyParticipants.css";
 import { storage } from "../firebase-config";

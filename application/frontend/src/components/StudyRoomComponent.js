@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
-import GroupStudyRoom from "../pages/GroupStudyPage";
-import { getAuthenticatedRequest } from "../pages/utils/authService";
-import { useNavigate } from "react-router-dom";
+import GroupStudyRoom from '../pages/GroupStudyPage';
+import { getAuthenticatedRequest } from "../utils/authService";
+import { useNavigate } from 'react-router-dom';
 import "../styles/StudyRoomComponent.css";
 
 const StudyRoomComponent = () => {
@@ -35,12 +35,13 @@ const StudyRoomComponent = () => {
       console.log("Joining .. . .");
 
       navigate(`/group-study/${response.roomCode}`, {
-        state: { roomCode: response.roomCode, roomName: roomName },
+        state: { roomCode: response.roomCode, roomName: roomName, roomList: response.roomList },
       });
     } catch (error) {
       console.error("Error creating room: ", error);
     }
   };
+
 
   // Methods to join room
   const joinRoom = async () => {
@@ -62,7 +63,7 @@ const StudyRoomComponent = () => {
       if (response.status === 200) setJoined(true);
       // Redirect to the Group Study Room page with the roomCode
       navigate(`/group-study/${roomCode}`, {
-        state: { roomCode: roomCode, roomName: response1.sessionName },
+        state: { roomCode: roomCode, roomName: response1.sessionName, roomList: response1.roomList },
       });
       console.log("User has joined the room");
     } catch (error) {

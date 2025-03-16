@@ -12,12 +12,12 @@ describe('UserAvatar', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
-
+ 
   test('renders avatar grid', async () => {
     render(<UserAvatar {...mockProps} />);
     const avatars = screen.getAllByRole('img');
     expect(avatars.length).toBeGreaterThan(0);
-    
+     
     const container = screen.getByTestId('avatar-grid');
     const rows = container.querySelectorAll('[data-testid="avatar-row"]');
     expect(rows.length).toBeGreaterThan(0);
