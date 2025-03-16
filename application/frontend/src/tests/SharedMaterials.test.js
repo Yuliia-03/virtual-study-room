@@ -26,6 +26,7 @@ describe('ProfileBox', () => {
   beforeEach(() => {
     getDownloadURL.mockResolvedValue('https://example.com/avatar.png');
     uploadBytes.mockResolvedValue();
+    getAuthenticatedRequest.mockResolvedValue({ roomCode: 'testRoomCode' });
   });
 
   test('renders the component', () => {
