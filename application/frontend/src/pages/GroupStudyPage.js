@@ -251,7 +251,7 @@ function GroupStudyPage(){
                                         id={`todo-${todo.id}`}
                                         type="checkbox"
                                         className="checkbox"
-                                        checked={todo.checked}
+                                  f      checked={todo.checked}
                                         onChange={() => toggleTodo(todo.id)}
                                     />
                                     <label htmlFor={`todo-${todo.id}`} className='todo-label'>{todo.text}</label>
