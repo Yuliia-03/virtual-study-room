@@ -8,6 +8,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useLocation } from 'react-router-dom';
 import "../styles/calendar.css";
 
+console.log(require.resolve('@fullcalendar/react')); 
+
 const backendURL = '/events/';
 
 const CalendarPage = () => {
@@ -118,54 +120,6 @@ const CalendarPage = () => {
         <div className='Page'>
             <h1 className='Header'>My Calendar</h1>
             <ToastContainer position='top-center'/>
-        
-             {
-             /* <button className="addeventbutton"onClick={openAddEventPopup}>Add Event</button>
-             {showPopup && (
-                <div className="event-popup">
-                    <div className="popup-content">
-                        <h2 className='eventbutton'>Add Event</h2>
-                        <form onSubmit={handleSubmit}>
-                            <div>
-                                <label>Title: </label>
-                                <input
-                                    type="text"
-                                    value={eventTitle}
-                                    onChange={(e) => setEventTitle(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label>Description: </label>
-                                <textarea
-                                    value={eventDescription}
-                                    onChange={(e) => setEventDescription(e.target.value)}
-                                />
-                            </div>
-                            <div>
-                                <label>Start: </label>
-                                <input
-                                    type="datetime-local"
-                                    value={eventStart}
-                                    onChange={(e) => setEventStart(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label>End: </label>
-                                <input
-                                    type="datetime-local"
-                                    value={eventEnd}
-                                    onChange={(e) => setEventEnd(e.target.value)}
-                                />
-                            </div>
-                            <button type="submit">Save Event</button>
-                            <button type="button" onClick={closeAddEventPopup}>Cancel</button>
-                        </form>
-                    </div>
-                </div>
-            )} */}
-
             <FullCalendar
                 plugins={[dayGridPlugin, timeGridPlugin]}
                 initialView="timeGridWeek"

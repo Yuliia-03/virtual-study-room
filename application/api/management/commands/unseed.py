@@ -38,6 +38,10 @@ class Command(BaseCommand):
         print("Deleting Study Sessions...")
         StudySession.objects.all().delete()
 
+        print("Deleting Appointments...")
+        Appointments.objects.all().delete()
+
+    
         print("Deleting friends...")
         Friends.objects.all().delete()
 
