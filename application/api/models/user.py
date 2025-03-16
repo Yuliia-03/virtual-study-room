@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.core.validators import RegexValidator
+from django.db.models import Q
 
 '''
 Custom User Model & Manager. Extends AbstractBaseUser to create custom User model
@@ -84,3 +85,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Return a string containing the user's full name."""
 
         return f'{self.firstname} {self.lastname}'
+
+    @staticmethod
+    def find_user(search_query):
+        return User.objects.filter(
+            Q(username__icontains=search_query) |
+            Q(firstname__icontains=search_query) |
+            Q(lastname__icontains=search_query))
+        

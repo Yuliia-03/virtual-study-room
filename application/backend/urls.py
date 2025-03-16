@@ -38,7 +38,8 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='index.html')),
     
     path('api/signup/', views.SignUpView.as_view(), name='signup'),
-    path("api/analytics/", get_analytics, name="analytics"),  # Default for logged-in user
+    # Default for logged-in user
+    path("api/analytics/", get_analytics, name="analytics"),
     path('api/login/', views.login, name='login'),
 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -51,14 +52,25 @@ urlpatterns = [
     path('api/leave-room/', leave_room),
 
 
-    path('api/todolists/<str:is_shared>/', views.ViewToDoList.as_view(), name='to_do_list'),
+    path('api/todolists/', views.ViewToDoList.as_view(), name='to_do_list'),
+    path('api/todolists/<int:id>/', views.ViewToDoList.as_view(), name='group_to_do_list'),
+
 
     path('api/update_task/<int:task_id>/', views.ViewToDoList.as_view(), name='update_task_status'),
     path('api/new_task/', views.ViewToDoList.as_view(), name='create_new_task'),
     path('api/delete_task/<int:id>/', views.ViewToDoList.as_view(), name='delete_task'),
 
     path('api/new_list/', views.ViewToDoList.as_view(), name='create_new_list'),
-    path('api/delete_list/<int:id>/',views.ViewToDoList.as_view(), name='delete_list'),
+    path('api/delete_list/<int:id>/', views.ViewToDoList.as_view(), name='delete_list'),
+
+    path('api/get_friends/', views.FriendsView.as_view(), name='friends'),
+    path('api/get_made_requests/', views.FriendsView.as_view(), name='friends_requested'),
+    path('api/get_pending_friends/', views.FriendsView.as_view(), name='pending_friends'),
+    path('api/accept_friend/<int:id>/', views.FriendsView.as_view(), name='accept_friend'),
+    path('api/reject_friend/<int:id>/', views.FriendsView.as_view(), name='reject_friend'),
+    path('api/create_friend_request/<int:id>/', views.FriendsView.as_view(), name = 'create_friend_request'),
+    path('api/find_friend/', views.FriendsView.as_view(), name='find_friend'),
+
 
     path('api/motivational-message/', views.motivationalMessage, name='motivation'),
     path('api/check-email/', views.checkEmailView, name='check_email'),

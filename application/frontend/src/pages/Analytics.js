@@ -38,7 +38,7 @@ const Analytics = () => {
         fetchAnalytics();
     }, []); // Empty dependency array ensures this runs only once when the component mounts
 
-    return (
+    return ( 
         <div className="dashboard-panel analytics">
             <h2>Your Progress</h2>
             <div className="stats">

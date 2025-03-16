@@ -1,9 +1,7 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
-const API_BASE_URL = "http://127.0.0.1:8000/api";
-//"https://studyspot.pythonanywhere.com/api/" // Change if needed
-
+const API_BASE_URL = "http://127.0.0.1:8000/api"; // Change if needed
 
 export const getAccessToken = () => localStorage.getItem("access_token");
 export const getRefreshToken = () => localStorage.getItem("refresh_token");
@@ -62,6 +60,7 @@ export const getAuthenticatedRequest = async (url, method = "GET", data = null) 
     try {
         const headers = { Authorization: `Bearer ${token}` };
         const config = { method, url: `${API_BASE_URL}${url}`, headers, data };
+        console.log(`${API_BASE_URL}${url}`)
 
         const response = await axios(config);
         return response.data;

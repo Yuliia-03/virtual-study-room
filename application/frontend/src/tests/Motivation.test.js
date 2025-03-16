@@ -11,11 +11,11 @@ describe("MotivationalMessage Component", () => {
 
     // Provide a default resolved mock for all tests
     axios.get.mockResolvedValue({ data: { message: "Mocked Message" } });
-  });
+  }); 
 
   test("displays loading message initially", () => {
     render(<MotivationalMessage />);
-
+ 
     // Check if the "Loading..." message appears initially
     expect(screen.getByText("Loading...")).toBeInTheDocument();
   });
