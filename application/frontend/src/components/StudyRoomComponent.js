@@ -63,7 +63,7 @@ const StudyRoomComponent = () => {
       if (response.status === 200) setJoined(true);
       // Redirect to the Group Study Room page with the roomCode
       navigate(`/group-study/${roomCode}`, {
-        state: { roomCode: roomCode, roomName: response1.sessionName },
+        state: { roomCode: roomCode, roomName: response1.sessionName, roomList: response1.roomList },
       });
       console.log("User has joined the room");
     } catch (error) {

@@ -4,7 +4,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import "../styles/Login.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { getAuthenticatedRequest, getAccessToken } from "./utils/authService";
+import { getAuthenticatedRequest, getAccessToken } from "../utils/authService";
 
 function Login() {
   // TODO: TEST THIS FILE?

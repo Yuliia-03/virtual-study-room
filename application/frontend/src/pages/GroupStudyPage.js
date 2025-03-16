@@ -6,10 +6,9 @@ import customLogo from "../assets/customisation_logo.png";
 import copyLogo from "../assets/copy_logo.png";
 import exitLogo from "../assets/exit_logo.png";
 import ToDoList from '../components/ToDoListComponents/ToDoList';
-
 import StudyTimer from "../components/StudyTimer.js";
 import StudyParticipants from "../components/StudyParticipants.js";
-import { getAuthenticatedRequest } from "../pages/utils/authService";
+import { getAuthenticatedRequest } from "../utils/authService";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "../styles/ChatBox.css";
@@ -23,7 +22,9 @@ function GroupStudyPage() {
   // Track the logged-in user
   const [loggedInUser, setLoggedInUser] = useState(null);
 
-    const { roomCode, roomName, roomList } = location.state || { roomCode: '', roomName: '', roomList: '' };
+    const { roomCode, roomName, roomList } = location.state || {
+        roomCode: '', roomName: '', roomList: ''
+    };
     // Retrieve roomCode and roomName from state
 
   // Retrieve roomCode from state if not in URL
@@ -81,25 +82,22 @@ function GroupStudyPage() {
         };
     
         //Handles incoming messages.
-        ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
+      ws.onmessage = (event) => {
+          const data = JSON.parse(event.data);
+          if (data.type === "chat_message") { //if message type is 'chat_message' then add to messages state
+              // Ensure the message is structured as an object with `sender` and `text`
+              setMessages((prev) => [...prev, { sender: data.sender, text: data.message }]);
+          }
+          else if (data.type === "typing") {
+              setTypingUser(data.sender);
 
-            setMessages((prev) => [...prev, data.message]);
+              // Remove "typing" message after 3 seconds
+              setTimeout(() => {
+                  setTypingUser("");
+              }, 3000);
+
+          }
       };
-      
-      if (data.type === "chat_message") { //if message type is 'chat_message' then add to messages state
-          // Ensure the message is structured as an object with `sender` and `text`
-          setMessages((prev) => [...prev, { sender: data.sender, text: data.message }]);
-      }
-      else if (data.type === "typing") {
-          setTypingUser(data.sender);
-
-          // Remove "typing" message after 3 seconds
-          setTimeout(() => {
-              setTypingUser("");
-          }, 3000);
-
-      }
 
         ws.onclose = () => console.log("Disconnected from Websocket");
 
@@ -181,15 +179,7 @@ function GroupStudyPage() {
     //Second Column: users listes, motivational message
     //Third Column: Timer, customisation, chatbox
 
-  const toggleTodo = (id) => {
-    const newTodos = todos.map((todo) => {
-      if (todo.id === id) {
-        return { ...todo, checked: !todo.checked };
-      }
-      return todo;
-    });
-    setTodos(newTodos);
-  };
+
 
   // Method to leave room
   const leaveRoom = async () => {
@@ -280,16 +270,7 @@ function GroupStudyPage() {
             <ToDoList isShared={true} listId={roomList} />
 
           </div>
-          {/*This is the add More button in the to do list- needs functionality (onClick method) */}
-          <button
-            type="button"
-            className={`add-more-button ${isActiveAddMore ? "active" : ""}`}
-            onMouseDown={() => handleMouseDown("addMore")}
-            onMouseUp={() => handleMouseUp("addMore")}
-            onMouseLeave={() => handleMouseUp("addMore")}
-          >
-            Add More
-          </button>
+          
         </div>
 
         <div
