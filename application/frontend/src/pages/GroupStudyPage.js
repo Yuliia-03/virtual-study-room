@@ -10,7 +10,6 @@ import StudyParticipants from "../components/StudyParticipants.js";
 import { getAuthenticatedRequest } from "../pages/utils/authService";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import StudyTimer from '../components/StudyTimer.js';
 import "../styles/ChatBox.css";
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -51,7 +50,6 @@ function GroupStudyPage() {
 
   const [username, setUsername] = useState("ANON_USER");   // Default to 'ANON_USER' before fetching. Stores username fetched from the backend
 
-  const navigate = useNavigate();
   const [isTyping, setIsTyping] = useState(false);
   const [typingUser, setTypingUser] = useState("");
 
@@ -351,13 +349,15 @@ function GroupStudyPage() {
           <div className="utility-bar-2" data-testid="utility-bar-2">
             <button
               type="button"
-              className={`copy-button ${isActiveCopy ? "active" : ""}`}
-              onMouseDown={() => handleMouseDown("copy")}
-              onMouseUp={() => handleMouseUp("copy")}
-              onMouseLeave={() => handleMouseUp("copy")}
+                className={`copy-button ${isActiveCopy ? 'active' : ''}`}
+                onClick={handleCopy}
+                onMouseDown={() => handleMouseDown('copy')}
+                onMouseUp={() => handleMouseUp('copy')}
+                onMouseLeave={() => handleMouseUp('copy')}
             >
               <img src={copyLogo} alt="Copy" />
             </button>
+            <ToastContainer />
             <button
               type="button"
               className={`exit-button ${isActiveExit ? "active" : ""}`}
@@ -375,131 +375,13 @@ function GroupStudyPage() {
       </div>
       {/*3rd Column */}
       <div className="column" role="column" data-testid="column-3">
-        <div className="timer-container">Timer</div>
-        <div className="custom-container">
-          {/*This is the button for music and customisation, needs functionality */}
-          <button
-            type="button"
-            className={`music-button ${isActiveMusic ? "active" : ""}`}
-            onMouseDown={() => handleMouseDown("music")}
-            onMouseUp={() => handleMouseUp("music")}
-            onMouseLeave={() => handleMouseUp("music")}
-          >
-            Music
-          </button>
-          <button
-            type="button"
-            className={`customisation-button ${isActiveCustom ? "active" : ""}`}
-            onMouseDown={() => handleMouseDown("custom")}
-            onMouseUp={() => handleMouseUp("custom")}
-            onMouseLeave={() => handleMouseUp("custom")}
-          >
-            Customisation
-          </button>
-
-          <input value={input} onChange={(e) => setInput(e.target.value)} />
-          <button onClick={sendMessage}>Send</button>
-        </div>
         <StudyTimer
           roomId="yourRoomId"
           isHost={true}
           onClose={() => console.log("Timer closed")}
           data-testid="studyTimer-container"
         />
-        <div className="chatBox-container" data-testid="chatBox-container">
-          Chat Box
-            {/*2nd Column */}
-            <div className="column" role='column' data-testid="column-2">
-                <div className="user-list-container" data-testid="user-list-container">
-                    <h2 className="heading"> Study Room: {roomName} </h2>
-                    <h3 className='gs-heading2'> Code: {finalRoomCode}</h3>
-                    {/* Debugging messages */}
-                    {/* {messages.map((msg, index) => <p key={index}>{msg}</p>)} */}   {/* WHAT IS THIS DO YOU NEED IT*/}
-                    <div className='utility-bar' data-testid="utility-bar">
-                        <button
-                            type="button"
-                            className={`music-button ${isActiveMusic ? 'active' : ''}`}
-                            onMouseDown={() => handleMouseDown('music')}
-                            onMouseUp={() => handleMouseUp('music')}
-                            onMouseLeave={() => handleMouseUp('music')}
-                        >
-                            <img src={musicLogo} alt="Music" />
-                        </button>
-                        <button
-                            type="button"
-                            className={`customisation-button ${isActiveCustom ? 'active' : ''}`}
-                            onMouseDown={() => handleMouseDown('custom')}
-                            onMouseUp={() => handleMouseUp('custom')}
-                            onMouseLeave={() => handleMouseUp('custom')}
-                        >
-                            <img src={customLogo} alt="Customisation" />
-                        </button>
-                    </div>
-                    <div className='utility-bar-2' data-testid="utility-bar-2">
-                        <button
-                            type="button"
-                            className={`copy-button ${isActiveCopy ? 'active' : ''}`}
-                            onClick={handleCopy} 
-                            onMouseDown={() => handleMouseDown('copy')}
-                            onMouseUp={() => handleMouseUp('copy')}
-                            onMouseLeave={() => handleMouseUp('copy')}
-                        >
-                            <img src={copyLogo} alt="Copy" />
-                        </button>
-                        <ToastContainer />
-                        <button
-                            type="button"
-                            className={`exit-button ${isActiveExit ? 'active' : ''}`}
-                            onClick={handleExit}
-                            onMouseDown={() => handleMouseDown('exit')}
-                            onMouseUp={() => handleMouseUp('exit')}
-                            onMouseLeave={() => handleMouseUp('exit')}
-                        >
-                            <img src={exitLogo} alt="Exit" />
-                        </button>
-                    </div>
-                    <div className='users'>
-                        {/*These are examples of how the user profiles are displayed. 
-                        user-image has the white circle, user-name is for the name at the bottom of the user. Can be changed, this is just an example.*/}
-                        <div className="user-circle"> 
-                            <div className="user-image">JD</div>
-                            <div className="user-name">John Doe</div>
-                        </div>
-                        <div className="user-circle">
-                            <div className="user-image">JD</div>
-                            <div className="user-name">John Doe</div>
-                        </div>
-                        <div className="user-circle">
-                            <div className="user-image">JD</div>
-                            <div className="user-name">John Doe</div>
-                        </div>
-                        <div className="user-circle">
-                            <div className="user-image">JD</div>
-                            <div className="user-name">John Doe</div>
-                        </div>
-                        <div className="user-circle">
-                            <div className="user-image">JD</div>
-                            <div className="user-name">John Doe</div>
-                        </div>
-                        <div className="user-circle">
-                            <div className="user-image">JD</div>
-                            <div className="user-name">John Doe</div>
-                        </div>
-                    </div>
-                </div>
-                <MotivationalMessage data-testid="motivationalMessage-container"/>
-            </div>
-            {/*3rd Column */}
-            <div className="column" role='column' data-testid="column-3">
-                {/* StudyTimer replaces the timer-container div */}
-                <StudyTimer 
-                    roomId={finalRoomCode} 
-                    isHost={true} 
-                    onClose={() => console.log('Timer closed')} 
-                    data-testid="studyTimer-container" 
-                />
-                {/* <StudyTimer roomId="yourRoomId" isHost={true} onClose={() => console.log('Timer closed')} data-testid="studyTimer-container" /> */}
-                {/* Chat Box */}
+        {/* Chat Box */}
                 <div className="chatBox-container" data-testid="chatBox-container">
                     {/* Chat Messages */}
                     <div className="chat-messages">
@@ -520,10 +402,9 @@ function GroupStudyPage() {
                         placeholder="Type a message..." 
                     />
                     <button onClick={sendMessage}>Send</button>
-                
+
                 </div>
-            </div>
-        </div>
+
       </div>
     </div>
   );
