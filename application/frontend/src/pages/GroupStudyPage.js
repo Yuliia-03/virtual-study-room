@@ -58,7 +58,7 @@ function GroupStudyPage() {
 
 
   useEffect(() => {
-
+      console.log("GroupStudyPage UseEffect is being called now!")
       if (finalRoomCode) {
           fetchParticipants(finalRoomCode);
           fetchParticipantData();
@@ -88,7 +88,7 @@ function GroupStudyPage() {
             return; // Reuse the existing connection
         }
 
-        console.log("Creates a new webserver");
+        console.log("Creates a new websocket connection");
         const ws = new WebSocket(`ws://localhost:8000/ws/room/${finalRoomCode}/`);
     
         //Logs when connection is established
