@@ -142,6 +142,7 @@
     border-radius: 40px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     overflow-y: auto;
+    background-color: #F0F3FC;
 }
 
 .todo-list-container::-webkit-scrollbar {
@@ -253,7 +254,7 @@
     font-family: 'Inter', sans-serif !important;
     font-size: 14px !important;
     font-weight: 900 !important;
-    color: white !important;
+    color: #F0F3FC !important;
     cursor: pointer;
     letter-spacing: 0.5px !important;
     text-transform: uppercase !important;
@@ -711,20 +712,33 @@
 
 .dashboard-heading {
     position: fixed;
-    border: 3px solid #BAD7F2;
+    width: 100%;
     padding: 15px;
-    text-align: center;
-    color: white;
-    font-family: 'Inter', sans-serif;
-    font-size: 48px;
-    font-weight: 700;
-    background-color: #BAD7F2;
+    background: linear-gradient(135deg, #bad7f2 0%, #d1cbed 100%); /* New gradient using requested color */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     top: 0;
     left: 0;
-    width: 100%;
     margin: 0;
-    box-sizing: border-box; /* ensures padding doesn't push it down */
+    box-sizing: border-box;
     z-index: 1000;
+    border: 3px solid #cfc9f5; /* Updated border color */
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    height: 80px;
+    padding-left: 50px;
+    padding-right: 50px;
+    text-align: center;
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-shadow: 
+        0 0 2px rgba(255, 255, 255, 0.8),
+        0 0 8px rgba(236, 213, 229, 0.6),
+        0 0 12px rgba(236, 213, 229, 0.4),
+        0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 /* Fix extra space in html/body */
