@@ -12,6 +12,7 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "../styles/ChatBox.css";
 import 'react-toastify/dist/ReactToastify.css';
+import SharedMaterials from "./SharedMaterials.js";
 
 function GroupStudyPage() {
   // Location object used for state
@@ -312,7 +313,7 @@ function GroupStudyPage() {
           className="sharedMaterials-container"
           data-testid="sharedMaterials-container"
         >
-          Shared Materials
+          <SharedMaterials />
         </div>
       </div>
       {/*2nd Column */}

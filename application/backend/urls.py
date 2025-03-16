@@ -67,7 +67,7 @@ urlpatterns = [
     path('api/description/', save_description, name='save_description'),
     path('api/badges/', get_user_badges, name='get_user_badges'),
 
-    path('api/shared_materials', get_current_session, name='get_current_session'),
+    path('api/shared_materials/', get_current_session, name='get_current_session'),
     path('', index, name='index'),
     path('<str:room_name>/', room, name='room'),
     path('api/events/', event_list, name='event-list'),  

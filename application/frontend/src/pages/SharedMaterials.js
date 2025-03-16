@@ -17,7 +17,6 @@ function SharedMaterials() {
         const fetchFiles = async () => {
             const data = await getAuthenticatedRequest("/shared_materials/", "GET");
             setRoomCode(data.roomCode);
-            //TODO: change to : `shared-materials/${roomCode}/`
             const listRef = ref(storage, `shared-materials/${roomCode}/`);
             try {
                 const res = await listAll(listRef);
@@ -34,7 +33,7 @@ function SharedMaterials() {
         };
 
         fetchFiles();
-    }, []);
+    }, [roomCode]);
 
     const handleUploadFile = async (event) => {
         const file = event.target.files[0];
@@ -50,7 +49,6 @@ function SharedMaterials() {
             return;
         }
 
-        //TODO: put storage name under the session_id - study session user model needs to be created in GSPage view
         const fileRef = ref(storage, `shared-materials/${roomCode}/${file.name}`);
         try {
             await uploadBytes(fileRef, file);
@@ -72,7 +70,6 @@ function SharedMaterials() {
     }
 
     const handleDeleteFile = async (fileName) => {
-        //TODO: change to the session_id version
         const fileRef = ref(storage, `shared-materials/${roomCode}/${fileName}`);
         try {
             await deleteObject(fileRef);
