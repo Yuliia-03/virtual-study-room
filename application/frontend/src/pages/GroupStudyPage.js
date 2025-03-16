@@ -12,8 +12,14 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "../styles/ChatBox.css";
 import 'react-toastify/dist/ReactToastify.css';
+import defaultAvatar from "../assets/avatars/avatar_2.png";
+import { storage } from "../firebase-config";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 
 function GroupStudyPage() {
+
+  const [participants, setParticipants] = useState([]); // State to store participants
+
   // Location object used for state
   const location = useLocation();
   const navigate = useNavigate(); // initialise
@@ -38,13 +44,10 @@ function GroupStudyPage() {
   const [isActiveCopy, setIsActiveCopy] = useState(false);
   const [isActiveExit, setIsActiveExit] = useState(false);
 
-
   // for websockets
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
-  //const [input, setInput] = useState("");
- 
-  // const [input, setInput] = useState("");
+
   const [customInput, setCustomInput] = useState(""); // For the customisation box
   const [chatInput, setChatInput] = useState(""); //Fot chat box
 
@@ -53,7 +56,14 @@ function GroupStudyPage() {
   const [isTyping, setIsTyping] = useState(false);
   const [typingUser, setTypingUser] = useState("");
 
+
   useEffect(() => {
+
+      if (finalRoomCode) {
+          fetchParticipants(finalRoomCode);
+          fetchParticipantData();
+          }
+
         //Fetches logged in user's username when component mounts
         //Updates username state with fetched data or defaults to 'anonymous'
         const fetchUserData = async () => {
@@ -72,6 +82,13 @@ function GroupStudyPage() {
           return;
         }
 
+        // Check if a WebSocket connection already exists, not sure if this actually does anything?
+        if (socket === WebSocket.OPEN) {
+            console.log("Using existing WebSocket connection");
+            return; // Reuse the existing connection
+        }
+
+        console.log("Creates a new webserver");
         const ws = new WebSocket(`ws://localhost:8000/ws/room/${finalRoomCode}/`);
     
         //Logs when connection is established
@@ -89,6 +106,11 @@ function GroupStudyPage() {
                 console.log("Received message:", data); // Debugging
                 setMessages((prev) => [...prev, { sender: data.sender, text: data.message }]);
             }
+            if (data.type === "participants_update") {
+            setParticipants(data.participants);
+            fetchParticipants(finalRoomCode);
+            fetchUserData();
+            }
             else if (data.type === "typing") {
                 setTypingUser(data.sender);
 
@@ -99,16 +121,17 @@ function GroupStudyPage() {
 
             }
         };
-        
+
         //Logs when the connection is closed
-        ws.onclose = () => console.log("Disconnected from Websocket");
+        ws.onclose = (event) => console.log("Disconnected from Websocket", event.code,  event.reason);
     
         // Cleanup function -> closes the websocket connection when the component unmounts
         return () => {
-            ws.close();
-        };
-    
-    
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.close(); // Cleanup on unmount
+        }
+    };
+
 //     setSocket(ws);
 
   }, [finalRoomCode]);
@@ -138,6 +161,48 @@ function GroupStudyPage() {
       setChatInput("");   //resets chatinput field after sending message
   }; 
   // end of websockets stuff
+
+  // Function to fetch participants
+  const fetchParticipants = async (roomCode) => {
+    try {
+      const response = await getAuthenticatedRequest(
+        `/get-participants/?roomCode=${roomCode}`,
+        "GET"
+      );
+      console.log("Participants", response.participantsList);
+
+      // Fetch profile pictures for each participant
+      const participantsWithImages = await Promise.all(
+        response.participantsList.map(async (participant) => {
+          const imageUrl = await fetchParticipantData(participant.username);
+          return { ...participant, imageUrl }; // Add imageUrl to the participant object
+        })
+      );
+
+      setParticipants(participantsWithImages); // Update participants state with image URLs
+    } catch (error) {
+      console.error("Error fetching participants:", error);
+    }
+  };
+
+  // Function to get user profiles
+
+  const fetchParticipantData = async (username) => {
+    try {
+      const data = await getAuthenticatedRequest("/profile/", "GET");
+
+      //fetch profile picture from firebase using user_id
+      const imageRef = ref(storage, `avatars/${username}`);
+      const imageUrl = await getDownloadURL(imageRef).catch(
+        () => defaultAvatar
+      ); //default image if not found
+      return imageUrl; // Return the imageUrl
+    } catch (error) {
+      toast.error("error fetching user data");
+      return defaultAvatar; // IF there is an error return default avatar
+    }
+  };
+
 
   const handleMouseDown = (btnType) => {
     //when the button is pressed then the variable setIsActive is set to True
@@ -366,8 +431,24 @@ function GroupStudyPage() {
             >
               <img src={exitLogo} alt="Exit" />
             </button>
-          </div>
-          <StudyParticipants />
+                  </div>
+                   <div className="users">
+              {/* Dynamically render participants */}
+              {participants.map((participant, index) => (
+                <div key={index} className="user-circle">
+                  <div className="user-image">
+                    <img
+                      src={participant.imageUrl}
+                      alt="profile"
+                      className="user-image"
+                    />
+                  </div>
+                  <div className="user-name">{participant.username}</div>
+                </div>
+              ))}
+            </div>
+          );
+        };
         </div>
         <MotivationalMessage data-testid="motivationalMessage-container" />
       </div>
