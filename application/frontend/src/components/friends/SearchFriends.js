@@ -8,7 +8,7 @@ import defaultAvatar from '../../assets/avatars/avatar_2.png';
 import { storage } from "../../firebase-config";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 
-const PendingFriends = () => {
+const SearchFriends = () => {
     const { loading, onAccept, onReject, friendRequests, invitationsRequests, friends  } = useContext(FriendsContext);
 
     const [search, setSearch] = useState("");
@@ -33,8 +33,7 @@ const PendingFriends = () => {
                         })
                     );
 
-                    // Set the result state with friends including images
-                    setResult(friendsWithImages);
+                    setResult(friendsWithImages); // Set state with updated friends
                 } catch (error) {
                     console.error("Error fetching friends:", error);
                 }
@@ -54,7 +53,7 @@ const PendingFriends = () => {
             <ul className="invitations-container invitations-list">
                 {result.map((friend) => (
                     <li key={friend.id} className="invitation-card">
-                        <img src={friend.image} alt="logo" className="small-pic" />
+                        <img src={friend.image || defaultAvatar} alt="logo" className="small-pic" />
                         <div className="invitation-name">
                         <span >
                             {friend.name} {friend.surname} ({friend.username})
@@ -68,7 +67,7 @@ const PendingFriends = () => {
                                     <button onClick={() => onAccept(r.id, 'accept_friend', "PATCH")} className="btn btn-success btn-sm" aria-label="Add Friend">
                                         <i class="bi bi-check2-circle"></i>
                                     </button>
-                                    <button className="btn btn-danger" onClick={() => onReject(r.id)}>
+                                        <button className="btn btn-danger" onClick={() => onReject(r.id)} aria-label="Remove Friend">
                                         <i className="bi bi-x-circle"></i>
                                     </button>
                                 </div>
@@ -107,4 +106,4 @@ const PendingFriends = () => {
     );
 };
 
-export default PendingFriends;
+export default SearchFriends;
