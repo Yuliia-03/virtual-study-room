@@ -46,7 +46,9 @@ urlpatterns = [
     path('api/join-room/', join_room),
 
 
-    path('api/todolists/<str:is_shared>/', views.ViewToDoList.as_view(), name='to_do_list'),
+    path('api/todolists/', views.ViewToDoList.as_view(), name='to_do_list'),
+    path('api/todolists/<int:id>/', views.ViewToDoList.as_view(), name='group_to_do_list'),
+
 
     path('api/update_task/<int:task_id>/', views.ViewToDoList.as_view(), name='update_task_status'),
     path('api/new_task/', views.ViewToDoList.as_view(), name='create_new_task'),

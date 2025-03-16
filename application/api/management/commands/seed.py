@@ -257,12 +257,12 @@ class Command(BaseCommand):
         print(f"Starting to seed permissions for {len(toDoLists)} toDoLists and {len(users)} users.")
 
         for toDo in toDoLists:
-            if toDo.is_shared:
+            '''if toDo.is_shared:
                 num_permissions = randint(2, len(users))
             else:
-                num_permissions = 1
+                num_permissions = 1'''
             
-            selected_users = sample(users, num_permissions)
+            selected_users = sample(users, 1)
 
             #print(f"{'Shared' if toDo.is_shared else 'Exclusive'} toDoList {toDo.list_id}: Assigning {num_permissions} permissions.")
 

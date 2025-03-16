@@ -37,10 +37,19 @@ def create_room(request):
                 createdBy = user,
                 sessionName = session_name
         )
+
         # is using the study session auto generated ID as the room code
+        todo_list_data = [{
+            "id": room.toDoList.id,
+            "name": room.toDoList.name,
+            "is_shared": room.toDoList.is_shared,
+            "tasks": []
+        }] if room.toDoList else None
 
         print("User", user, "has successfully made the room:", session_name, "with code:", room.roomCode)
-        return Response({"roomCode" : room.roomCode})
+        return Response({"roomCode" : room.roomCode,
+                        "roomList": room.toDoList.id
+        })
         # returns the room ID as the room code
     except Exception as e:
         return Response({"error": f"Failed to create room: {str(e)}"}, status=400)
@@ -49,6 +58,8 @@ def create_room(request):
 @api_view(['POST'])
 def join_room(request):
     room_id = request.data.get("roomCode")
-    if StudySession.objects.filter(id=room_id).exists():
-        return Response({"message": "Joined successfully!"})
+    if StudySession.objects.filter(roomCode=room_id).exists():
+        return Response({"message": "Joined successfully!", 
+                        "roomCode": room_id,
+                        "roomList": StudySession.objects.get(roomCode=room_id).toDoList.id})
     return Response({"error": "Room not found"}, status=404)
