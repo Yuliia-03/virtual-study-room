@@ -42,7 +42,7 @@ function GroupStudyPage() {
   // for websockets
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
+  //const [input, setInput] = useState("");
  
   // const [input, setInput] = useState("");
   const [customInput, setCustomInput] = useState(""); // For the customisation box
@@ -374,14 +374,16 @@ function GroupStudyPage() {
         <MotivationalMessage data-testid="motivationalMessage-container" />
       </div>
       {/*3rd Column */}
-      <div className="column" role="column" data-testid="column-3">
-        <StudyTimer
-          roomId="yourRoomId"
-          isHost={true}
-          onClose={() => console.log("Timer closed")}
-          data-testid="studyTimer-container"
-        />
-        {/* Chat Box */}
+            <div className="column" role='column' data-testid="column-3">
+                {/* StudyTimer replaces the timer-container div */}
+                <StudyTimer
+                    roomId={finalRoomCode}
+                    isHost={true}
+                    onClose={() => console.log('Timer closed')}
+                    data-testid="studyTimer-container"
+                />
+                {/* <StudyTimer roomId="yourRoomId" isHost={true} onClose={() => console.log('Timer closed')} data-testid="studyTimer-container" /> */}
+                {/* Chat Box */}
                 <div className="chatBox-container" data-testid="chatBox-container">
                     {/* Chat Messages */}
                     <div className="chat-messages">
@@ -393,18 +395,17 @@ function GroupStudyPage() {
                         {typingUser && (<p className="typing-indicator"> <strong>{typingUser}</strong> is typing...</p>)}
                     </div>
                     {/* Chat Input */}
-                    <input 
-                        value={chatInput} 
+                    <input
+                        value={chatInput}
                         onChange={(e) => {
-                            setChatInput(e.target.value); 
+                            setChatInput(e.target.value);
                             handleTyping();}}
                         onKeyDown={(e) => e.key === "Enter" && sendMessage(e)}
-                        placeholder="Type a message..." 
+                        placeholder="Type a message..."
                     />
                     <button onClick={sendMessage}>Send</button>
 
                 </div>
-
       </div>
     </div>
   );
