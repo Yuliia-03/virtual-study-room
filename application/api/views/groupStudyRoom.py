@@ -38,6 +38,17 @@ def create_room(request):
     # use as default session name for now, later take as input field for user to type in
     #session_name = "Untitled Study Session"
 
+     # if the user is already in another room they have to 'leave' that room first
+    if SessionUser.objects.filter(user=user).exists():
+        print("Deleting user from old session")
+        session_users = SessionUser.objects.filter(user=user)
+        for session_user in session_users:
+            previous_session = session_user.session
+            user = session_user.user
+            previous_session.participants.remove(user)
+            session_user.delete()
+            print(" user removed from old session")
+            
     try:
         room = StudySession.objects.create(
                 createdBy = user,
@@ -82,6 +93,17 @@ def join_room(request):
 
     print("User", user, "is attempting to join room :", request.data.get("roomCode"))
     # takes the room code
+
+    # if the user is already in another room they have to 'leave' that room first
+    if SessionUser.objects.filter(user=user).exists():
+        print("Deleting user from old session")
+        session_users = SessionUser.objects.filter(user=user)
+        for session_user in session_users:
+            previous_session = session_user.session
+            user = session_user.user
+            previous_session.participants.remove(user)
+            session_user.delete()
+            print(" user removed from old session")
 
     room_code = request.data.get('roomCode')
     if StudySession.objects.filter(roomCode=room_code).exists():
