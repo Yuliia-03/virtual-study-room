@@ -9,7 +9,7 @@ class RoomConsumer(AsyncWebsocketConsumer):
         self.room_code = None
 
     async def connect(self):
-        self.room_code = self.scope["url_route"]["kwargs"]["room_id"]
+        self.room_code = self.scope["url_route"]["kwargs"]["room_code"]
         print(f"Consumers.py Room code: {self.room_code}")  # Debugging: Log the room code
         # Create a name to refer to the room
         self.room_group_name = f"room_{self.room_code}"
