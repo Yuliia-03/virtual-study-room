@@ -88,7 +88,7 @@ describe('FriendsContext', () => {
     });
     afterEach(() => {
         jest.restoreAllMocks(); // ✅ Restores all spies/mocks to their original behavior
-    });
+    }); 
 
     test('should correctly fetch and render friends data', async () => {
         // Mocking the API call to return friends data

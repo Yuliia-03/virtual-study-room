@@ -12,7 +12,7 @@ jest.mock('firebase/storage');
 jest.mock('../../../firebase-config.js');
 jest.mock('react-toastify', () => {
     const actual = jest.requireActual('react-toastify');
-    return {
+    return { 
         ...actual,
         toast: {
             error: jest.fn(),

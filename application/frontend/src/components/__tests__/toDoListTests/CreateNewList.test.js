@@ -9,7 +9,7 @@ jest.mock("../../../utils/authService", () => ({
 describe("CreateNewList", () => {
 
     let setAddListWindowMock, setListsMock;
-
+ 
     beforeAll(() => {
         global.alert = jest.fn(); // Mock window.alert
         global.console.log = jest.fn(); // Mock window.alert

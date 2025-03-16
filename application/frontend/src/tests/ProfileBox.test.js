@@ -14,9 +14,9 @@ jest.mock('firebase/storage');
 jest.mock('../firebase-config.js');
 jest.mock('react-toastify', () => {
   const actual = jest.requireActual('react-toastify'); // Preserve the actual module
-  return {
+  return { 
     ...actual, // Spread actual exports
-    toast: {
+    toast: { 
       error: jest.fn(),
       success: jest.fn(),
     },

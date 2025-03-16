@@ -13,7 +13,7 @@ describe('UserBadges', () => {
     const badges = screen.getAllByRole('img');
     expect(badges.length).toBeGreaterThan(0);
   });
-
+ 
   test('handles empty badge list', () => {
     render(<UserBadges userId="test-user-123" userBadges={[]} />);
     const badges = screen.getAllByRole('img');

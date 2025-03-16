@@ -19,7 +19,7 @@ function Login() {
     // when the username/password fields are edited, update form data
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+    }; 
 
 
     // when the login button is clicked - send form data to backend django form

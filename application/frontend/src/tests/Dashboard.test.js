@@ -11,11 +11,11 @@ jest.mock('../pages/Analytics', () => () => <div>Mocked Analytics</div>);
 jest.mock('../components/ToDoListComponents/ToDoList', () => () => <div>Mocked ToDoList</div>);
 jest.mock("axios");
 jest.mock("@fontsource/vt323", () => {}); 
-jest.mock("@fontsource/press-start-2p", () => {}); 
+jest.mock("@fontsource/press-start-2p", () => {});  
 
 describe("Dashboard", () => {
     test('renders the Dashboard heading', () => {
-        render(<Dashboard />);
+        render(<Dashboard />); 
     
         // Check for the main heading
         const heading = screen.getByRole('heading', { name: /dashboard/i });

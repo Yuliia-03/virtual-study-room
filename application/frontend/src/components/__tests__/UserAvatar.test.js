@@ -12,7 +12,7 @@ describe('UserAvatar', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
-
+ 
   test('renders avatar grid', async () => {
     render(<UserAvatar {...mockProps} />);
     const avatars = screen.getAllByRole('img');

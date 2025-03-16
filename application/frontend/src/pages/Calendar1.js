@@ -37,7 +37,7 @@ const CalendarPage = () => {
         }
     };
 
-    useEffect(() => {
+    useEffect(() => { 
         fetchEvents();
     }, []);
 

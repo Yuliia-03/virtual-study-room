@@ -33,7 +33,7 @@ function GroupStudyPage(){
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState("");
 
-    useEffect(() => {
+    useEffect(() => { 
         // Ensure room code is given
         if (!finalRoomCode) {
             console.error("Room code is missing.");

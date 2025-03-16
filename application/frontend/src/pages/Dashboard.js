@@ -12,7 +12,7 @@ import  FriendsTab  from '../components/friends/FriendsTab';
 
 import ProfileBox from './ProfileBox';
 
-function Dashboard() {
+function Dashboard() { 
     const navigate = useNavigate();
 
     const gotoCalendar = () => {

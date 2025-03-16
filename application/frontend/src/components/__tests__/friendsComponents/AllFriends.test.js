@@ -69,7 +69,7 @@ describe("AllFriends", () => {
         expect(screen.getByText(/Loading Friends List/i)).toBeInTheDocument();
     });
 
- 
+  
     test('renders the list of friends correctly', async () => {
         renderWithContext({
             onReject: mockOnReject,

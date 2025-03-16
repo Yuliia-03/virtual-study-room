@@ -90,7 +90,7 @@ describe("FriendsTab Component", () => {
         expect(sentRequestsButton).toHaveClass("active");
 
         expect(allFriendsButton).not.toHaveClass("active");
-
+ 
         fireEvent.click(screen.getByText("Search Friends"));
         const searchFriendsButton = screen.getByText("Search Friends");
         expect(searchFriendsButton).toHaveClass("active");

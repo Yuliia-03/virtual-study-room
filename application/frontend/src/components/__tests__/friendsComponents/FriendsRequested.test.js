@@ -8,7 +8,7 @@ import FriendsRequested from '../../friends/FriendsRequested';
 jest.mock('../../../utils/authService', () => ({
     getAuthenticatedRequest: jest.fn(),
 }));
-
+ 
 jest.mock('firebase/storage');
 jest.mock('../../../firebase-config.js');
 jest.mock('react-toastify', () => {

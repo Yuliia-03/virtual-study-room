@@ -6,13 +6,13 @@ import CalendarPage from '../pages/Calendar1';
 jest.mock('axios');
 
 describe('CalendarPage Component', () => {
-  let originalLocation;
+  let originalLocation; 
 
   beforeAll(() => {
     originalLocation = window.location;
     delete window.location;
     window.location = { assign: jest.fn() };
-  });
+  }); 
 
   afterAll(() => {
     window.location = originalLocation;

@@ -15,8 +15,8 @@ jest.mock("@fontsource/press-start-2p", () => {});
 jest.mock("../pages/Motivation", () => ({ "data-testid": dataTestId, isError }) => (
     <div data-testid={dataTestId}>
       {isError ? "Failed to load message" : "Believe in yourself and all that you are."}
-    </div>
-));
+    </div> 
+)); 
 describe("GroupStudyPage", () => {
     beforeEach(() => {
         axios.get.mockResolvedValue({

@@ -38,13 +38,6 @@ def create_room(request):
                 sessionName = session_name
         )
 
-        # is using the study session auto generated ID as the room code
-        todo_list_data = [{
-            "id": room.toDoList.id,
-            "name": room.toDoList.name,
-            "is_shared": room.toDoList.is_shared,
-            "tasks": []
-        }] if room.toDoList else None
 
         print("User", user, "has successfully made the room:", session_name, "with code:", room.roomCode)
         return Response({"roomCode" : room.roomCode,

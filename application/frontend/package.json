@@ -118,7 +118,9 @@
       "^.+\\.(js|jsx|ts|tsx)$": "babel-jest"
     },
     "transformIgnorePatterns": [
-      "/node_modules/(?!axios|react-router-dom)"
+      "/node_modules/(?!axios|react-router-dom)",
+      "/node_modules/(?!preact|react-router-dom)",
+      "/node_modules/(?!preact|react-router-dom|@testing-library|axios)"
     ],
     "modulePaths": [],
     "moduleNameMapper": {
@@ -126,7 +128,8 @@
       "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy",
       "\\.css$": "identity-obj-proxy",
       "@fontsource/press-start-2p": "identity-obj-proxy",
-      "@fontsource/vt323": "identity-obj-proxy"
+      "@fontsource/vt323": "identity-obj-proxy",
+      "^react/jsx-runtime$": "preact/jsx-runtime"
     },
     "moduleFileExtensions": [
       "web.js",
@@ -166,13 +169,16 @@
   },
   "babel": {
     "presets": [
-      "react-app",
       [
-        "@babel/preset-react",
+        "@babel/preset-env",
         {
-          "runtime": "automatic"
+          "targets": {
+            "node": "current"
+          },
+          "modules": "commonjs"
         }
-      ]
+      ],
+      "@babel/preset-react"
     ],
     "plugins": [
       "@babel/plugin-transform-react-jsx"

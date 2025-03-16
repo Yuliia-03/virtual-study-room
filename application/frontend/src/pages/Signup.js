@@ -201,7 +201,7 @@ function Signup() {
           </label>
           <input
             id="username"
-            type="text"
+            type="text" 
             name="username"
             className="input-field"
             value={formData.username}
