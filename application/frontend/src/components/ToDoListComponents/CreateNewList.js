@@ -1,7 +1,7 @@
     import React, { useState } from "react";
-    import "../../styles/CreateNewList.css";
+import "../../styles/toDoList/CreateNewList.css";
 
-    import { getAuthenticatedRequest } from "../../pages/utils/authService";
+    import { getAuthenticatedRequest } from "../../utils/authService";
 
 const AddListModal = ({ addListWindow, setAddListWindow, setLists }) => {
         const [formData, setFormData] = useState({ name: "", isShared: false});
@@ -68,16 +68,6 @@ const AddListModal = ({ addListWindow, setAddListWindow, setLists }) => {
                             placeholder="Enter list title"
                             required
                         />
-                        <input
-                            type="checkbox"
-                            name="isShared"
-                            checked={formData.isShared}
-                            onChange={(e) => setFormData({ ...formData, isShared: e.target.checked })}
-                        />
-
-                        <task-span>
-                            Do you want to make it sharable?
-                        </task-span>
 
                         <div>
                             <button type="submit" className="btn btn-primary">Save</button>

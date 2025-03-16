@@ -16,7 +16,7 @@ function Welcome() {
                 </button>
                 {/* change this to create account page URL */}
                 <button className="create-account-button" onClick={() => navigate("/signup")}>
-                    CREATE ACCOUNT
+                    CREATE ACCOUNT 
                 </button>
             </div>
         </div>

@@ -25,6 +25,21 @@ class SignupTestCase(APITestCase):
         user = User.objects.get(username='@johndoe')
         self.assertEqual(user.email, 'johndoe@example.com')
 
+        """Test if signup fails when passwords do not match."""
+        data = {
+            'firstname': 'John',
+            'lastname': 'Doe',
+            'username': '@johndoe',
+            'email': 'johndoe@example.com',
+            'description': '',
+            'password': 'password123',
+            'passwordConfirmation': 'wrongpassword123'
+        }
+        response = self.client.post('/api/signup/', data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data['error'], 'Passwords do not match')
+
     def test_signup_username_taken(self):
         """Test if signup fails when the username is already taken."""
         User.objects.create_user(
@@ -82,21 +97,3 @@ class SignupTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('error', response.data)
         self.assertIn('details', response.data)
-
-        '''
-    def test_signup_password_mismatch(self):
-        """Test if signup fails when passwords do not match."""
-        data = {
-            'firstname': 'John',
-            'lastname': 'Doe',
-            'username': '@johndoe',
-            'email': 'johndoe@example.com',
-            'description': '',
-            'password': 'password123',
-            'passwordConfirmation': 'wrongpassword123'
-        }
-        response = self.client.post('/api/signup/', data, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data['error'], 'Passwords do not match')
-'''

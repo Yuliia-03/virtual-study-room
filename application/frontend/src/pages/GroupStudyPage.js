@@ -5,13 +5,15 @@ import musicLogo from "../assets/music_logo.png";
 import customLogo from "../assets/customisation_logo.png";
 import copyLogo from "../assets/copy_logo.png";
 import exitLogo from "../assets/exit_logo.png";
+import ToDoList from "../components/ToDoListComponents/ToDoList";
 import StudyTimer from "../components/StudyTimer.js";
 import StudyParticipants from "../components/StudyParticipants.js";
-import { getAuthenticatedRequest } from "../pages/utils/authService";
+import { getAuthenticatedRequest } from "../utils/authService";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "../styles/ChatBox.css";
 import "react-toastify/dist/ReactToastify.css";
+import SharedMaterials from "./SharedMaterials.js";
 
 function GroupStudyPage() {
   // Location object used for state
@@ -21,9 +23,10 @@ function GroupStudyPage() {
   // Track the logged-in user
   const [loggedInUser, setLoggedInUser] = useState(null);
 
-  const { roomCode, roomName } = location.state || {
+  const { roomCode, roomName, roomList } = location.state || {
     roomCode: "",
     roomName: "",
+    roomList: "",
   };
   // Retrieve roomCode and roomName from state
 
@@ -99,18 +102,13 @@ function GroupStudyPage() {
       }
     };
 
-    //Logs when the connection is closed
     ws.onclose = () => console.log("Disconnected from Websocket");
 
-    // Cleanup function -> closes the websocket connection when the component unmounts
-    return () => {
-      ws.close();
-    };
+    setSocket(ws);
 
-    //     setSocket(ws);
-  }, [finalRoomCode]);
+    return () => ws.close();
+  }, [finalRoomCode, location.state]);
 
-  //Sends chat message through websocket connection
   const sendMessage = () => {
     if (!socket || socket.readyState !== WebSocket.OPEN) {
       console.error("WebSocket not connected.");
@@ -169,26 +167,20 @@ function GroupStudyPage() {
 
   //testing functions- for UI purposes (not linked to the database)
 
-  const [todos, setTodos] = useState([
-    { id: 1, text: "Study for Math", checked: false },
-    { id: 2, text: "Study for English", checked: false },
-    { id: 3, text: "Study for Geography", checked: false },
-    { id: 4, text: "Study for Chemistry", checked: false },
-    { id: 5, text: "Study for Economics", checked: false },
-    { id: 6, text: "Study for Engineering", checked: false },
-    { id: 7, text: "Study for Physics", checked: false },
-    { id: 8, text: "Study for Biology", checked: false },
-  ]);
-
-  const toggleTodo = (id) => {
-    const newTodos = todos.map((todo) => {
-      if (todo.id === id) {
-        return { ...todo, checked: !todo.checked };
-      }
-      return todo;
-    });
-    setTodos(newTodos);
-  };
+  /*const [todos, setTodos] = useState([
+        { id: 1, text: "Study for Math", checked: false },
+        { id: 2, text: "Study for English", checked: false },
+        { id: 3, text: "Study for Geography", checked: false },
+        { id: 4, text: "Study for Chemistry", checked: false },
+        { id: 5, text: "Study for Economics", checked: false },
+        { id: 6, text: "Study for Engineering", checked: false },
+        { id: 7, text: "Study for Physics", checked: false },
+        { id: 8, text: "Study for Biology", checked: false },
+    ]);*/
+  //page is designed in columns
+  //First Column: todoList, shared materials
+  //Second Column: users listes, motivational message
+  //Third Column: Timer, customisation, chatbox
 
   // Method to leave room
   const leaveRoom = useCallback(async () => {
@@ -288,43 +280,15 @@ function GroupStudyPage() {
           <div style={{ flex: 1, width: "100%" }}>
             {" "}
             {/* This div takes all available space */}
-            {todos.map((todo) => (
-              <div key={todo.id} className="todo-item">
-                <div className="checkbox-wrapper-28">
-                  <input
-                    id={`todo-${todo.id}`}
-                    type="checkbox"
-                    className="checkbox"
-                    checked={todo.checked}
-                    onChange={() => toggleTodo(todo.id)}
-                  />
-                  <label htmlFor={`todo-${todo.id}`} className="todo-label">
-                    {todo.text}
-                  </label>
-                </div>
-                <button type="button" className="delete-button">
-                  X
-                </button>
-              </div>
-            ))}
+            <ToDoList isShared={true} listId={roomList} />
           </div>
-          {/*This is the add More button in the to do list- needs functionality (onClick method) */}
-          <button
-            type="button"
-            className={`add-more-button ${isActiveAddMore ? "active" : ""}`}
-            onMouseDown={() => handleMouseDown("addMore")}
-            onMouseUp={() => handleMouseUp("addMore")}
-            onMouseLeave={() => handleMouseUp("addMore")}
-          >
-            Add More
-          </button>
         </div>
 
         <div
           className="sharedMaterials-container"
           data-testid="sharedMaterials-container"
         >
-          Shared Materials
+          <SharedMaterials />
         </div>
       </div>
       {/*2nd Column */}

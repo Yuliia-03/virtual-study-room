@@ -17,8 +17,8 @@ const Analytics = () => {
 
             try {
                 const response = await axios.get(
-                    "https://studyspot.pythonanywhere.com/api/analytics/",
-                    // "http://127.0.0.1:8000/api/analytics/", // Endpoint for fetching analytics
+                    //"https://studyspot.pythonanywhere.com/api/analytics/",
+                    "http://127.0.0.1:8000/api/analytics/", // Endpoint for fetching analytics
                     {
                         headers: {
                             Authorization: `Bearer ${token}`, // Include the access token in the request
@@ -38,7 +38,7 @@ const Analytics = () => {
         fetchAnalytics();
     }, []); // Empty dependency array ensures this runs only once when the component mounts
 
-    return (
+    return ( 
         <div className="dashboard-panel analytics">
             <h2>Your Progress</h2>
             <div className="stats">

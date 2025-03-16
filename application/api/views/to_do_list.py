@@ -11,15 +11,22 @@ class ViewToDoList(APIView):
 
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, is_shared="false"):
+    def get(self, request, id=0):
         user = request.user
-        is_shared_bool = is_shared.lower() == "true"
 
-        user_permissions = Permission.objects.filter(user_id=user)
-        user_lists = List.objects.filter(
-            id__in=user_permissions.values_list('list_id', flat=True),
-             is_shared=is_shared_bool
-             )
+        url_name = request.resolver_match.view_name
+
+        print(url_name)
+        if url_name == "group_to_do_list":
+            user_lists = List.objects.filter(pk=id)
+            print(user_lists)
+        else:
+    
+            user_permissions = Permission.objects.filter(user_id=user)
+            user_lists = List.objects.filter(
+                id__in=user_permissions.values_list('list_id', flat=True),
+                is_shared=False
+                )
 
         
         response_data = []
@@ -71,7 +78,7 @@ class ViewToDoList(APIView):
 
             if toDoList.objects.filter(pk=task_id).exists():
                 toDoList.objects.get(pk=task_id).delete()
-                return self.get(request)
+                return Response({"data": task_id}, status=status.HTTP_200_OK)
             else:
                 return Response({"error": "Task doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)
                 

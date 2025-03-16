@@ -11,7 +11,7 @@ const MotivationalMessage = ({ "data-testid": dataTestId }) => {
       .get("http://127.0.0.1:8000/api/motivational-message/")
       .then((response) => {
         console.log("API Response:", response.data);
-        setMessage(response.data.message);
+        setMessage(response.data.message); 
       })
       .catch((error) => {
         console.error("Error fetching message:", error);
