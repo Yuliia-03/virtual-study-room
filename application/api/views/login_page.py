@@ -24,6 +24,9 @@ def login(request):
         refresh = RefreshToken.for_user(user)
         return Response({
             'refresh': str(refresh),
-            'access': str(refresh.access_token)
+            'access': str(refresh.access_token),
+            'userId': user.id,
+            'username': user.username,  # Return the username
+
         })
     return Response({'error': 'Invalid Credentials'}, status=400)

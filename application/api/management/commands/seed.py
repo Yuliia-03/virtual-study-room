@@ -2,15 +2,15 @@ import logging
 logging.basicConfig(level=logging.INFO, handlers=[logging.StreamHandler()])
 from django.core.management.base import BaseCommand, CommandError
 from api.models.motivational_message import MotivationalMessage
-
+import random
 from django.core.management import call_command
 
-from api.models import Friends, User, Status, toDoList, Permission, MotivationalMessage, Rewards, StudySession, SessionUser, List
+from api.models import Friends, Appointments, User, Status, toDoList, Permission, MotivationalMessage, Rewards, StudySession, SessionUser, List
 
 
 import pytz
 from faker import Faker
-from django.utils.timezone import now
+from django.utils.timezone import now, make_aware
 from random import choice, randint, sample
 from datetime import datetime, timedelta, date
 
@@ -48,15 +48,26 @@ class Command(BaseCommand):
       
         self.seed_motivationalMessage()
         self.generating_users()
+        User.objects.create_user(
+            email = "testuser@email.com",
+            firstname = "Test",
+            lastname = "User",
+            username = "TestUser1",
+            password = "Password123",
+            description = "This is a test user"
+        )
         self.generate_random_friends()
         self.generating_rewards()
         self.generate_random_Lists()
         self.generate_random_toDoLists()
         self.generate_toDoListUsers()
+        self.generate_events()
         self.generating_study_sessions()
         self.generating_session_users()
+        
 
 
+    
     def generate_random_friends(self):
         friends_count = Friends.objects.count()
         while friends_count < self.FRIENDS_COUNT:
@@ -266,6 +277,31 @@ class Command(BaseCommand):
             )
         except Exception as e:
             self.stdout.write(self.style.ERROR(f'Error creating ToDoListUser: {str(e)}'))
+  
+
+    def generate_events(self):
+        # Clear existing events
+        Appointments.objects.all().delete()
+
+        # Seed events for each user
+        for user in User.objects.all():
+            for i in range(5):  # Create 5 events per user
+                naive_start_date = datetime.now() + timedelta(days=random.randint(1, 30))
+                naive_end_date = naive_start_date + timedelta(hours=random.randint(1, 5))
+
+                # Make the datetime objects timezone-aware
+                start_date = make_aware(naive_start_date)
+                end_date = make_aware(naive_end_date)
+
+                Appointments.objects.create(
+                    user=user,
+                    name="CLASS for STUDENTS",
+                    start_date=start_date,
+                    end_date=end_date,
+                    comments=f"Sample comment for event {i + 1}",
+                    status=random.choice(['Pending', 'Confirmed', 'Cancelled']),
+                )
+        self.stdout.write(self.style.SUCCESS('Successfully seeded events for all users.'))
 
     """Seeder for Study Sessions"""
     def generating_study_sessions(self):

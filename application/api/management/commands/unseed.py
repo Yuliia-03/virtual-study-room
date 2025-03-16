@@ -15,6 +15,12 @@ class Command(BaseCommand):
         deleted_count, _ = MotivationalMessage.objects.all().delete()
         print(self.style.SUCCESS(f'Successfully deleted {deleted_count} motivational messages.'))
 
+        # deleted_countevent, _ = Event.objects.all().delete()
+
+        # if deleted_countevent:
+        #     self.stdout.write(self.style.SUCCESS(f'Successfully deleted {deleted_countevent} events'))
+        # else:
+        #     self.stdout.write(self.style.WARNING('No events found to delete'))
 
         # Delete in order to respect foreign key constraints
 
@@ -32,6 +38,10 @@ class Command(BaseCommand):
         print("Deleting Study Sessions...")
         StudySession.objects.all().delete()
 
+        print("Deleting Appointments...")
+        Appointments.objects.all().delete()
+
+    
         print("Deleting friends...")
         Friends.objects.all().delete()
 
