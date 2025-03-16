@@ -11,11 +11,14 @@ function SharedMaterials() {
     const [files, setFiles] = useState([]);
     const [fileModalOpen, setFileModalOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
+    const [roomCode, setRoomCode] = useState(null);
 
     useEffect(() => {
         const fetchFiles = async () => {
+            const data = await getAuthenticatedRequest("/shared_materials/", "GET");
+            setRoomCode(data.roomCode);
             //TODO: change to : `shared-materials/${roomCode}/`
-            const listRef = ref(storage, `shared-materials`);
+            const listRef = ref(storage, `shared-materials/${roomCode}/`);
             try {
                 const res = await listAll(listRef);
                 const filePromises = res.items.map(async (itemRef) => {
@@ -48,7 +51,7 @@ function SharedMaterials() {
         }
 
         //TODO: put storage name under the session_id - study session user model needs to be created in GSPage view
-        const fileRef = ref(storage, `shared-materials/${file.name}`);
+        const fileRef = ref(storage, `shared-materials/${roomCode}/${file.name}`);
         try {
             await uploadBytes(fileRef, file);
             const fileUrl = await getDownloadURL(fileRef);
@@ -70,7 +73,7 @@ function SharedMaterials() {
 
     const handleDeleteFile = async (fileName) => {
         //TODO: change to the session_id version
-        const fileRef = ref(storage, `shared-materials/${fileName}`);
+        const fileRef = ref(storage, `shared-materials/${roomCode}/${fileName}`);
         try {
             await deleteObject(fileRef);
             setFiles((prevFiles) => prevFiles.filter(file => file.name !== fileName));

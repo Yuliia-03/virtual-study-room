@@ -27,6 +27,8 @@ from api.views.profile_view import get_logged_in_user, save_description, get_use
 from api.views.analytics import get_analytics
 from api.views.groupStudyRoom import create_room, join_room
 
+from api.views.shared_materials_view import get_current_session
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
@@ -56,5 +58,7 @@ urlpatterns = [
     path('api/check-username/', views.checkUsernameView, name='check_username'),
     path('api/profile/', get_logged_in_user, name='get_logged_in_user'),
     path('api/description/', save_description, name='save_description'),
-    path('api/badges/', get_user_badges, name='get_user_badges')
+    path('api/badges/', get_user_badges, name='get_user_badges'),
+
+    path('api/shared_materials', get_current_session, name='get_current_session')
 ]
