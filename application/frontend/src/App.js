@@ -1,4 +1,4 @@
-import React, { Component} from "react";
+import React, { Component } from "react";
 // import { w3websocket as W3CWebSocket } from "websocket";
 
 import "./styles/App.css";
@@ -7,8 +7,8 @@ import CalendarPage from "./pages/Calendar";
 import Signup from "./pages/Signup";
 import Welcome from "./pages/Welcome";
 import Dashboard from "./pages/Dashboard";
-import GroupStudyPage from './pages/GroupStudyPage';
-import Analytics from './pages/Analytics';
+import GroupStudyPage from "./pages/GroupStudyPage";
+import Analytics from "./pages/Analytics";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MotivationalMessage from "./pages/Motivation";
 import ProfileBox from "./pages/ProfileBox";
