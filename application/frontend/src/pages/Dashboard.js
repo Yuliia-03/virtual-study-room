@@ -42,7 +42,11 @@ function Dashboard() {
                 </div>
                 <div className = "dashboard-right-panel" data-testid="right-panel">
                     <StudyRoomComponent />
-                    <div><ToDoList/></div>
+                    <div><ToDoList
+                        isShared={false}
+                        listData={[]}
+                    />
+                    </div>
                 </div>
 
                 </div>

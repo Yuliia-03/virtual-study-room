@@ -35,7 +35,7 @@ const StudyRoomComponent = () => {
             // Redirect to the Group Study Room page with the Room Code
             console.log("Joining .. . .");
             navigate(`/group-study/${response.roomCode}`, {
-                state: { roomCode: response.roomCode, roomName: roomName },
+                state: { roomCode: response.roomCode, roomName: roomName, roomList: response.roomList },
             });
         }
 
@@ -56,11 +56,16 @@ const StudyRoomComponent = () => {
 
             if (res.status === 200) setJoined(true);
                 // Redirect to the Group Study Room page with the roomCode
-                navigate(`/group-study-room/${roomCode}`);
+            console.log(res.data.roomList)
+            navigate(`/group-study/${roomCode}`, {
+                state:
+                    { roomCode: roomCode, roomList: res.data.roomList },
+            });
         }
 
         catch (error) {
-            console.error("Error joining room:", error)}
+            console.error("Error joining room:", error)
+        }
     };
 
 

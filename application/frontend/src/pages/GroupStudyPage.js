@@ -7,13 +7,14 @@ import copyLogo from "../assets/copy_logo.png";
 import exitLogo from "../assets/exit_logo.png";
 import StudyTimer from '../components/StudyTimer.js';
 import { useParams, useLocation } from 'react-router-dom';
+import ToDoList from '../components/ToDoListComponents/ToDoList';
 
 function GroupStudyPage(){
 
     // Location object used for state
     const location = useLocation();
 
-    const { roomCode, roomName } = location.state || { roomCode: '', roomName: '' };
+    const { roomCode, roomName, roomList } = location.state || { roomCode: '', roomName: '', roomList: '' };
     // Retrieve roomCode and roomName from state
 
     // Retrieve roomCode from state if not in URL
@@ -33,7 +34,6 @@ function GroupStudyPage(){
     const [input, setInput] = useState("");
 
     useEffect(() => {
-
         // Ensure room code is given
         if (!finalRoomCode) {
             console.error("Room code is missing.");
@@ -53,7 +53,7 @@ function GroupStudyPage(){
         setSocket(ws);
 
         return () => ws.close();
-    }, [finalRoomCode]);
+    }, [finalRoomCode, location.state]);
 
     const sendMessage = () => {
         if (socket && input.trim()) {
@@ -96,7 +96,7 @@ function GroupStudyPage(){
 
     //testing functions- for UI purposes (not linked to the database)
 
-    const [todos, setTodos] = useState([
+    /*const [todos, setTodos] = useState([
         { id: 1, text: "Study for Math", checked: false },
         { id: 2, text: "Study for English", checked: false },
         { id: 3, text: "Study for Geography", checked: false },
@@ -105,18 +105,7 @@ function GroupStudyPage(){
         { id: 6, text: "Study for Engineering", checked: false },
         { id: 7, text: "Study for Physics", checked: false },
         { id: 8, text: "Study for Biology", checked: false },
-    ]);
-
-    const toggleTodo = id => {
-        const newTodos = todos.map(todo => {
-            if (todo.id === id) {
-                return { ...todo, checked: !todo.checked };
-            }
-            return todo;
-        });
-        setTodos(newTodos);
-    };
-
+    ]);*/
     //page is designed in columns
     //First Column: todoList, shared materials 
     //Second Column: users listes, motivational message
@@ -136,7 +125,7 @@ function GroupStudyPage(){
                     </div>
                     </h2>
                     <div style={{ flex: 1, width: '100%' }}> {/* This div takes all available space */}
-                    {todos.map(todo => (
+                        {/*{todos.map(todo => (
                             <div key={todo.id} className="todo-item">
                                 <div className="checkbox-wrapper-28">
                                     <input
@@ -150,7 +139,8 @@ function GroupStudyPage(){
                                 </div>
                                 <button type= "button" className='delete-button' >X</button>
                             </div>
-                        ))}
+                    ))}*/}
+                        <ToDoList isShared={true} listId={roomList} />
                     </div>
                     {/*This is the add More button in the to do list- needs functionality (onClick method) */}
                     <button
