@@ -51,7 +51,7 @@ const StudyParticipants = () => {
         socket.close();
       };
     }
-  }, [urlRoomCode]);
+  }, []);
 
   // Function to fetch participants
   const fetchParticipants = async (roomCode) => {
