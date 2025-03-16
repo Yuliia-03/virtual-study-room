@@ -4,11 +4,11 @@ import GroupStudyPage from "../pages/GroupStudyPage";
 import axios from "axios";
 import Dashboard from '../pages/Dashboard'; 
 import Analytics from '../pages/Analytics';
-import ToDoList from '../pages/ToDoList';
+import ToDoList from '../components/ToDoListComponents/ToDoList';
 
 //mock the necessary modules
 jest.mock('../pages/Analytics', () => () => <div>Mocked Analytics</div>);
-jest.mock('../pages/ToDoList', () => () => <div>Mocked ToDoList</div>);
+jest.mock('../components/ToDoListComponents/ToDoList', () => () => <div>Mocked ToDoList</div>);
 jest.mock("axios");
 jest.mock("@fontsource/vt323", () => {}); 
 jest.mock("@fontsource/press-start-2p", () => {}); 

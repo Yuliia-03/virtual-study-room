@@ -21,7 +21,7 @@ jest.mock('react-toastify', () => {
       success: jest.fn(),
     },
   };
-});
+}); 
 
 
 describe('ProfileBox', () => {

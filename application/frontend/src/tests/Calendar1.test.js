@@ -18,7 +18,7 @@ describe('CalendarPage Component', () => {
     window.location = originalLocation;
   });
 
-  beforeEach(() => {
+  beforeEach(() => { 
     // Mocking localStorage
     const mockAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.' + 
                             'eyJleHAiOjE2Mjk2Mjk2MDB9.' + 
