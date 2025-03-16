@@ -62,17 +62,14 @@ class Command(BaseCommand):
             description = "This is a test user"
         )
         self.generate_random_friends()
-        self.generating_rewards()
+        #self.generating_rewards()
         self.generate_random_Lists()
         self.generate_random_toDoLists()
         self.generate_toDoListUsers()
         self.generate_events()
         self.generating_study_sessions()
         self.generating_session_users()
-        
 
-
-    
     def generate_random_friends(self):
         friends_count = Friends.objects.count()
         while friends_count < self.FRIENDS_COUNT:
