@@ -2,10 +2,19 @@
     max-width: 100%;
     margin: 20px auto;
     padding: 20px;
-    border-radius: 8px;
-    background: #f9f9f9;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     overflow-x: auto;
+        text-align: center;
+            align-items: center;
+            display: flex;
+                /* Added flex display */
+                flex-direction: row;
+                /* Ensures content is stacked vertically */
+                justify-content: center;
+                /* Centers content vertically */
+                transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 /* Scrollable Row */
@@ -13,9 +22,13 @@
     overflow-x: auto;
     white-space: nowrap;
     padding-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 5px;
 }
 
-/* Scrollbar Styling */
+/* Custom Scrollbar */
 .friends-list-wrapper::-webkit-scrollbar {
     height: 8px;
 }
@@ -27,7 +40,7 @@
 
 .friends-list {
     display: flex;
-    gap: 15px;
+    gap: 20px;
     padding: 10px;
     list-style: none;
     margin: 0;
@@ -35,37 +48,89 @@
     /* Prevents wrapping */
 }
 
-/* Friend Card - Flex Items */
+/* Friend Card */
 .friend-card {
-    min-width: 180px;
-    /* Ensure consistent width */
+    min-width: 200px;
+    /* Increase width */
     max-width: 200px;
     padding: 15px;
-    border-radius: 6px;
+    border-radius: 10px;
     background: white;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
+    align-items: center;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
+/* Hover effect */
+.friend-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Profile Picture */
+.friend-card .pic {
+    align-content: center;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ddd;
+        align-self: center;
+}
+
+/* Friend Name */
 .friend-card h4 {
-    margin: 5px 0;
+    margin: 8px 0 5px;
     font-size: 18px;
-    color: #444;
+    color: #333;
+    font-weight: bold;
 }
 
+/* Username */
 .username {
-    color: #777;
+    color: #666;
     font-size: 14px;
 }
 
-.pic {
-    align-items: center;
-    width: 100px;
-    /* Set the desired width */
-    height: 100px;
-    /* Set the desired height */
-    border-radius: 10%;
-    /* Make the image circular */
-    object-fit: cover;
-    /* Ensure the image covers the area without stretching */
+/* Buttons */
+.reject-btn,
+.details-btn {
+    margin: 5px;
+    padding: 5px 5px 5px 5px;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+    min-width: 50px;
+}
+
+.friend-card .reject-btn {
+    margin: 5px;
+    padding: 5px;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+    background: #ff1919;
+    /* Default red background */
+    color: white;
+}
+
+.friend-card .reject-btn:hover {
+    background: #d43f3f;
+    /* Slightly darker red on hover */
+    color: white;
+}
+
+
+.friend-card .details-btn {
+    background: #4CAF50;
+    color: white;
+}
+
+.friend-card .details-btn:hover {
+    background: #3e8e41;
 }

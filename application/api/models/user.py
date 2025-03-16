@@ -55,6 +55,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     created_at = models.DateTimeField(auto_now_add=True)
     hours_studied = models.IntegerField(default=0)
     streaks = models.IntegerField(default=0)
+    share_analytics = models.BooleanField(default=False)
     description = models.TextField(blank=True, default="")  #Text field that can be blank
     total_sessions = models.IntegerField(default=0)
     #profile_id = models.CharField(max_length=255, blank=True, null=True)  #For Firebase storage reference for image - if still needed

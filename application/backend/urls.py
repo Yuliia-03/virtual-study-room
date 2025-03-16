@@ -67,6 +67,7 @@ urlpatterns = [
     path('api/reject_friend/<int:id>/', views.FriendsView.as_view(), name='reject_friend'),
     path('api/create_friend_request/<int:id>/', views.FriendsView.as_view(), name = 'create_friend_request'),
     path('api/find_friend/', views.FriendsView.as_view(), name='find_friend'),
+    path('api/get_friend_profile/<int:id>/', views.FriendsView.as_view(), name='friends_profile'),
 
 
     path('api/motivational-message/', views.motivationalMessage, name='motivation'),

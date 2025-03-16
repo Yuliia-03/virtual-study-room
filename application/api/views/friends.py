@@ -9,7 +9,7 @@ class FriendsView(APIView):
 
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
+    def get(self, request, id=None):
 
         url_name = request.resolver_match.view_name
         user = request.user
@@ -23,6 +23,22 @@ class FriendsView(APIView):
 
         elif url_name == "friends_requested":
             friends = Friends.get_invitations_sent(user)
+        
+        elif url_name == "friends_profile":
+            friend = Friends.get_friend(id, user)
+            print(friend.share_analytics)
+            response_data = {
+                "id": friend.pk,
+                "name": friend.firstname,
+                "surname": friend.lastname,
+                "username": friend.username,
+                "email": friend.email,
+                "description": friend.description,
+                "share_analytics": friend.share_analytics,
+                "hours_studied": friend.hours_studied,
+                "streaks": friend.streaks
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
 
         elif url_name == "find_friend":
             search_query = request.GET.get('q', '')

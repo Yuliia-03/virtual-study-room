@@ -1,0 +1,68 @@
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    width: auto;
+    /* Allow the width to adjust based on content */
+    min-width: 400px;
+    /* Set a minimum width */
+    max-width: 600px;
+    /* Prevent it from being too wide */
+    display: flex;
+    flex-direction: column;
+    /* Stack children vertically */
+    align-items: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.profile-section {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    /* Align items to the left */
+    width: 100%;
+    flex-wrap: wrap;
+    /* Prevent content from overflowing */
+    gap: 15px;
+    /* Add spacing */
+}
+
+.profile-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid #ddd;
+    object-fit: cover;
+    flex-shrink: 0;
+    /* Prevent image from resizing */
+}
+
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    /* Allow text to take available space */
+    min-width: 200px;
+    /* Ensure enough space for text */
+    text-align: left;
+}
+
+.analytics-section {
+    margin-top: 10px;
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 8px;
+    width: 100%;
+    text-align: left;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
