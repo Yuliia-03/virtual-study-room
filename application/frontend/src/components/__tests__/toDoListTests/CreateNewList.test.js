@@ -19,7 +19,7 @@ describe("CreateNewList", () => {
         global.alert.mockRestore();
         global.console.log.mockRestore(); // Restore alert after tests
     });
-
+ 
     beforeEach(() => {
         setAddListWindowMock = jest.fn();
         setListsMock = jest.fn();

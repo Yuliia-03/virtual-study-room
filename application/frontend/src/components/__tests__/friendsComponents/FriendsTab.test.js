@@ -24,7 +24,7 @@ jest.mock('react-toastify', () => {
             error: jest.fn(),
             success: jest.fn(),
         },
-    };
+    }; 
 });
 
 jest.mock("firebase/database", () => ({

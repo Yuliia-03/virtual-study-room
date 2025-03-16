@@ -19,7 +19,7 @@ describe("CreateNewTask", () => {
     afterAll(() => {
         global.alert.mockRestore();
         global.console.log.mockRestore(); // Restore alert after tests
-    });
+    }); 
 
     beforeEach(() => {
         setAddTaskWindowMock = jest.fn();

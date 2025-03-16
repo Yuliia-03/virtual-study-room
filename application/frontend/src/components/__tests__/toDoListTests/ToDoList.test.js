@@ -344,7 +344,7 @@ describe("ToDoList", () => {
     });
 
     test('create new list', async () => {
-
+ 
         authService.getAuthenticatedRequest.mockResolvedValueOnce(mockListsData);
 
         render(<ToDoList />);

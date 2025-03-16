@@ -21,7 +21,7 @@ jest.mock('react-toastify', () => {
         },
     };
 });
-
+ 
 const mockRequestData = [
     { id: 1, name: "Name1", surname: "Surname1", username: "@username1" },
     { id: 2, name: "Name2", surname: "Surname2", username: "@username2" },
