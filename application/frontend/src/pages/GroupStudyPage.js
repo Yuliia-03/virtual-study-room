@@ -83,8 +83,10 @@ function GroupStudyPage() {
         //Handles incoming messages.
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
+            console.log("Received WebSocket Message:", data); 
             if (data.type === "chat_message") { //if message type is 'chat_message' then add to messages state
                 // Ensure the message is structured as an object with `sender` and `text`
+                console.log("Received message:", data); // Debugging
                 setMessages((prev) => [...prev, { sender: data.sender, text: data.message }]);
             }
             else if (data.type === "typing") {
@@ -320,10 +322,6 @@ function GroupStudyPage() {
         <div className="user-list-container" data-testid="user-list-container">
           <h2 className="heading"> Study Room: {roomName} </h2>
           <h3 className="gs-heading2"> Code: {finalRoomCode}</h3>
-          {/* Debugging messages */}
-          {messages.map((msg, index) => (
-            <p key={index}>{msg}</p>
-          ))}
           <div className="utility-bar" data-testid="utility-bar">
             <button
               type="button"

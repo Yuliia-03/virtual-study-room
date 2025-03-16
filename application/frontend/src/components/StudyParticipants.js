@@ -14,6 +14,7 @@ const StudyParticipants = () => {
   const [roomCode, setRoomCode] = useState(""); // Ensure that the room code is defined
   const [roomName, setRoomName] = useState("");
   const [participants, setParticipants] = useState([]); // State to store participants
+  const [socket, setSocket] = useState(null);
 
   // Use to navigate to the created room / joined room
   const navigate = useNavigate(); // initialise
@@ -22,7 +23,9 @@ const StudyParticipants = () => {
 
   console.log("The room code is: ", roomCode);
   // Fetch participants when the component mounts or roomCode changes
+
   useEffect(() => {
+    if (!roomCode) return;
     if (urlRoomCode) {
       setRoomCode(urlRoomCode); // Set the roomCode state
       fetchParticipants(urlRoomCode);

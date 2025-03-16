@@ -65,7 +65,7 @@ urlpatterns = [
     path('api/description/', save_description, name='save_description'),
     path('api/badges/', get_user_badges, name='get_user_badges'),
     path('', index, name='index'),
-    path('<str:room_name>/', room, name='room'),
+    path('<str:room_code>/', room, name='room'),
     path('api/events/', event_list, name='event-list'),  
     path('api/events/<int:pk>/', event_detail, name='event-detail'),  
 ]
