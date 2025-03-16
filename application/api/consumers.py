@@ -1,7 +1,6 @@
 # this is for websocket handling
-
-import json
 from channels.generic.websocket import AsyncWebsocketConsumer
+import json
 
 class RoomConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
@@ -23,12 +22,34 @@ class RoomConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
-        message = data["message"]
+        message_type = data.get("type")
 
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {"type": "chat_message", "message": message}
-        )
+        if message_type == "chat_message":
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    "type": "chat_message",
+                    "message": data["message"],
+                    "sender": data["sender"],
+                }
+            )
+        elif message_type == "study_update":
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    "type": "study_update",
+                    "update": data["update"],
+                }
+            )
+        elif message_type == "typing":
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    "type": "typing",
+                    "sender":data["sender"],
+                }
+            )
+
 
     # send an updated list of room participants when someone joins
     async def send_participants(self, event):
@@ -39,5 +60,20 @@ class RoomConsumer(AsyncWebsocketConsumer):
         }))
 
     async def chat_message(self, event):
-        message = event["message"]
-        await self.send(text_data=json.dumps({"message": message}))
+        await self.send(text_data=json.dumps({
+            "type": "chat_message",
+            "message": event["message"],
+            "sender": event["sender"],
+        }))
+
+    async def study_update(self, event):
+        await self.send(text_data=json.dumps({
+            "type": "study_update",
+            "update": event["update"],
+        }))
+
+    async def typing(self, event):
+        await self.send(text_data=json.dumps({
+            "type": "typing",
+            "sender" : event["sender"],
+        }))

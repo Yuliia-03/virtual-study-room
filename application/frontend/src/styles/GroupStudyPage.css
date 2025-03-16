@@ -9,6 +9,7 @@
     background-color: #F6F0F0;
     box-sizing: border-box;
     overflow: hidden;
+    min-height: 120vh; /* to allow chat box to be visible - may have to change */
 }
 
 .column {

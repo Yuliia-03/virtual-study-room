@@ -1,7 +1,9 @@
-import React from "react";
+import React, { Component} from "react";
+// import { w3websocket as W3CWebSocket } from "websocket";
+
 import "./styles/App.css";
 import Login from "./pages/Login";
-import Calendar1 from "./pages/Calendar1";
+import CalendarPage from "./pages/Calendar";
 import Signup from "./pages/Signup";
 import Welcome from "./pages/Welcome";
 import Dashboard from "./pages/Dashboard";
@@ -10,6 +12,7 @@ import Analytics from './pages/Analytics';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MotivationalMessage from "./pages/Motivation";
 import ProfileBox from "./pages/ProfileBox";
+import ChatBox from "./pages/ChatBox";
 //import ToDoList from './pages/ToDoList';
 
 function App() {
@@ -19,7 +22,7 @@ function App() {
         // temporary change ok
         <Route path="/" element={<Welcome />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/calendar" element={<Calendar1 />} />
+        <Route path="/calendar" element={<CalendarPage />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/motivational-message" element={<MotivationalMessage />} />
         <Route path="/dashboard/:username" element={<Dashboard />} />
@@ -28,6 +31,7 @@ function App() {
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/profile" element={<ProfileBox />} />
+        <Route path="/chatbox" element={<ChatBox />} />
       </Routes>
     </Router>
   );
