@@ -3,11 +3,11 @@ import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import SharedMaterials from '../pages/SharedMaterials';
 import { BrowserRouter as Router } from "react-router-dom";
 import { ref, getDownloadURL, uploadBytes, listAll, deleteObject } from 'firebase/storage';
-import { getAuthenticatedRequest } from '../pages/utils/authService';
+import { getAuthenticatedRequest } from '../utils/authService';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-jest.mock('../pages/utils/authService');
+jest.mock('../utils/authService');
 jest.mock('firebase/storage'); 
 jest.mock('../firebase-config.js');
 jest.mock('react-toastify', () => {

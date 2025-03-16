@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { storage } from "../firebase-config";
 import { Navigate, useNavigate } from 'react-router-dom';
 import { ref, getDownloadURL, uploadBytes, listAll, deleteObject } from "firebase/storage";
-import { getAuthenticatedRequest, getAccessToken } from "./utils/authService";
+import { getAuthenticatedRequest, getAccessToken } from "../utils/authService";
 import "../styles/SharedMaterials.css";
 
 function SharedMaterials() {
