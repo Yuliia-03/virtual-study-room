@@ -2,15 +2,15 @@ import logging
 logging.basicConfig(level=logging.INFO, handlers=[logging.StreamHandler()])
 from django.core.management.base import BaseCommand, CommandError
 from api.models.motivational_message import MotivationalMessage
-
+import random
 from django.core.management import call_command
 
-from api.models import Friends, events, User, Status, toDoList, Permission, MotivationalMessage, Rewards, StudySession, SessionUser, List
+from api.models import Friends, Appointments, User, Status, toDoList, Permission, MotivationalMessage, Rewards, StudySession, SessionUser, List
 
 
 import pytz
 from faker import Faker
-from django.utils.timezone import now
+from django.utils.timezone import now, make_aware
 from random import choice, randint, sample
 from datetime import datetime, timedelta, date
 
@@ -61,9 +61,10 @@ class Command(BaseCommand):
         self.generate_random_Lists()
         self.generate_random_toDoLists()
         self.generate_toDoListUsers()
-        #self.generate_events()
+        self.generate_events()
         self.generating_study_sessions()
         self.generating_session_users()
+        
 
 
     
@@ -276,50 +277,31 @@ class Command(BaseCommand):
             )
         except Exception as e:
             self.stdout.write(self.style.ERROR(f'Error creating ToDoListUser: {str(e)}'))
-    
-    # def generate_events(self):
-    #         titles = [
-    #             "Django Workshop",
-    #             "Python Developer Meetup",
-    #             "Frontend Development Conference",
-    #             "Tech Talk: Artificial Intelligence",
-    #             "Web Development Bootcamp"
-    #         ]
-    #         descriptions = [
-    #             "A workshop on Django for beginners.",
-    #             "Join us for a Python meetup with interesting talks.",
-    #             "Learn about the latest in frontend development.",
-    #             "Discover the power of AI in this tech talk.",
-    #             "An intensive bootcamp focused on web development skills."
-    #         ]
-    #         locations = [
-    #             "Room A, Tech Hub",
-    #             "Room B, Main Building",
-    #             "Online",
-    #             "Room C, Innovation Center",
-    #             "Room D, Conference Hall"
-    #         ]
+  
 
-    #         # Seed 10 sample events
-    #         for _ in range(10):
-    #             title = random.choice(titles)
-    #             description = random.choice(descriptions)
-    #             location = random.choice(locations)
-    #             start_time = datetime.now() + timedelta(days=random.randint(1, 10))
-    #             end_time = start_time + timedelta(hours=random.randint(1, 4))
-                
-    #             # Create the Event object
-    #             event = Event.objects.create(
-    #                 users = list(User.objects.create())
-    #                 title=title,
-    #                 description=description,
-    #                 start_time=start_time,
-    #                 end_time=end_time,
-    #                 location=location,
-    #                 is_completed=random.choice([True, False])
-    #             )
+    def generate_events(self):
+        # Clear existing events
+        Appointments.objects.all().delete()
 
-    #             self.stdout.write(self.style.SUCCESS(f'Successfully created event: {event.title}'))
+        # Seed events for each user
+        for user in User.objects.all():
+            for i in range(5):  # Create 5 events per user
+                naive_start_date = datetime.now() + timedelta(days=random.randint(1, 30))
+                naive_end_date = naive_start_date + timedelta(hours=random.randint(1, 5))
+
+                # Make the datetime objects timezone-aware
+                start_date = make_aware(naive_start_date)
+                end_date = make_aware(naive_end_date)
+
+                Appointments.objects.create(
+                    user=user,
+                    name="CLASS for STUDENTS",
+                    start_date=start_date,
+                    end_date=end_date,
+                    comments=f"Sample comment for event {i + 1}",
+                    status=random.choice(['Pending', 'Confirmed', 'Cancelled']),
+                )
+        self.stdout.write(self.style.SUCCESS('Successfully seeded events for all users.'))
 
     """Seeder for Study Sessions"""
     def generating_study_sessions(self):
