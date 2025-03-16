@@ -8,6 +8,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useLocation } from 'react-router-dom';
 import "../styles/calendar.css";
 
+console.log(require.resolve('@fullcalendar/react')); 
+
 const backendURL = '/events/';
 
 const CalendarPage = () => {
@@ -18,6 +20,7 @@ const CalendarPage = () => {
     const [eventEnd, setEventEnd] = useState('');
     const [showPopup, setShowPopup] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
+   
     const location = useLocation();
     const userId = location.state?.userId;
 
@@ -71,7 +74,9 @@ const CalendarPage = () => {
     };
 
     const openAddEventPopup = () => {
+        console.log('Add Event button func called'); 
         setShowPopup(true);
+        console.log('showPopup:', showPopup);
     };
 
     const closeAddEventPopup = () => {
@@ -109,16 +114,38 @@ const CalendarPage = () => {
         };
     });
 
+
+
     return (
-        <div>
-            <h1 className='hlol'>My Calendar</h1>
+        <div className='Page'>
+            <h1 className='Header'>My Calendar</h1>
             <ToastContainer position='top-center'/>
-            <button onClick={openAddEventPopup}>Add Event</button>
+            <FullCalendar
+                plugins={[dayGridPlugin, timeGridPlugin]}
+                initialView="timeGridWeek"
+                events={processedEvents}
+                headerToolbar={{
+                    left: 'prev,today,next',
+                    center: 'title',
+                    right: 'addEventButton,timeGridWeek,dayGridMonth,dayGridYear',
+                }}
+                customButtons={{
+                    addEventButton: {
+                        text: 'Add Event',
+                        // Debugging
+                        click: () => { 
+                            console.log('Add Event button clicked'); 
+                            openAddEventPopup(); // Ensure this is correctly defined
+                        },
+                    },
+                }}
+                eventClick={handleEventClick}
+            />
 
             {showPopup && (
                 <div className="event-popup">
                     <div className="popup-content">
-                        <h2 className='eventbutton'>Add Event</h2>
+                        <h2 className="eventbutton">Add Event</h2>
                         <form onSubmit={handleSubmit}>
                             <div>
                                 <label>Title: </label>
@@ -154,30 +181,13 @@ const CalendarPage = () => {
                                 />
                             </div>
                             <button type="submit">Save Event</button>
-                            <button type="button" onClick={closeAddEventPopup}>Cancel</button>
+                            <button type="button" onClick={closeAddEventPopup}>
+                                Cancel
+                            </button>
                         </form>
                     </div>
                 </div>
             )}
-
-            <FullCalendar 
-                plugins={[dayGridPlugin, timeGridPlugin]}
-                initialView="timeGridWeek"
-                events={processedEvents}
-                headerToolbar={{
-                    left: 'prev,today,next',
-                    center: 'title',
-                    right: 'timeGridWeek,dayGridMonth,dayGridYear',
-                }}
-                eventClick={handleEventClick}
-                eventContent={(eventInfo) => {
-                    return (
-                        <div style={{ backgroundColor: eventInfo.event.backgroundColor, color: eventInfo.event.textColor }}>
-                            {eventInfo.event.title}
-                        </div>
-                    );
-                }}
-            />
 
             {selectedEvent && (
                 <div className="event-popup">

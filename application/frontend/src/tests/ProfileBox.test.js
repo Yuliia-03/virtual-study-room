@@ -294,4 +294,36 @@ describe('ProfileBox', () => {
       await waitFor(() => expect(toast.error).toHaveBeenCalledWith('error fetching user badges'));
     });
 
+    test('clicking modal close hides modal', async () => {
+      render(
+        <Router>
+          <ProfileBox />
+        </Router>
+      );
+
+      const showMoreButton = screen.getByTestId('show-more-button');
+      fireEvent.click(showMoreButton);
+
+      expect(screen.getByText("UPLOAD AVATAR")).toBeInTheDocument();
+      fireEvent.click(screen.getByText("×"));
+      expect(screen.queryByText("UPLOAD AVATAR")).not.toBeInTheDocument();
+
+    });
+
+    test('clicking close inventory hides inventory', async () => {
+      render(
+        <Router>
+          <ProfileBox />
+        </Router>
+      );
+
+      const inventoryButton = screen.getByLabelText('View Badge Collection');
+      fireEvent.click(inventoryButton);
+
+      expect(screen.getByText("Your Badge Collection")).toBeInTheDocument();
+      fireEvent.click(screen.getByText("×"));
+      expect(screen.queryByText("Your Badge Collection")).not.toBeInTheDocument();
+      
+    });
+
 });

@@ -6,3 +6,5 @@ from api.views.motivational_message import *
 from api.views.check_email_exists import *
 from api.views.check_username_exists import *
 from api.views.friends import FriendsView
+from api.views.groupStudyRoom import *
+from api.views.getParticipants import *

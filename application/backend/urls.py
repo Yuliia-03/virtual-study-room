@@ -24,6 +24,7 @@ from api import views
 from api.views.profile_view import get_logged_in_user, save_description, get_user_badges
 from api.views.analytics import get_analytics
 from api.views.groupStudyRoom import create_room, join_room
+from api.views.views import room, index
 from api.views.calendar import EventViewSet
 event_list = EventViewSet.as_view({'get': 'list', 'post': 'create'})  
 event_detail = EventViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})
@@ -44,6 +45,9 @@ urlpatterns = [
     path('api/motivational-message/', views.motivationalMessage, name='motivation'),
     path('api/create-room/', create_room),
     path('api/join-room/', join_room),
+    path('api/get-room-details/', get_room_details),
+    path('api/get-participants/', get_participants),
+    path('api/leave-room/', leave_room),
 
 
     path('api/todolists/', views.ViewToDoList.as_view(), name='to_do_list'),
@@ -72,6 +76,8 @@ urlpatterns = [
     path('api/profile/', get_logged_in_user, name='get_logged_in_user'),
     path('api/description/', save_description, name='save_description'),
     path('api/badges/', get_user_badges, name='get_user_badges'),
+    path('', index, name='index'),
+    path('<str:room_name>/', room, name='room'),
     path('api/events/', event_list, name='event-list'),  
     path('api/events/<int:pk>/', event_detail, name='event-detail'), 
 ]
