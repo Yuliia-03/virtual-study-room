@@ -62,8 +62,8 @@ class Command(BaseCommand):
         self.generate_random_toDoLists()
         self.generate_toDoListUsers()
         #self.generate_events()
-        #self.generating_study_sessions()
-        #self.generating_session_users()
+        self.generating_study_sessions()
+        self.generating_session_users()
 
 
     
