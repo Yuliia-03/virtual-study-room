@@ -35,7 +35,7 @@ const FriendsProfile = ({ FriendsId, addUserWindow, setAddUserWindow }) => {
     if (!addUserWindow) return null; // Don't render if modal is closed
 
     return (
-        <div className="modal-overlay" onClick={() => setAddUserWindow(false)}>
+        <div className="modal-overlay" data-testid="modal-overlay" onClick={() => setAddUserWindow(false)}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <button className="close-btn" onClick={() => setAddUserWindow(false)}>×</button>
 

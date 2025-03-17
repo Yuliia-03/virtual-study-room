@@ -28,8 +28,8 @@ const AllFriends = () => {
                                 <img src={friend.image} alt="logo" className="pic" />
                                 <h4>{friend.name} {friend.surname}</h4>
                                 <p className="username">{friend.username}</p> 
-                                <button className="reject-btn" onClick={() => onReject(friend.id)}><i class="bi bi-trash"></i></button>
-                                <button className="details-btn" onClick={() => handleOpenProfile(friend.id)} > <i class="bi bi-eye"></i> </button>
+                                <button className="reject-btn" onClick={() => onReject(friend.id)} aria-label="delete friend"><i class="bi bi-trash"></i></button>
+                                <button className="details-btn" onClick={() => handleOpenProfile(friend.id)} aria-label="details" > <i class="bi bi-eye"></i> </button>
                             </li>
                         ))
                     )}

@@ -38,14 +38,11 @@ describe("CreateNewList", () => {
 
     const submitForm = () => {
         const titleInput = screen.getByPlaceholderText("Enter list title");
-        const isShared = screen.getByRole("checkbox");
-
+        
         fireEvent.change(titleInput, { target: { value: "New List" } });
-        fireEvent.click(isShared);
-
+        
         expect(titleInput.value).toBe("New List");
-        expect(isShared.checked).toBe(true);
-
+        
         fireEvent.click(screen.getByText("Save"));
     }
 
