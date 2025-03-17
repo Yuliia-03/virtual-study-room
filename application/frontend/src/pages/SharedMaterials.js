@@ -37,26 +37,25 @@ function SharedMaterials( { socket }) {
 
         // Listen for websocket messages
         if (socket) {
-            socket.onmessage = (event) => {
-                const data = JSON.parse(event.data)
+            const handleWebSocketMessage = (event) => {
+                const data = JSON.parse(event.data);
 
-            if (data.type === "file_uploaded") {
-                // Add the new file to the list
-                setFiles((prevFiles) => [...prevFiles, data.file]);
-            }
-            else if (data.type = "file_deleted") {
-                // Remove the deleted file from the list
-                setFiles((prevFiles) => prevFiles.filter(file => file.name !== data.fileName));
-            }
-        };
-
-        // Clean up websocket listener on unmount
-        return() =>{
-            if (socket) {
-                socket.onmessage = null;
+                if (data.type === "file_uploaded") {
+                    // Add the new file to the list
+                    setFiles((prevFiles) => [...prevFiles, data.file]);
+                } else if (data.type === "file_deleted") {
+                    // Remove the deleted file from the list
+                    setFiles((prevFiles) => prevFiles.filter(file => file.name !== data.fileName));
                 }
-        };
-    };
+            };
+
+            socket.addEventListener("message", handleWebSocketMessage);
+
+            // Clean up WebSocket listener on unmount
+            return () => {
+                socket.removeEventListener("message", handleWebSocketMessage);
+            };
+        }
     }, [roomCode, socket]);
 
     const handleUploadFile = async (event) => {
@@ -75,13 +74,25 @@ function SharedMaterials( { socket }) {
 
         const fileRef = ref(storage, `shared-materials/${roomCode}/${file.name}`);
         try {
+            // Download the file from firebase
             await uploadBytes(fileRef, file);
             const fileUrl = await getDownloadURL(fileRef);
+            const newFile = { name: file.name, url: fileUrl, type: file.type };
 
             setFiles((prevFiles) => [
                 ...prevFiles,
                 { name: file.name, url: fileUrl, type: file.type }
             ]);
+
+            // Notify other users via WebSocket
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                const message = JSON.stringify({
+                    type: "file_uploaded",
+                    file: newFile,
+                });
+                console.log("Sharing a file via websocket! :", message);
+                socket.send(message);
+            }
 
             //clear the previous file to allow same file to be uploaded whilst still triggering onChange
             event.target.value = "";
@@ -98,6 +109,17 @@ function SharedMaterials( { socket }) {
         try {
             await deleteObject(fileRef);
             setFiles((prevFiles) => prevFiles.filter(file => file.name !== fileName));
+
+            // Notify other users via WebSocket
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                const message = JSON.stringify({
+                    type: "file_deleted",
+                    fileName: fileName,
+                });
+                console.log("Deleting file via websocket! :", message);
+                socket.send(message);
+            }
+
             toast.success("File Deleted Successfully!");
         } catch (error) {
             toast.error("Error Deleting File");

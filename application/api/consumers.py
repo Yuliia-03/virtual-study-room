@@ -143,8 +143,11 @@ class RoomConsumer(AsyncWebsocketConsumer):
         }))
 
     async def file_deleted(self, event):
-        # Notify the client about the deleted file
-        await self.send(text_data=json.dumps({
-            "type": "file_deleted",
-            "fileName": event["fileName"],
-        }))
+        try:
+            # Notify the client about the deleted file
+            await self.send(text_data=json.dumps({
+                "type": "file_deleted",
+                "fileName": event["fileName"],
+            }))
+        except Exception as e:
+            print(f"Error in file_deleted: {e}")
