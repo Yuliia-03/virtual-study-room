@@ -80,8 +80,6 @@ urlpatterns = [
     path('api/profile/', get_logged_in_user, name='get_logged_in_user'),
     path('api/description/', save_description, name='save_description'),
     path('api/badges/', get_user_badges, name='get_user_badges'),
-    path('', index, name='index'),
-    path('<str:room_code>/', room, name='room'),
 
 
     path('api/shared_materials/', get_current_session, name='get_current_session'),

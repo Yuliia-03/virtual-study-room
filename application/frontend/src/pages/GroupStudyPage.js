@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import "../styles/GroupStudyPage.css";
 import MotivationalMessage from "./Motivation";
 import musicLogo from "../assets/music_logo.png";
@@ -96,6 +96,65 @@ function GroupStudyPage() {
 
     };
   }, [finalRoomCode]);
+
+
+// Method for connecting to the websocket
+  const connectWebSocket = () => {
+        // Check if a WebSocket connection already exists, not sure if this actually does anything?
+        if (socket === WebSocket.OPEN) {
+            console.log("Using existing WebSocket connection");
+            return; // Reuse the existing connection
+        }
+
+        const ws = new WebSocket(`ws://localhost:8000/ws/room/${finalRoomCode}/`);
+
+        //Logs when connection is established
+        ws.onopen = () => {
+            console.log("Connected to Websocket");
+            setSocket(ws);
+        };
+
+        //Handles incoming messages.
+        ws.onmessage = async (event) => {
+            const data = JSON.parse(event.data);
+            console.log("Received WebSocket Message:", data);
+            if (data.type === "chat_message") { //if message type is 'chat_message' then add to messages state
+                // Ensure the message is structured as an object with `sender` and `text`
+                console.log("Received message:", data); // Debugging
+                setMessages((prev) => [...prev, { sender: data.sender, text: data.message }]);
+            }
+            if (data.type === "participants_update") {
+                console.log("Recreating the page to fix participants...")
+                 // Fetch image URLs for each participant and update the state
+                const updatedParticipants = await Promise.all(
+                  data.participants.map(async (participant) => {
+                    const imageUrl = await fetchParticipantData(participant.username);
+                    return { ...participant, imageUrl }; // Add imageUrl to the participant object
+                  })
+                );
+
+                setParticipants(updatedParticipants); // Update state with participants and their image URLs
+            }
+            else if (data.type === "typing") {
+                setTypingUser(data.sender);
+
+                // Remove "typing" message after 3 seconds
+                setTimeout(() => {
+                    setTypingUser("");
+                }, 3000);
+
+            }
+        };
+
+        //Logs when the connection is closed
+        ws.onclose = () => {
+        console.log("Disconnected from WebSocket");
+        if (shouldReconnect) {
+            console.log("Reconnecting");
+            setTimeout(connectWebSocket, 1000); // Attempt to reconnect after 1 seconds
+        }
+    };
+    };
 
   //Sends chat message through websocket connection
   const sendMessage = () => {
