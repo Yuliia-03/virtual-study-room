@@ -25,7 +25,7 @@ class ListViewTestCase(APITestCase):
     def test_get_lists_for_user(self):
         """Test if the API correctly returns lists for an authenticated user based on permissions."""
 
-        response = self.client.get('/api/todolists/false/')
+        response = self.client.get('/api/todolists/')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 2)
@@ -35,6 +35,20 @@ class ListViewTestCase(APITestCase):
         self.assertEqual(list_data['name'], self.todo_list.name)
         self.assertEqual(list_data['is_shared'], self.todo_list.is_shared)
 
+
+    def test_get_lists_for_groups(self):
+
+        """Test if the API correctly returns lists for an authenticated user based on permissions."""
+
+        response = self.client.get(f'/api/todolists/{self.todo_list.pk}/')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+        list_data = response.data[0]
+        self.assertEqual(list_data['id'], self.todo_list.id)
+        self.assertEqual(list_data['name'], self.todo_list.name)
+        self.assertEqual(list_data['is_shared'], self.todo_list.is_shared)
 
 
     def test_delete_task_success(self):
@@ -70,7 +84,7 @@ class ListViewTestCase(APITestCase):
         """ Make an authenticated DELETE request to delete a list"""
         list_to_delete = choice(List.objects.all())
         id = list_to_delete.pk
-        response = self.client.delete(f'/api/delete_list/{self.todo_list.pk}/')
+        response = self.client.delete(f'/api/delete_list/{id}/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(List.objects.filter(id=id).exists())
         self.assertFalse(toDoList.objects.filter(list=list_to_delete).exists())

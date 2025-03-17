@@ -48,9 +48,9 @@ class SessionUser(models.Model):
             
         current_time = now()
         
-        if self.status == 'FOCUSED':
+        '''if self.status == 'FOCUSED':
             time_diff = current_time - self.joined_at
-            self.focus_time += time_diff
+            self.focus_time += time_diff'''
             
         self.status = new_status
         self.save()

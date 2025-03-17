@@ -112,5 +112,29 @@ describe("AllFriends", () => {
         expect(mockOnReject).toHaveBeenCalledTimes(2);  // Ensure it was called exactly twice
     });
 
+    test('handles profile button click and opens user profile window', async () => {
+        renderWithContext({
+            onReject: mockOnReject,
+            friends: mockFriendsData,
+            loading: mockLoading,
+        });
+
+        // Initially, the FriendsProfile should not be visible
+        const profileWindow = screen.queryByText(/Profile/i);
+        expect(profileWindow).not.toBeInTheDocument();
+
+        // Find and click the 'details' button for the first friend
+        const detailsButton = screen.getAllByRole('button', { name: /details/i })[0];
+        fireEvent.click(detailsButton);
+
+        // After click, the profile window should be visible
+        //const updatedProfileWindow = screen.queryByText(/Profile/i);
+        //expect(updatedProfileWindow).toBeInTheDocument();
+
+        // Check if the selectedUser is set to the correct id
+        // The FriendsProfile component should have received the correct FriendsId (friend.id)
+        expect(updatedProfileWindow).toHaveTextContent('Name1');
+    });
+
 
 });
