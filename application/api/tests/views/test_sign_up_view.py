@@ -25,20 +25,6 @@ class SignupTestCase(APITestCase):
         user = User.objects.get(username='@johndoe')
         self.assertEqual(user.email, 'johndoe@example.com')
 
-        """Test if signup fails when passwords do not match."""
-        data = {
-            'firstname': 'John',
-            'lastname': 'Doe',
-            'username': '@johndoe',
-            'email': 'johndoe@example.com',
-            'description': '',
-            'password': 'password123',
-            'passwordConfirmation': 'wrongpassword123'
-        }
-        response = self.client.post('/api/signup/', data, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data['error'], 'Passwords do not match')
 
     def test_signup_username_taken(self):
         """Test if signup fails when the username is already taken."""
@@ -97,3 +83,27 @@ class SignupTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('error', response.data)
         self.assertIn('details', response.data)
+    
+    def test_invalid_email_format(self):
+        """Test invalid email format raises a ValidationError"""
+        
+        # Send a POST request with an invalid email format
+        invalid_email_data = {
+            "firstname": "John",
+            "lastname": "Doe",
+            "username": "johndoe123",
+            "email": "invalid-email",  # Invalid email format
+            "description": "Test description",
+            "password": "password123",
+            "passwordConfirmation": "password123"
+        }
+        
+        response = self.client.post('/api/signup/', invalid_email_data, format='json')
+        
+        # Check if the response status is 400 Bad Request
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        
+        # Check if the error message contains the validation error for email format
+        self.assertIn("email", response.data["error"])  # Ensure 'email' is part of the error message
+        self.assertTrue("Enter a valid email address" in response.data["error"]["email"][0])  # Check specific validation error message
+

@@ -22,9 +22,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from api.views import *
 from api import views
 from api.views.profile_view import get_logged_in_user, save_description, get_user_badges
-from api.views.analytics import get_analytics
+from api.views.analytics import get_analytics, update_analytics
 from api.views.groupStudyRoom import create_room, join_room
-from api.views.views import room, index
 from api.views.calendar import EventViewSet
 event_list = EventViewSet.as_view({'get': 'list', 'post': 'create'})  
 event_detail = EventViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})
@@ -40,6 +39,8 @@ urlpatterns = [
     path('api/signup/', views.SignUpView.as_view(), name='signup'),
     # Default for logged-in user
     path("api/analytics/", get_analytics, name="analytics"),
+    path("api/share_analytics/", update_analytics, name="update_analytics"),
+    
     path('api/login/', views.login, name='login'),
 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -70,6 +71,7 @@ urlpatterns = [
     path('api/reject_friend/<int:id>/', views.FriendsView.as_view(), name='reject_friend'),
     path('api/create_friend_request/<int:id>/', views.FriendsView.as_view(), name = 'create_friend_request'),
     path('api/find_friend/', views.FriendsView.as_view(), name='find_friend'),
+    path('api/get_friend_profile/<int:id>/', views.FriendsView.as_view(), name='friends_profile'),
 
 
     path('api/motivational-message/', views.motivationalMessage, name='motivation'),
@@ -79,9 +81,9 @@ urlpatterns = [
     path('api/description/', save_description, name='save_description'),
     path('api/badges/', get_user_badges, name='get_user_badges'),
 
+
     path('api/shared_materials/', get_current_session, name='get_current_session'),
-    path('', index, name='index'),
-    path('<str:room_name>/', room, name='room'),
+
     path('api/events/', event_list, name='event-list'),  
     path('api/events/<int:pk>/', event_detail, name='event-detail')
 ]

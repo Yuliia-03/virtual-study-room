@@ -407,4 +407,26 @@ describe("ToDoList", () => {
         expect(taskDetails).not.toBeInTheDocument();
     });
 
+    test('fetches to-do list data when isShared is true and listId is provided', async () => {
+        authService.getAuthenticatedRequest.mockResolvedValueOnce({
+            id: 99,
+            name: "Shared List",
+            tasks: [
+                { id: 101, title: "Shared Task 1", content: "Details 1", is_completed: false },
+                { id: 102, title: "Shared Task 2", content: "Details 2", is_completed: true },
+            ],
+        });
+
+        render(<ToDoList isShared={true} listId={99} />);
+
+        //await waitFor(() => expect(authService.getAuthenticatedRequest).toHaveBeenCalled());
+
+        await waitFor(() => expect(screen.getByText("Shared List")).toBeInTheDocument());
+        expect(screen.getByText("Shared Task 1")).toBeInTheDocument();
+        expect(screen.getByText("Shared Task 2")).toBeInTheDocument();
+    });
+
+
+
+
 });

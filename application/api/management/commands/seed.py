@@ -63,7 +63,7 @@ class Command(BaseCommand):
             description = "This is a test user"
         )
         self.generate_random_friends()
-        self.generating_rewards()
+        #self.generating_rewards()
         self.generate_random_Lists()
         self.generate_random_toDoLists()
         self.generate_toDoListUsers()
