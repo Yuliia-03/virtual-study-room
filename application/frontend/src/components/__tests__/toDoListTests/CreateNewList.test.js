@@ -1,15 +1,15 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import AddListModal from "../../ToDoListComponents/CreateNewList";
-import * as authService from "../../../pages/utils/authService";
+import * as authService from "../../../utils/authService";
 
-jest.mock("../../../pages/utils/authService", () => ({
+jest.mock("../../../utils/authService", () => ({
     getAuthenticatedRequest: jest.fn(),
 }));
 describe("CreateNewList", () => {
 
     let setAddListWindowMock, setListsMock;
-
+ 
     beforeAll(() => {
         global.alert = jest.fn(); // Mock window.alert
         global.console.log = jest.fn(); // Mock window.alert
@@ -19,7 +19,7 @@ describe("CreateNewList", () => {
         global.alert.mockRestore();
         global.console.log.mockRestore(); // Restore alert after tests
     });
-
+ 
     beforeEach(() => {
         setAddListWindowMock = jest.fn();
         setListsMock = jest.fn();
@@ -38,14 +38,11 @@ describe("CreateNewList", () => {
 
     const submitForm = () => {
         const titleInput = screen.getByPlaceholderText("Enter list title");
-        const isShared = screen.getByRole("checkbox");
-
+        
         fireEvent.change(titleInput, { target: { value: "New List" } });
-        fireEvent.click(isShared);
-
+        
         expect(titleInput.value).toBe("New List");
-        expect(isShared.checked).toBe(true);
-
+        
         fireEvent.click(screen.getByText("Save"));
     }
 

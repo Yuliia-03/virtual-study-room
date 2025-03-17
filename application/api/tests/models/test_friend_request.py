@@ -20,8 +20,9 @@ class FriendsModelTestCase(TestCase):
         self.user3 = User.objects.get(pk=3)
 
         self.friendship_accepted  = Friends.objects.get(pk=1)
-        self.friendship_pending = Friends.objects.get(pk=2)
-        self.friendship_rejected = Friends.objects.get(pk=3)
+        self.friendship_rejected = Friends.objects.get(pk=2)
+        self.friendship_pending_requested = Friends.objects.get(pk=3)
+        self.friendship_pending_received = Friends.objects.get(pk=4)
 
     
     def test_valid_user(self):
@@ -30,7 +31,7 @@ class FriendsModelTestCase(TestCase):
 
     def test_friends_count(self):
         """Check if 3 users exist in the database"""
-        self.assertEqual(Friends.objects.count(), 3)
+        self.assertEqual(Friends.objects.count(), 4)
 
     def test_status_cannot_be_blank(self):
         """Test to check if the status cannot be blank"""
@@ -42,6 +43,12 @@ class FriendsModelTestCase(TestCase):
         self.friendship_accepted .status = 'x' * 11
         self._assert_user_is_invalid(self.friendship_accepted)
 
+    def test_invalid_requested_by(self):
+        """Test to check if the requested_by attribute is invalid"""
+        self.friendship_accepted.requested_by = self.user3
+        self.friendship_accepted.save()
+        self._assert_user_is_invalid(self.friendship_accepted)
+
     def test_friends_should_be_unique(self):
         """Test that friendship between two users should be unique"""
         existing_friendship = Friends.objects.filter(user1=self.user1, user2=self.user2).first()
@@ -50,7 +57,8 @@ class FriendsModelTestCase(TestCase):
             user1=self.user2,
             user2=self.user1,
             status=Status.ACCEPTED,
-            created_at="2025-02-01T12:00:00Z"
+            created_at="2025-02-01T12:00:00Z",
+            requested_by = self.user1
         )
         if existing_friendship:
             with self.assertRaises(IntegrityError):
@@ -88,3 +96,58 @@ class FriendsModelTestCase(TestCase):
         """Test if the method correctly identifies when users are not friends with 'REJECTED' status"""
         self.assertFalse(Friends.are_friends(self.user1, self.user3))
         self.assertFalse(Friends.are_friends(self.user3, self.user1))
+
+    def test_get_invitations_sent(self):
+        self.assertEqual([self.friendship_pending_requested],
+                     Friends.get_invitations_sent(self.user1))
+
+
+    def test_get_invitations_received(self):
+        self.assertEqual([self.friendship_pending_received],
+                     Friends.get_invitations_received(self.user1))
+
+
+    def test_get_all_friends(self):
+        all_friends = []
+        all_friends.extend(Friends.objects.filter(user1=self.user1))
+        all_friends.extend(Friends.objects.filter(user2=self.user1))
+        all_friends = list(all_friends)  # Convert to list
+
+        self.assertEqual(all_friends, list(Friends.get_all_friends(self.user1)))
+
+    def test_update_status(self):
+        self.assertEqual(self.friendship_rejected.status, Status.REJECTED)
+        Friends.update_status(self.friendship_rejected.pk, Status.ACCEPTED)
+        self.friendship_rejected.refresh_from_db()  # Ensure data is refreshed from DB
+        self.assertEqual(self.friendship_rejected.status, Status.ACCEPTED)
+
+    def test_invalid_update_status(self):
+        with self.assertRaises(ValueError) as context:
+            Friends.update_status(9999, Status.ACCEPTED)
+
+        self.assertEqual(str(context.exception), "Friendship not found.")
+
+
+    def test_get_friend(self):
+        self.assertEqual(Friends.get_friend(self.friendship_rejected.pk, self.user2), self.user3)
+    
+    def test_invalid_get_friend(self):
+        with self.assertRaises(ValueError) as context:
+            Friends.get_friend(9999, self.user1)
+
+        self.assertEqual(str(context.exception), "Friendship not found.")
+
+    def test_delete_friend(self):
+        Friends.delete_friend(self.friendship_pending_received.pk)
+        self.assertNotIn(self.friendship_pending_received, Friends.objects.all())
+        
+        Friends.delete_friend(self.friendship_accepted.pk, user=self.user1)
+        self.friendship_accepted.refresh_from_db()
+        self.assertEqual(self.friendship_accepted.status, Status.PENDING)
+
+    def test_invalid_delete_friend(self):
+        with self.assertRaises(ValueError) as context:
+            Friends.delete_friend(9999)
+
+        self.assertEqual(str(context.exception), "Friendship not found.")
+

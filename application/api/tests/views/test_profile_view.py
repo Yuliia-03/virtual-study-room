@@ -32,6 +32,18 @@ class ProfileViewTestCase(APITestCase):
         self.user.refresh_from_db()
         self.assertEqual(self.user.description, new_desc)
 
+    def test_null_description_saved(self):
+        '''Test updating the user's description in the database'''
+        new_desc = None
+        response = self.client.put(
+            '/api/description/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['description'], "")
+
+        # verify that is was updated
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.description, "")
+
 
     def test_get_user_badges(self):
         '''Test the user's badges are correctly returned'''

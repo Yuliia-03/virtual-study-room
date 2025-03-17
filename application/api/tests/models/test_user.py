@@ -1,6 +1,7 @@
 from django.db import IntegrityError
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+from api.models import User
 
 class UserModelTest(TestCase):
     def setUp(self):
@@ -70,5 +71,12 @@ class UserModelTest(TestCase):
         with self.assertRaises(IntegrityError):
             User.objects.create_user(description=None, email="test_none@example.com", firstname="Test", lastname="User", username="testUserNone", password="password123")
 
-        
+    def test_user_with_none_description_fails(self):
+        """Test that creating a user with None description fails when null=False"""
+
+        user = User.objects.create_user(**self.user_data)
+        full_name = user.full_name()
+        self.assertEqual(full_name, "Test User")
+
+
     

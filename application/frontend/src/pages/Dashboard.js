@@ -4,13 +4,15 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 // import ToDoList from '../pages/ToDoList';
-import CalendarPage from '../pages/Calendar1';
+import CalendarPage from './Calendar';
 import ToDoList from '../components/ToDoListComponents/ToDoList';
 import StudyRoomComponent from '../components/StudyRoomComponent';
 import Analytics from './Analytics';
+import  FriendsTab  from '../components/friends/FriendsTab';
+
 import ProfileBox from './ProfileBox';
 
-function Dashboard() {
+function Dashboard() { 
     const navigate = useNavigate();
 
     const gotoCalendar = () => {
@@ -31,16 +33,40 @@ function Dashboard() {
                 <div className = "dashboard-left-panel" data-testid="left-panel">
                     <Analytics />
                     <div className="dashboard-panel">
-                    <button onClick={gotoCalendar}>Go to Calendar</button>   
+                    <button
+                        className="CalendarButton"
+                        onClick={gotoCalendar}
+                        style={{
+                            width: '45px',
+                            height: '45px',
+                            borderRadius: '50%',
+                            backgroundColor: '#bad7f5', // Static background color
+                            border: 'none',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '24px',
+                            transition: 'all 0.2s ease-in-out',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                            marginBottom: '10px',
+                        }}
+                    >
+                        📅
+                    </button>
                     </div>
                 </div>
                 <div className = "dashboard-main-panel" data-testid="main-panel">
                     <div className="dashboard-panel"><ProfileBox /></div>
-                    <div className="dashboard-panel">Friends</div>
+                    <div className="dashboard-panel"><FriendsTab /></div>
                 </div>
                 <div className = "dashboard-right-panel" data-testid="right-panel">
                     <StudyRoomComponent />
-                    <div className="dashboard-panel"><ToDoList/></div>
+                    <div><ToDoList
+                        isShared={false}
+                        listData={[]}
+                    />
+                    </div>
                 </div>
 
                 </div>

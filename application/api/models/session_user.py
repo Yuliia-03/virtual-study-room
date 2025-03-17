@@ -48,9 +48,9 @@ class SessionUser(models.Model):
             
         current_time = now()
         
-        if self.status == 'FOCUSED':
+        '''if self.status == 'FOCUSED':
             time_diff = current_time - self.joined_at
-            self.focus_time += time_diff
+            self.focus_time += time_diff'''
             
         self.status = new_status
         self.save()
@@ -100,7 +100,12 @@ class SessionUser(models.Model):
             user=user, 
             session=session
         ).count() + 1
-        
+
+        # Add user to participants if not already
+        if user not in session.participants.all():
+            session.participants.add(user)
+            session.save()
+
         # Create and return new session
         return cls.objects.create(
             user=user,

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.core.validators import RegexValidator
+from django.db.models import Q
 
 '''
 Custom User Model & Manager. Extends AbstractBaseUser to create custom User model
@@ -54,6 +55,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     created_at = models.DateTimeField(auto_now_add=True)
     hours_studied = models.IntegerField(default=0)
     streaks = models.IntegerField(default=0)
+    share_analytics = models.BooleanField(default=False)
     description = models.TextField(blank=True, default="")  #Text field that can be blank
     total_sessions = models.IntegerField(default=0)
     #profile_id = models.CharField(max_length=255, blank=True, null=True)  #For Firebase storage reference for image - if still needed
@@ -71,16 +73,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.username
     
-    # Required methods for admin and permissions
-    def has_perm(self, perm, obj=None):
-        """Does the user have a specific permission?"""
-        return True
-
-    def has_module_perms(self, app_label):
-        """Does the user have permissions to view the app `app_label`?"""
-        return True
-
     def full_name(self):
         """Return a string containing the user's full name."""
 
         return f'{self.firstname} {self.lastname}'
+
+    @staticmethod
+    def find_user(search_query):
+        return User.objects.filter(
+            Q(username__icontains=search_query) |
+            Q(firstname__icontains=search_query) |
+            Q(lastname__icontains=search_query))
+        

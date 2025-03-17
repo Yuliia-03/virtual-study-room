@@ -2,15 +2,15 @@ import logging
 logging.basicConfig(level=logging.INFO, handlers=[logging.StreamHandler()])
 from django.core.management.base import BaseCommand, CommandError
 from api.models.motivational_message import MotivationalMessage
-
+import random
 from django.core.management import call_command
 
-from api.models import Friends, events, User, Status, toDoList, Permission, MotivationalMessage, Rewards, StudySession, SessionUser, List
+from api.models import Friends, Appointments, User, Status, toDoList, Permission, MotivationalMessage, Rewards, StudySession, SessionUser, List
 
 
 import pytz
 from faker import Faker
-from django.utils.timezone import now
+from django.utils.timezone import now, make_aware
 from random import choice, randint, sample
 from datetime import datetime, timedelta, date
 
@@ -41,8 +41,14 @@ class Command(BaseCommand):
         try:
             call_command('loaddata', 'api/tests/fixtures/default_user.json')
             call_command('loaddata', 'api/tests/fixtures/default_friends.json')
-            call_command('loaddata', 'api/tests/fixtures/default_study_session.json')
-            call_command('loaddata', 'api/tests/fixtures/default_session_users.json')
+
+            call_command('loaddata', 'api/tests/fixtures/default_lists.json')
+            call_command('loaddata', 'api/tests/fixtures/default_permissions.json')
+            call_command('loaddata', 'api/tests/fixtures/default_list_task.json')
+            
+            # call_command('loaddata', 'api/tests/fixtures/default_study_session.json')
+            # call_command('loaddata', 'api/tests/fixtures/default_session_users.json')
+
         except Exception as e:
             self.stdout.write(self.style.ERROR(f'Error while seeding database: {e}'))
       
@@ -57,16 +63,13 @@ class Command(BaseCommand):
             description = "This is a test user"
         )
         self.generate_random_friends()
-        self.generating_rewards()
+        #self.generating_rewards()
         self.generate_random_Lists()
         self.generate_random_toDoLists()
         self.generate_toDoListUsers()
-        #self.generate_events()
-        self.generating_study_sessions()
-        self.generating_session_users()
+        self.generate_events()
+        
 
-
-    
     def generate_random_friends(self):
         friends_count = Friends.objects.count()
         while friends_count < self.FRIENDS_COUNT:
@@ -89,7 +92,8 @@ class Command(BaseCommand):
                 'user1': user1,
                 'user2': user2,
                 'status': status,
-                'created_at': created_at
+                'created_at': created_at,
+                'requested_by': user1
             })
 
     def create_friends(self, data):
@@ -98,7 +102,8 @@ class Command(BaseCommand):
                 user1=data["user1"],
                 user2=data["user2"],
                 status=data["status"],
-                created_at=data["created_at"]
+                created_at=data["created_at"],
+                requested_by=data["requested_by"]
             )
             return friends
         except:
@@ -250,12 +255,12 @@ class Command(BaseCommand):
         print(f"Starting to seed permissions for {len(toDoLists)} toDoLists and {len(users)} users.")
 
         for toDo in toDoLists:
-            if toDo.is_shared:
+            '''if toDo.is_shared:
                 num_permissions = randint(2, len(users))
             else:
-                num_permissions = 1
+                num_permissions = 1'''
             
-            selected_users = sample(users, num_permissions)
+            selected_users = sample(users, 1)
 
             #print(f"{'Shared' if toDo.is_shared else 'Exclusive'} toDoList {toDo.list_id}: Assigning {num_permissions} permissions.")
 
@@ -276,145 +281,32 @@ class Command(BaseCommand):
             )
         except Exception as e:
             self.stdout.write(self.style.ERROR(f'Error creating ToDoListUser: {str(e)}'))
-    
-    # def generate_events(self):
-    #         titles = [
-    #             "Django Workshop",
-    #             "Python Developer Meetup",
-    #             "Frontend Development Conference",
-    #             "Tech Talk: Artificial Intelligence",
-    #             "Web Development Bootcamp"
-    #         ]
-    #         descriptions = [
-    #             "A workshop on Django for beginners.",
-    #             "Join us for a Python meetup with interesting talks.",
-    #             "Learn about the latest in frontend development.",
-    #             "Discover the power of AI in this tech talk.",
-    #             "An intensive bootcamp focused on web development skills."
-    #         ]
-    #         locations = [
-    #             "Room A, Tech Hub",
-    #             "Room B, Main Building",
-    #             "Online",
-    #             "Room C, Innovation Center",
-    #             "Room D, Conference Hall"
-    #         ]
+  
 
-    #         # Seed 10 sample events
-    #         for _ in range(10):
-    #             title = random.choice(titles)
-    #             description = random.choice(descriptions)
-    #             location = random.choice(locations)
-    #             start_time = datetime.now() + timedelta(days=random.randint(1, 10))
-    #             end_time = start_time + timedelta(hours=random.randint(1, 4))
-                
-    #             # Create the Event object
-    #             event = Event.objects.create(
-    #                 users = list(User.objects.create())
-    #                 title=title,
-    #                 description=description,
-    #                 start_time=start_time,
-    #                 end_time=end_time,
-    #                 location=location,
-    #                 is_completed=random.choice([True, False])
-    #             )
+    def generate_events(self):
+        # Clear existing events
+        Appointments.objects.all().delete()
 
-    #             self.stdout.write(self.style.SUCCESS(f'Successfully created event: {event.title}'))
+        # Seed events for each user
+        for user in User.objects.all():
+            for i in range(5):  # Create 5 events per user
+                naive_start_date = datetime.now() + timedelta(days=random.randint(1, 30))
+                naive_end_date = naive_start_date + timedelta(hours=random.randint(1, 5))
 
-    """Seeder for Study Sessions"""
-    def generating_study_sessions(self):
-        for x in range(self.SESSION_COUNT):
-            print(f"Seeding study session {x+1}/{self.SESSION_COUNT}", end='\r')
-            self.generate_random_study_session()
-        print("Study Sessions seeding complete!")
+                # Make the datetime objects timezone-aware
+                start_date = make_aware(naive_start_date)
+                end_date = make_aware(naive_end_date)
 
-    def generate_random_study_session(self):
-        user = choice(User.objects.all())
-        session_name = self.faker.sentence(nb_words=4)
-        start_time = now()
-
-        # Decide if session has ended or is ongoing
-        is_ongoing = randint(0, 1)  # 50% chance of session being ongoing
-        if is_ongoing:
-            end_time = None  # Session is still ongoing
-        else:
-            # Session has ended
-            end_time = start_time + timedelta(hours=randint(1, 5))
-
-        session_date = date.today()
-
-        try:
-            StudySession.objects.create(
-                createdBy=user, 
-                sessionName=session_name, 
-                startTime=start_time, 
-                endTime=end_time, 
-                date=session_date
-            )
-        except Exception as e:
-            print(f"Failed to create study session: {e}")
-    
-    """Seeder for Study Session Users"""
-    def generating_session_users(self):
-        sessions = list(StudySession.objects.all())
-        users = list(User.objects.all())
-        session_user_count = 0
-
-        if not sessions or not users:
-            print("No sessions or no users found. Skipping session user seeding.")
-            return
+                Appointments.objects.create(
+                    user=user,
+                    name="CLASS for STUDENTS",
+                    start_date=start_date,
+                    end_date=end_date,
+                    comments=f"Sample comment for event {i + 1}",
+                    status=random.choice(['Pending', 'Confirmed', 'Cancelled']),
+                )
+        self.stdout.write(self.style.SUCCESS('Successfully seeded events for all users.'))
         
-        #Making sure every session has at least 1 user 
-        for session in sessions:
-            user = choice(users)
-            self.create_session_user(user, session)
-            session_user_count += 1
-            if session_user_count >= self.SESSION_USER_COUNT:
-                return
-        
-        #Add remaining random no. of users to random sessions
-        while session_user_count < self.SESSION_USER_COUNT:
-            user = choice(users)
-            session = choice(sessions)
-            self.create_session_user(user, session)
-            session_user_count +=1
-        
-        print("Study Session Users seeding complete!")
-
-    def create_session_user(self, user, session):
-        joined_at_time = now()
-    
-        if session.endTime is None:
-            # Session is ongoing
-            has_left = randint(0, 1)  # 50% chance user has left
-            
-            if has_left:
-                # User left sometime after 1 or 2 hrs
-                left_at_time = joined_at_time + timedelta(hours=randint(1,2))
-            else:
-                # User is still in the session
-                left_at_time = None
-        else:
-            # Session has ended, so all users must have left
-            # User left sometime between joining and session end
-            end_time = session.endTime
-
-            max_duration = (end_time - joined_at_time).total_seconds()
-            random_duration = randint(60, int(max_duration)) if max_duration > 60 else 60
-            left_at_time = joined_at_time + timedelta(seconds=random_duration)
-        try:
-            SessionUser.objects.create(
-                user=user,
-                session=session,
-                status=choice(['FOCUSED', 'CASUAL']),
-                focus_target=self.faker.sentence(nb_words=6) if randint(0, 1) else None,
-                joined_at= joined_at_time,
-                left_at = left_at_time
-            )
-        except Exception as e:
-            print(f"Failed to create session user: {e}")
-        
-
 
     # Helper functions
     def create_username(self, first_name, last_name):
