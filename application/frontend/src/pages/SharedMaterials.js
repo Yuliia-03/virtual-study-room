@@ -7,12 +7,13 @@ import { ref, getDownloadURL, uploadBytes, listAll, deleteObject } from "firebas
 import { getAuthenticatedRequest, getAccessToken } from "../utils/authService";
 import "../styles/SharedMaterials.css";
 
-function SharedMaterials() {
+function SharedMaterials( { socket }) {
     const [files, setFiles] = useState([]);
     const [fileModalOpen, setFileModalOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [roomCode, setRoomCode] = useState(null);
 
+    // Fetch files and setup websocket receiver
     useEffect(() => {
         const fetchFiles = async () => {
             const data = await getAuthenticatedRequest("/shared_materials/", "GET");
@@ -33,7 +34,30 @@ function SharedMaterials() {
         };
 
         fetchFiles();
-    }, [roomCode]);
+
+        // Listen for websocket messages
+        if (socket) {
+            socket.onmessage = (event) => {
+                const data = JSON.parse(event.data)
+
+            if (data.type === "file_uploaded") {
+                // Add the new file to the list
+                setFiles((prevFiles) => [...prevFiles, data.file]);
+            }
+            else if (data.type = "file_deleted") {
+                // Remove the deleted file from the list
+                setFiles((prevFiles) => prevFiles.filter(file => file.name !== data.fileName));
+            }
+        };
+
+        // Clean up websocket listener on unmount
+        return() =>{
+            if (socket) {
+                socket.onmessage = null;
+                }
+        };
+    };
+    }, [roomCode, socket]);
 
     const handleUploadFile = async (event) => {
         const file = event.target.files[0];

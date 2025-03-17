@@ -405,7 +405,7 @@ function GroupStudyPage() {
           className="sharedMaterials-container"
           data-testid="sharedMaterials-container"
         >
-          <SharedMaterials />
+          <SharedMaterials socket = {socket} />
         </div>
       </div>
       {/*2nd Column */}
