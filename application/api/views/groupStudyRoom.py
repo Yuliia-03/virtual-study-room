@@ -216,8 +216,8 @@ def notify_participants(room_code, participants):
     async_to_sync(channel_layer.group_send)(
         f"room_{room_code}",
         {
-            'type' : 'send_participants',
-            'participants' : participants,
+            'type': 'participants_update',
+            'participants': [participant.username for participant in participants],
         }
     )
 

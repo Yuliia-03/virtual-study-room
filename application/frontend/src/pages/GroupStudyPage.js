@@ -125,15 +125,15 @@ function GroupStudyPage() {
             }
             if (data.type === "participants_update") {
                 console.log("Recreating the page to fix participants...")
-                 // Fetch image URLs for each participant and update the state
+                 // Update the participants list
+                // Update the participants list
                 const updatedParticipants = await Promise.all(
-                  data.participants.map(async (participant) => {
-                    const imageUrl = await fetchParticipantData(participant.username);
-                    return { ...participant, imageUrl }; // Add imageUrl to the participant object
-                  })
+                    data.participants.map(async (username) => {
+                        const imageUrl = await fetchParticipantData(username);
+                        return { username, imageUrl };
+                    })
                 );
-
-                setParticipants(updatedParticipants); // Update state with participants and their image URLs
+                setParticipants(updatedParticipants);
             }
             else if (data.type === "typing") {
                 setTypingUser(data.sender);
@@ -154,6 +154,7 @@ function GroupStudyPage() {
             setTimeout(connectWebSocket, 1000); // Attempt to reconnect after 1 seconds
         }
     };
+    setSocket(ws);
     };
 
   //Sends chat message through websocket connection
