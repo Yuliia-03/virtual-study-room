@@ -165,23 +165,6 @@ function GroupStudyPage() {
     }
   };
 
-  //testing functions- for UI purposes (not linked to the database)
-
-  /*const [todos, setTodos] = useState([
-        { id: 1, text: "Study for Math", checked: false },
-        { id: 2, text: "Study for English", checked: false },
-        { id: 3, text: "Study for Geography", checked: false },
-        { id: 4, text: "Study for Chemistry", checked: false },
-        { id: 5, text: "Study for Economics", checked: false },
-        { id: 6, text: "Study for Engineering", checked: false },
-        { id: 7, text: "Study for Physics", checked: false },
-        { id: 8, text: "Study for Biology", checked: false },
-    ]);*/
-  //page is designed in columns
-  //First Column: todoList, shared materials
-  //Second Column: users listes, motivational message
-  //Third Column: Timer, customisation, chatbox
-
   // Method to leave room
   const leaveRoom = useCallback(async () => {
     try {
