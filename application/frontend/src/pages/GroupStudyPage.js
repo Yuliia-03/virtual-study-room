@@ -366,6 +366,10 @@ function GroupStudyPage() {
     }
   };
 
+  const handleExit = () => {
+    navigate("/dashboard");
+  };
+
   let typingTimeout;
   const handleTyping = () => {
     if (!socket || socket.readyState !== WebSocket.OPEN) return;
@@ -482,6 +486,7 @@ function GroupStudyPage() {
               </div>
             ))}
           </div>
+          ); };
         </div>
         <MotivationalMessage data-testid="motivationalMessage-container" />
       </div>
