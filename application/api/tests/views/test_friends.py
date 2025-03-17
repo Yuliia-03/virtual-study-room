@@ -79,6 +79,20 @@ class FriendsViewTestCase(APITestCase):
         self.assertEqual(list_data['surname'], check_data[0].lastname)
         self.assertEqual(list_data['username'], check_data[0].username)
 
+    def test_get_friend_profile(self):
+        """Test if the API correctly returns lists for an authenticated user based on permissions."""
+
+        response = self.client.get(f'/api/get_friend_profile/3/')
+
+        friend = Friends.get_friend(3, self.user)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        list_data = response.data
+        self.assertEqual(friend.id, list_data['id'])
+        self.assertEqual(friend.firstname, list_data['name'])
+        self.assertEqual(friend.lastname, list_data['surname'])
+        self.assertEqual(friend.username, list_data['username'])
+
     def test_accept_friend(self):
 
         self.assertEqual(Friends.objects.get(pk=4).status, Status.PENDING)

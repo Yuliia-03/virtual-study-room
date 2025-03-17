@@ -73,15 +73,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.username
     
-    # Required methods for admin and permissions
-    def has_perm(self, perm, obj=None):
-        """Does the user have a specific permission?"""
-        return True
-
-    def has_module_perms(self, app_label):
-        """Does the user have permissions to view the app `app_label`?"""
-        return True
-
     def full_name(self):
         """Return a string containing the user's full name."""
 
