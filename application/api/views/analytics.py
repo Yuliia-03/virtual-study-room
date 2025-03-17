@@ -57,6 +57,21 @@ def get_analytics(request):
     return Response({
         "streaks": user.streaks,
         "total_hours_studied": user.hours_studied,
+        "is_sharable": user.share_analytics,
         "average_study_hours": round(avg_study_hours, 2),
         "earned_badges": earned_badges
     })
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def update_analytics(request):
+
+    user = request.user
+    new_status = not user.share_analytics
+
+    user.share_analytics = new_status
+    user.save()
+    
+    return Response({"message": "Joined successfully!"})
+
+    

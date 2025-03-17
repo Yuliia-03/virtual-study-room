@@ -22,7 +22,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from api.views import *
 from api import views
 from api.views.profile_view import get_logged_in_user, save_description, get_user_badges
-from api.views.analytics import get_analytics
+from api.views.analytics import get_analytics, update_analytics
 from api.views.groupStudyRoom import create_room, join_room
 from api.views.calendar import EventViewSet
 event_list = EventViewSet.as_view({'get': 'list', 'post': 'create'})  
@@ -39,6 +39,8 @@ urlpatterns = [
     path('api/signup/', views.SignUpView.as_view(), name='signup'),
     # Default for logged-in user
     path("api/analytics/", get_analytics, name="analytics"),
+    path("api/share_analytics/", update_analytics, name="update_analytics"),
+    
     path('api/login/', views.login, name='login'),
 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

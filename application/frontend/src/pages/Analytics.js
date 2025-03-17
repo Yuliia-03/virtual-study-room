@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import "../styles/Analytics.css";
+import { getAuthenticatedRequest } from "../utils/authService";
 
 const Analytics = () => {
-    const [analytics, setAnalytics] = useState({ streaks: 0, total_hours_studied:0, average_study_hours: 0 });
+    const [analytics, setAnalytics] = useState({ streaks: 0, total_hours_studied: 0, average_study_hours: 0, is_sharable: false });
 
     useEffect(() => {
         const fetchAnalytics = async () => {
@@ -40,6 +41,22 @@ const Analytics = () => {
         console.log(analytics);
     }, []); // Empty dependency array ensures this runs only once when the component mounts
 
+    const toggleTaskCompletion = async () => {
+        try {
+            const response = await getAuthenticatedRequest(`/share_analytics/`, "PATCH");
+            if (response.status === 0) {
+                console.error("Error updating task status");
+            } else {
+                setAnalytics(prevList => ({
+                    ...prevList, is_sharable: !prevList.is_sharable
+                }));
+            }
+        } catch (error) {
+            console.error("Error fetching to-do lists:", error);
+        }
+    };
+
+
     return ( 
         <div className="dashboard-panel analytics">
             <h2>Your Progress</h2>
@@ -70,7 +87,18 @@ const Analytics = () => {
                 </div>
             </div>
             <div className="share">
-                <div className="share-label" ></div>
+                <div className="share-label" >
+                    <div className="checkbox-wrapper-5">
+                        <h5>Make it sharable</h5>
+                        <div className="check">
+                            <input id="check-5"
+                                type="checkbox"
+                                checked={analytics.is_sharable}
+                                onChange={() => toggleTaskCompletion()}></input>
+                            <label htmlFor="check-5"></label>
+                        </div>
+                    </div>
+                </div>
                 <div className="button-container">
                 </div>
             </div>
