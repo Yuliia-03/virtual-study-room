@@ -159,11 +159,11 @@ def get_room_details(request):
 
     print("Retrieving name for the study room", room_code)
 
-    # get the room and get the name of the room
-    study_session = StudySession.objects.get(roomCode=room_code)
-    session_name = study_session.sessionName
-    print("Retrieved the room name", session_name)
     try:
+        # get the room and get the name of the room
+        study_session = StudySession.objects.get(roomCode=room_code)
+        session_name = study_session.sessionName
+        print("Retrieved the room name", session_name)
         return Response({"sessionName" : session_name,
                          "roomList": study_session.toDoList.id
         })
