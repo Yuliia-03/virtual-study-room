@@ -53,14 +53,23 @@ function GroupStudyPage() {
   const [messages, setMessages] = useState([]);
 
   const [customInput, setCustomInput] = useState(""); // For the customisation box
-  const [chatInput, setChatInput] = useState(""); //Fot chat box
+  const [chatInput, setChatInput] = useState(""); //For chat box
 
-  const [username, setUsername] = useState("ANON_USER"); // Default to 'ANON_USER' before fetching. Stores username fetched from the backend
+  const [username, setUsername] = useState("");
 
   const [isTyping, setIsTyping] = useState(false);
   const [typingUser, setTypingUser] = useState("");
 
   const [shouldReconnect, setShouldReconnect] = useState(true);  // Determines whether or not to auto-reconnect user to websocket server
+
+
+  // Updates the websocket saved everytime it changes
+  useEffect(() => {
+    if (socket) {
+        console.log("Socket state updated:", socket);
+    }
+  }, [socket]); // This effect runs whenever `socket` changes
+
 
   useEffect(() => {
         // Ensure room code is given
@@ -73,13 +82,15 @@ function GroupStudyPage() {
 
 
         if (finalRoomCode) {
+          // Get the logged in user's data
+          fetchUserData();
+
+
           // Retrieves the room participants currently in the room when joining
+          // Fetches the data for each user ( username and profile picture from firebase )
           fetchParticipants(finalRoomCode);
-          fetchParticipantData();
           }
 
-        // Fetches the data for each user ( username and profile picture from firebase )
-        fetchUserData();
 
         // If the user disconnects by accident due to a timeout, will auto-reconnect
         setShouldReconnect(true);
@@ -91,11 +102,12 @@ function GroupStudyPage() {
         return () => {
             setShouldReconnect(false); // Signal not to reconnect anymore
             if (socket) {
+                console.log("Closing WebSocket connection on unmount...");
                 socket.close();
             }
 
     };
-  }, [finalRoomCode]);
+  }, [finalRoomCode, shouldReconnect]);
 
 
 // Method for connecting to the websocket
@@ -112,6 +124,7 @@ function GroupStudyPage() {
         ws.onopen = () => {
             console.log("Connected to Websocket");
             setSocket(ws);
+            console.log("socket", ws);
         };
 
         //Handles incoming messages.
@@ -124,7 +137,7 @@ function GroupStudyPage() {
                 setMessages((prev) => [...prev, { sender: data.sender, text: data.message }]);
             }
             if (data.type === "participants_update") {
-                console.log("Recreating the page to fix participants...")
+                console.log("Re-rendering the participants on the page...")
                  // Update the participants list
                 // Update the participants list
                 const updatedParticipants = await Promise.all(
@@ -198,6 +211,7 @@ function GroupStudyPage() {
   // Function to fetch participants
   const fetchParticipants = async (roomCode) => {
     console.log("Fetching participants")
+
     try {
       const response = await getAuthenticatedRequest(
         `/get-participants/?roomCode=${roomCode}`,
@@ -220,8 +234,12 @@ function GroupStudyPage() {
   };
 
   // Function to get user profiles
-
   const fetchParticipantData = async (username) => {
+    if (!username) {
+        return defaultAvatar; // Return a default avatar if username is undefined
+    }
+    console.log("fetched user data", username)
+
     try {
       const data = await getAuthenticatedRequest("/profile/", "GET");
 
@@ -232,7 +250,7 @@ function GroupStudyPage() {
       ); //default image if not found
       return imageUrl; // Return the imageUrl
     } catch (error) {
-      toast.error("error fetching user data");
+      toast.error("Error fetching user data");
       return defaultAvatar; // IF there is an error return default avatar
     }
   };
@@ -270,7 +288,22 @@ function GroupStudyPage() {
 
   // Method to leave room
   const leaveRoom = useCallback(async () => {
+
+    // User is leaving so they should not reconnect to the room automatically
+    setShouldReconnect(false)
+
     try {
+
+      // Close the WebSocket connection if it exists
+        if (socket) {
+            console.log("Closing WebSocket connection...");
+            socket.close(); // Close the WebSocket connection
+            setSocket(null);
+        }
+        else {
+            console.log("Connection to websocket already terminated.")
+        }
+
       // This stuff gets sent to the backend!
       const response = await getAuthenticatedRequest("/leave-room/", "POST", {
         roomCode: finalRoomCode, // Sends the room name to the backend
