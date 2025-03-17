@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 
+from rest_framework import status
 from api.models import SessionUser, User, Rewards
 
 from django.db import models
@@ -72,6 +73,6 @@ def update_analytics(request):
     user.share_analytics = new_status
     user.save()
     
-    return Response({"message": "Joined successfully!"})
+    return Response({"message": "Joined successfully!"}, status=status.HTTP_200_OK)
 
     
