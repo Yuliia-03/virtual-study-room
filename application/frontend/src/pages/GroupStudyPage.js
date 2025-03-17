@@ -56,85 +56,101 @@ function GroupStudyPage() {
   const [isTyping, setIsTyping] = useState(false);
   const [typingUser, setTypingUser] = useState("");
 
+  const [shouldReconnect, setShouldReconnect] = useState(true);  // Determines whether or not to auto-reconnect user to websocket server
 
   useEffect(() => {
-      console.log("GroupStudyPage UseEffect is being called now!")
-      if (finalRoomCode) {
-          fetchParticipants(finalRoomCode);
-          fetchParticipantData();
-          }
-
-        //Fetches logged in user's username when component mounts
-        //Updates username state with fetched data or defaults to 'anonymous'
-        const fetchUserData = async () => {
-            try {
-                const data = await getAuthenticatedRequest("/profile/", "GET");
-                setUsername(data.username || "Anonymous"); // Fallback in case username is missing
-            } catch (error) {
-                console.error("Error fetching user data", error);
-            }
-        };
-        fetchUserData();
-        
         // Ensure room code is given
         if (!finalRoomCode) {
           console.error("Room code is missing.");
           return;
         }
 
-        // Check if a WebSocket connection already exists, not sure if this actually does anything?
-        if (socket === WebSocket.OPEN) {
-            console.log("Using existing WebSocket connection");
-            return; // Reuse the existing connection
-        }
+        console.log("GroupStudyPage UseEffect is being called now!")
 
-        console.log("Creates a new websocket connection");
-        const ws = new WebSocket(`ws://localhost:8000/ws/room/${finalRoomCode}/`);
-    
-        //Logs when connection is established
-        ws.onopen = () => {
-            console.log("Connected to Websocket");
-            setSocket(ws);
-        };
-    
-        //Handles incoming messages.
-        ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            console.log("Received WebSocket Message:", data); 
-            if (data.type === "chat_message") { //if message type is 'chat_message' then add to messages state
-                // Ensure the message is structured as an object with `sender` and `text`
-                console.log("Received message:", data); // Debugging
-                setMessages((prev) => [...prev, { sender: data.sender, text: data.message }]);
-            }
-            if (data.type === "participants_update") {
-            setParticipants(data.participants);
-            fetchParticipants(finalRoomCode);
-            fetchUserData();
-            }
-            else if (data.type === "typing") {
-                setTypingUser(data.sender);
 
-                // Remove "typing" message after 3 seconds
-                setTimeout(() => {
-                    setTypingUser("");
-                }, 3000);
+        if (finalRoomCode) {
+          // Retrieves the room participants currently in the room when joining
+          fetchParticipants(finalRoomCode);
+          fetchParticipantData();
+          }
 
-            }
-        };
+        // Fetches the data for each user ( username and profile picture from firebase )
+        fetchUserData();
 
-        //Logs when the connection is closed
-        ws.onclose = (event) => console.log("Disconnected from Websocket", event.code,  event.reason);
-    
-        // Cleanup function -> closes the websocket connection when the component unmounts
+        // If the user disconnects by accident due to a timeout, will auto-reconnect
+        setShouldReconnect(true);
+
+        // Initial connection to the websocket
+        connectWebSocket();
+
+        // Cleanup function to prevent reconnect attempts after the component unmounts
         return () => {
-        if (ws.readyState === WebSocket.OPEN) {
-            ws.close(); // Cleanup on unmount
-        }
+            setShouldReconnect(false); // Signal not to reconnect anymore
+            if (socket) {
+                socket.close();
+            }
+
     };
-
-//     setSocket(ws);
-
   }, [finalRoomCode]);
+
+  // Method for connecting to the websocket
+  const connectWebSocket = () => {
+            // Check if a WebSocket connection already exists, not sure if this actually does anything?
+            if (socket === WebSocket.OPEN) {
+                console.log("Using existing WebSocket connection");
+                return; // Reuse the existing connection
+            }
+
+            console.log("Creates a new websocket connection");
+            const ws = new WebSocket(`ws://localhost:8000/ws/room/${finalRoomCode}/`);
+
+            //Logs when connection is established
+            ws.onopen = () => {
+                console.log("Connected to Websocket");
+                setSocket(ws);
+            };
+
+            //Handles incoming messages.
+            ws.onmessage = async (event) => {
+                const data = JSON.parse(event.data);
+                console.log("Received WebSocket Message:", data);
+                if (data.type === "chat_message") { //if message type is 'chat_message' then add to messages state
+                    // Ensure the message is structured as an object with `sender` and `text`
+                    console.log("Received message:", data); // Debugging
+                    setMessages((prev) => [...prev, { sender: data.sender, text: data.message }]);
+                }
+                if (data.type === "participants_update") {
+                    console.log("Recreating the page to fix participants...")
+                     // Fetch image URLs for each participant and update the state
+                    const updatedParticipants = await Promise.all(
+                      data.participants.map(async (participant) => {
+                        const imageUrl = await fetchParticipantData(participant.username);
+                        return { ...participant, imageUrl }; // Add imageUrl to the participant object
+                      })
+                    );
+
+                    setParticipants(updatedParticipants); // Update state with participants and their image URLs
+                }
+                else if (data.type === "typing") {
+                    setTypingUser(data.sender);
+
+                    // Remove "typing" message after 3 seconds
+                    setTimeout(() => {
+                        setTypingUser("");
+                    }, 3000);
+
+                }
+            };
+
+            //Logs when the connection is closed
+            ws.onclose = () => {
+            console.log("Disconnected from WebSocket");
+            if (shouldReconnect) {
+                setTimeout(connectWebSocket, 1000); // Attempt to reconnect after 1 seconds
+            }
+        };
+        };
+
 
   //Sends chat message through websocket connection
   const sendMessage = () => {
@@ -162,8 +178,20 @@ function GroupStudyPage() {
   }; 
   // end of websockets stuff
 
+    //Fetches logged in user's username when component mounts
+    //Updates username state with fetched data or defaults to 'anonymous'
+    const fetchUserData = async () => {
+        try {
+            const data = await getAuthenticatedRequest("/profile/", "GET");
+            setUsername(data.username || "Anonymous"); // Fallback in case username is missing
+        } catch (error) {
+            console.error("Error fetching user data", error);
+        }
+    };
+
   // Function to fetch participants
   const fetchParticipants = async (roomCode) => {
+    console.log("Fetching participants")
     try {
       const response = await getAuthenticatedRequest(
         `/get-participants/?roomCode=${roomCode}`,
@@ -284,9 +312,9 @@ function GroupStudyPage() {
                 .then(() => {
                     toast.success("Code copied to clipboard!", {
                         position: "top-center",
-                        autoClose: 1000,  
+                        autoClose: 1000,
                         closeOnClick: true,
-                        pauseOnHover: true, 
+                        pauseOnHover: true,
                     });
                 })
                 .catch(err => {
@@ -305,7 +333,7 @@ function GroupStudyPage() {
         if (!socket || socket.readyState !== WebSocket.OPEN) return;
         // Send "typing" event to WebSocket
         socket.send(JSON.stringify({ type: "typing", sender: username }));
-    
+
         // Prevent multiple events from being sent too frequently
         if (isTyping) {
             setIsTyping(true);

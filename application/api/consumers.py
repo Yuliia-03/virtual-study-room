@@ -7,6 +7,8 @@ class RoomConsumer(AsyncWebsocketConsumer):
         super().__init__(args, kwargs)
         self.room_group_name = None
         self.room_code = None
+        self.send_participants() = set()
+        # to track the participants in the room
 
     async def connect(self):
         self.room_code = self.scope["url_route"]["kwargs"]["room_code"]

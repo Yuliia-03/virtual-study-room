@@ -52,6 +52,7 @@ const StudyParticipants = () => {
 
     return () => {
       socket.close();
+      console.log("Study Participants Websocket is closed")
     };
   };
 
