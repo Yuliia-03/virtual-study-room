@@ -308,7 +308,7 @@ function GroupStudyPage() {
                 .then(() => {
                     toast.success("Code copied to clipboard!", {
                         position: "top-center",
-                        autoClose: 1000,  
+                        autoClose: 100,
                         closeOnClick: true,
                         pauseOnHover: true, 
                     });

@@ -196,9 +196,17 @@ def leave_room(request):
         # Fetch the study session using the room code
         study_session = StudySession.objects.get(roomCode=room_code)
 
-        # Add the user to the participants field
+        # Remove the user from the participants field
         study_session.participants.remove(user)
         study_session.save()
+
+        # Fetch the updated participants list
+        participants = study_session.participants.all()
+
+        # Notify all clients in the room
+        notify_participants(room_code, participants)
+
+        print(f"Notifying participants in room {room_code}: {participants}")
 
         try:
             session_user = SessionUser.objects.get(user=user, session=study_session)
