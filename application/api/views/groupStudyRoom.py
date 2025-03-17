@@ -38,16 +38,35 @@ def create_room(request):
     # use as default session name for now, later take as input field for user to type in
     #session_name = "Untitled Study Session"
 
+     # if the user is already in another room they have to 'leave' that room first
+    if SessionUser.objects.filter(user=user).exists():
+        print("Deleting user from old session")
+        session_users = SessionUser.objects.filter(user=user)
+        for session_user in session_users:
+            previous_session = session_user.session
+            user = session_user.user
+            previous_session.participants.remove(user)
+            session_user.delete()
+            print(" user removed from old session")
+            
     try:
+
+        print("Room start")
         room = StudySession.objects.create(
                 createdBy = user,
                 sessionName = session_name
         )
+
+        print("Room ", room)
+
         # is using the study session auto generated ID as the room code
         # Add the user to the participants field
         room.participants.add(user)
+
+        print("Room ", room)
         room.save()
 
+        print("Room ", room)
         if SessionUser.objects.filter(user=user, session=room).exists():
             print("User is already in the session. Updating join sequence.")
             session_user = SessionUser.objects.filter(user=user, session=room).first()
@@ -60,7 +79,9 @@ def create_room(request):
             )
 
         print("User", user, "has successfully made the room:", session_name, "with code:", room.roomCode)
-        return Response({"roomCode" : room.roomCode})
+        return Response({"roomCode" : room.roomCode,
+                        "roomList": room.toDoList.id
+        })
         # returns the room ID as the room code
     except Exception as e:
         return Response({"error": f"Failed to create room: {str(e)}"}, status=400)
@@ -70,7 +91,8 @@ def create_room(request):
 @permission_classes([IsAuthenticated])
 def join_room(request):
     print("API is being called")
-    print("Request headers:", request.headers)  # Debugging: Log request headers
+    # Debugging: Log request headers
+    print("Request headers:", request.headers)
     print("Request user:", request.user)  # Debugging: Log the user
     print("Request room code:", request.data)
 
@@ -80,8 +102,20 @@ def join_room(request):
     if not user.is_authenticated:
         return Response({"error": "User must be logged in"}, status=401)
 
-    print("User", user, "is attempting to join room :", request.data.get("roomCode"))
+    print("User", user, "is attempting to join room :",
+          request.data.get("roomCode"))
     # takes the room code
+
+    # if the user is already in another room they have to 'leave' that room first
+    if SessionUser.objects.filter(user=user).exists():
+        print("Deleting user from old session")
+        session_users = SessionUser.objects.filter(user=user)
+        for session_user in session_users:
+            previous_session = session_user.session
+            user = session_user.user
+            previous_session.participants.remove(user)
+            session_user.delete()
+            print(" user removed from old session")
 
     room_code = request.data.get('roomCode')
     if StudySession.objects.filter(roomCode=room_code).exists():
@@ -101,7 +135,8 @@ def join_room(request):
         # create an instance of session user
         if SessionUser.objects.filter(user=user, session=study_session).exists():
             print("User is already in the session. Updating join sequence.")
-            session_user = SessionUser.objects.filter(user=user, session=study_session).first()
+            session_user = SessionUser.objects.filter(
+                user=user, session=study_session).first()
             session_user.rejoin_session(user, study_session)
         else:
             print("Creating new SessionUser instance.")
@@ -129,7 +164,9 @@ def get_room_details(request):
     session_name = study_session.sessionName
     print("Retrieved the room name", session_name)
     try:
-        return Response({"sessionName" : session_name})
+        return Response({"sessionName" : session_name,
+                         "roomList": study_session.toDoList.id
+        })
         # returns the room name
     except Exception as e:
         return Response({"error": f"Failed to retrieve room details: {str(e)}"}, status=400)

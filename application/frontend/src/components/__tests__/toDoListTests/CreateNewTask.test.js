@@ -1,16 +1,16 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import AddTaskModal from "../../ToDoListComponents/CreateNewTask";
-import * as authService from "../../../pages/utils/authService";
+import * as authService from "../../../utils/authService";
 
-jest.mock("../../../pages/utils/authService", () => ({
+jest.mock("../../../utils/authService", () => ({
     getAuthenticatedRequest: jest.fn(),
 }));
 
 describe("CreateNewTask", () => {
 
     let setAddTaskWindowMock, setListsMock;
-
+ 
     beforeAll(() => {
         global.alert = jest.fn(); // Mock window.alert
         global.console.log = jest.fn(); // Mock window.alert
@@ -19,7 +19,7 @@ describe("CreateNewTask", () => {
     afterAll(() => {
         global.alert.mockRestore();
         global.console.log.mockRestore(); // Restore alert after tests
-    });
+    }); 
 
     beforeEach(() => {
         setAddTaskWindowMock = jest.fn();

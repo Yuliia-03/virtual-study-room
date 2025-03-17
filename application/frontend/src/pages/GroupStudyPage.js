@@ -5,9 +5,10 @@ import musicLogo from "../assets/music_logo.png";
 import customLogo from "../assets/customisation_logo.png";
 import copyLogo from "../assets/copy_logo.png";
 import exitLogo from "../assets/exit_logo.png";
+import ToDoList from "../components/ToDoListComponents/ToDoList";
 import StudyTimer from "../components/StudyTimer.js";
 import StudyParticipants from "../components/StudyParticipants.js";
-import { getAuthenticatedRequest } from "../pages/utils/authService";
+import { getAuthenticatedRequest } from "../utils/authService";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "../styles/ChatBox.css";
@@ -15,6 +16,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import defaultAvatar from "../assets/avatars/avatar_2.png";
 import { storage } from "../firebase-config";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import SharedMaterials from "./SharedMaterials.js";
+
 
 function GroupStudyPage() {
 
@@ -27,9 +30,10 @@ function GroupStudyPage() {
   // Track the logged-in user
   const [loggedInUser, setLoggedInUser] = useState(null);
 
-  const { roomCode, roomName } = location.state || {
+  const { roomCode, roomName, roomList } = location.state || {
     roomCode: "",
     roomName: "",
+    roomList: "",
   };
   // Retrieve roomCode and roomName from state
 
@@ -51,7 +55,7 @@ function GroupStudyPage() {
   const [customInput, setCustomInput] = useState(""); // For the customisation box
   const [chatInput, setChatInput] = useState(""); //Fot chat box
 
-  const [username, setUsername] = useState("ANON_USER");   // Default to 'ANON_USER' before fetching. Stores username fetched from the backend
+  const [username, setUsername] = useState("ANON_USER"); // Default to 'ANON_USER' before fetching. Stores username fetched from the backend
 
   const [isTyping, setIsTyping] = useState(false);
   const [typingUser, setTypingUser] = useState("");
@@ -93,89 +97,31 @@ function GroupStudyPage() {
     };
   }, [finalRoomCode]);
 
-  // Method for connecting to the websocket
-  const connectWebSocket = () => {
-            // Check if a WebSocket connection already exists, not sure if this actually does anything?
-            if (socket === WebSocket.OPEN) {
-                console.log("Using existing WebSocket connection");
-                return; // Reuse the existing connection
-            }
-
-            console.log("Creates a new websocket connection");
-            const ws = new WebSocket(`ws://localhost:8000/ws/room/${finalRoomCode}/`);
-
-            //Logs when connection is established
-            ws.onopen = () => {
-                console.log("Connected to Websocket");
-                setSocket(ws);
-            };
-
-            //Handles incoming messages.
-            ws.onmessage = async (event) => {
-                const data = JSON.parse(event.data);
-                console.log("Received WebSocket Message:", data);
-                if (data.type === "chat_message") { //if message type is 'chat_message' then add to messages state
-                    // Ensure the message is structured as an object with `sender` and `text`
-                    console.log("Received message:", data); // Debugging
-                    setMessages((prev) => [...prev, { sender: data.sender, text: data.message }]);
-                }
-                if (data.type === "participants_update") {
-                    console.log("Recreating the page to fix participants...")
-                     // Fetch image URLs for each participant and update the state
-                    const updatedParticipants = await Promise.all(
-                      data.participants.map(async (participant) => {
-                        const imageUrl = await fetchParticipantData(participant.username);
-                        return { ...participant, imageUrl }; // Add imageUrl to the participant object
-                      })
-                    );
-
-                    setParticipants(updatedParticipants); // Update state with participants and their image URLs
-                }
-                else if (data.type === "typing") {
-                    setTypingUser(data.sender);
-
-                    // Remove "typing" message after 3 seconds
-                    setTimeout(() => {
-                        setTypingUser("");
-                    }, 3000);
-
-                }
-            };
-
-            //Logs when the connection is closed
-            ws.onclose = () => {
-            console.log("Disconnected from WebSocket");
-            if (shouldReconnect) {
-                setTimeout(connectWebSocket, 1000); // Attempt to reconnect after 1 seconds
-            }
-        };
-        };
-
-
   //Sends chat message through websocket connection
   const sendMessage = () => {
-      if (!socket || socket.readyState !== WebSocket.OPEN) {
-          console.error("WebSocket not connected.");
-          return;
-      }
+    if (!socket || socket.readyState !== WebSocket.OPEN) {
+      console.error("WebSocket not connected.");
+      return;
+    }
 
-      if (!chatInput.trim()) { // Prevent empty messages
-          console.error("Cannot send an empty message.");
-          return;
-      }
+    if (!chatInput.trim()) {
+      // Prevent empty messages
+      console.error("Cannot send an empty message.");
+      return;
+    }
 
-      //construct a message with type, message and sender
-      const messageData = { 
-          type: "chat_message", 
-          message: chatInput, 
-          sender: username
-      };
+    //construct a message with type, message and sender
+    const messageData = {
+      type: "chat_message",
+      message: chatInput,
+      sender: username,
+    };
 
-      console.log("Sending message to WebSocket:", messageData); // Debugging log
+    console.log("Sending message to WebSocket:", messageData); // Debugging log
 
-      socket.send(JSON.stringify(messageData));
-      setChatInput("");   //resets chatinput field after sending message
-  }; 
+    socket.send(JSON.stringify(messageData));
+    setChatInput(""); //resets chatinput field after sending message
+  };
   // end of websockets stuff
 
     //Fetches logged in user's username when component mounts
@@ -262,31 +208,8 @@ function GroupStudyPage() {
     }
   };
 
-  //testing functions- for UI purposes (not linked to the database)
-
-  const [todos, setTodos] = useState([
-    { id: 1, text: "Study for Math", checked: false },
-    { id: 2, text: "Study for English", checked: false },
-    { id: 3, text: "Study for Geography", checked: false },
-    { id: 4, text: "Study for Chemistry", checked: false },
-    { id: 5, text: "Study for Economics", checked: false },
-    { id: 6, text: "Study for Engineering", checked: false },
-    { id: 7, text: "Study for Physics", checked: false },
-    { id: 8, text: "Study for Biology", checked: false },
-  ]);
-
-  const toggleTodo = (id) => {
-    const newTodos = todos.map((todo) => {
-      if (todo.id === id) {
-        return { ...todo, checked: !todo.checked };
-      }
-      return todo;
-    });
-    setTodos(newTodos);
-  };
-
   // Method to leave room
-  const leaveRoom = async () => {
+  const leaveRoom = useCallback(async () => {
     try {
       // This stuff gets sent to the backend!
       const response = await getAuthenticatedRequest("/leave-room/", "POST", {
@@ -304,7 +227,20 @@ function GroupStudyPage() {
     } catch (error) {
       console.error("Error leaving room:", error);
     }
-  };
+  }, [finalRoomCode, navigate]);
+
+  useEffect(() => {
+    const handlePageHide = (event) => {
+      leaveRoom();
+    };
+
+    // Add event listeners
+    window.addEventListener("pagehide", handlePageHide);
+
+    return () => {
+      window.removeEventListener("pagehide", handlePageHide);
+    };
+  }, [leaveRoom]);
 
     const handleCopy = () => {
         if (finalRoomCode) {
@@ -312,9 +248,9 @@ function GroupStudyPage() {
                 .then(() => {
                     toast.success("Code copied to clipboard!", {
                         position: "top-center",
-                        autoClose: 1000,
+                        autoClose: 1000,  
                         closeOnClick: true,
-                        pauseOnHover: true,
+                        pauseOnHover: true, 
                     });
                 })
                 .catch(err => {
@@ -324,26 +260,25 @@ function GroupStudyPage() {
         }
     };
 
-    const handleExit = () => {
-        navigate("/dashboard")
+  const handleExit = () => {
+    navigate("/dashboard");
+  };
+
+  let typingTimeout;
+  const handleTyping = () => {
+    if (!socket || socket.readyState !== WebSocket.OPEN) return;
+    // Send "typing" event to WebSocket
+    socket.send(JSON.stringify({ type: "typing", sender: username }));
+
+    // Prevent multiple events from being sent too frequently
+    if (isTyping) {
+      setIsTyping(true);
     }
-
-    let typingTimeout;
-    const handleTyping = () => {
-        if (!socket || socket.readyState !== WebSocket.OPEN) return;
-        // Send "typing" event to WebSocket
-        socket.send(JSON.stringify({ type: "typing", sender: username }));
-
-        // Prevent multiple events from being sent too frequently
-        if (isTyping) {
-            setIsTyping(true);
-        }
-        clearTimeout(typingTimeout);
-        typingTimeout =  setTimeout(() =>{
-            setIsTyping(false);
-        }, 3000);
-    };
-    
+    clearTimeout(typingTimeout);
+    typingTimeout = setTimeout(() => {
+      setIsTyping(false);
+    }, 3000);
+  };
 
   //page is designed in columns
   //First Column: todoList, shared materials
@@ -366,48 +301,18 @@ function GroupStudyPage() {
                 <label htmlFor="check-5"></label>
               </div>
             </div>
-
           </h2>
           <div style={{ flex: 1, width: "100%" }}>
             {" "}
             {/* This div takes all available space */}
-            {todos.map((todo) => (
-              <div key={todo.id} className="todo-item">
-                <div className="checkbox-wrapper-28">
-                  <input
-                    id={`todo-${todo.id}`}
-                    type="checkbox"
-                    className="checkbox"
-                    checked={todo.checked}
-                    onChange={() => toggleTodo(todo.id)}
-                  />
-                  <label htmlFor={`todo-${todo.id}`} className="todo-label">
-                    {todo.text}
-                  </label>
-                </div>
-                <button type="button" className="delete-button">
-                  X
-                </button>
-              </div>
-            ))}
+            <ToDoList isShared={true} listId={roomList} />
           </div>
-          {/*This is the add More button in the to do list- needs functionality (onClick method) */}
-          <button
-            type="button"
-            className={`add-more-button ${isActiveAddMore ? "active" : ""}`}
-            onMouseDown={() => handleMouseDown("addMore")}
-            onMouseUp={() => handleMouseUp("addMore")}
-            onMouseLeave={() => handleMouseUp("addMore")}
-          >
-            Add More
-          </button>
         </div>
-
         <div
           className="sharedMaterials-container"
           data-testid="sharedMaterials-container"
         >
-          Shared Materials
+          <SharedMaterials />
         </div>
       </div>
       {/*2nd Column */}
@@ -440,11 +345,11 @@ function GroupStudyPage() {
           <div className="utility-bar-2" data-testid="utility-bar-2">
             <button
               type="button"
-                className={`copy-button ${isActiveCopy ? 'active' : ''}`}
-                onClick={handleCopy}
-                onMouseDown={() => handleMouseDown('copy')}
-                onMouseUp={() => handleMouseUp('copy')}
-                onMouseLeave={() => handleMouseUp('copy')}
+              className={`copy-button ${isActiveCopy ? "active" : ""}`}
+              onClick={handleCopy}
+              onMouseDown={() => handleMouseDown("copy")}
+              onMouseUp={() => handleMouseUp("copy")}
+              onMouseLeave={() => handleMouseUp("copy")}
             >
               <img src={copyLogo} alt="Copy" />
             </button>
@@ -481,38 +386,48 @@ function GroupStudyPage() {
         <MotivationalMessage data-testid="motivationalMessage-container" />
       </div>
       {/*3rd Column */}
-            <div className="column" role='column' data-testid="column-3">
-                {/* StudyTimer replaces the timer-container div */}
-                <StudyTimer
-                    roomId={finalRoomCode}
-                    isHost={true}
-                    onClose={() => console.log('Timer closed')}
-                    data-testid="studyTimer-container"
-                />
-                {/* <StudyTimer roomId="yourRoomId" isHost={true} onClose={() => console.log('Timer closed')} data-testid="studyTimer-container" /> */}
-                {/* Chat Box */}
-                <div className="chatBox-container" data-testid="chatBox-container">
-                    {/* Chat Messages */}
-                    <div className="chat-messages">
-                        {messages.map((msg, index) => (
-                        <div key={index} className={`chat-message ${msg.sender === username ? "current-user" : "other-user"}`}>
-                            <strong>{msg.sender}:</strong> {msg.text}
-                        </div>
-                        ))}
-                        {typingUser && (<p className="typing-indicator"> <strong>{typingUser}</strong> is typing...</p>)}
-                    </div>
-                    {/* Chat Input */}
-                    <input
-                        value={chatInput}
-                        onChange={(e) => {
-                            setChatInput(e.target.value);
-                            handleTyping();}}
-                        onKeyDown={(e) => e.key === "Enter" && sendMessage(e)}
-                        placeholder="Type a message..."
-                    />
-                    <button onClick={sendMessage}>Send</button>
-
-                </div>
+      <div className="column" role="column" data-testid="column-3">
+        {/* StudyTimer replaces the timer-container div */}
+        <StudyTimer
+          roomId={finalRoomCode}
+          isHost={true}
+          onClose={() => console.log("Timer closed")}
+          data-testid="studyTimer-container"
+        />
+        {/* <StudyTimer roomId="yourRoomId" isHost={true} onClose={() => console.log('Timer closed')} data-testid="studyTimer-container" /> */}
+        {/* Chat Box */}
+        <div className="chatBox-container" data-testid="chatBox-container">
+          {/* Chat Messages */}
+          <div className="chat-messages">
+            {messages.map((msg, index) => (
+              <div
+                key={index}
+                className={`chat-message ${
+                  msg.sender === username ? "current-user" : "other-user"
+                }`}
+              >
+                <strong>{msg.sender}:</strong> {msg.text}
+              </div>
+            ))}
+            {typingUser && (
+              <p className="typing-indicator">
+                {" "}
+                <strong>{typingUser}</strong> is typing...
+              </p>
+            )}
+          </div>
+          {/* Chat Input */}
+          <input
+            value={chatInput}
+            onChange={(e) => {
+              setChatInput(e.target.value);
+              handleTyping();
+            }}
+            onKeyDown={(e) => e.key === "Enter" && sendMessage(e)}
+            placeholder="Type a message..."
+          />
+          <button onClick={sendMessage}>Send</button>
+        </div>
       </div>
     </div>
   );

@@ -39,6 +39,3 @@ class SignUpView( APIView):
 
         except Exception as e:  # Catch all other errors
             return Response({"error": "An unexpected error occurred", "details": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-            
-    def get(self):
-        pass

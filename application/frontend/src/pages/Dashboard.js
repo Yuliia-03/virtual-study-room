@@ -8,9 +8,11 @@ import CalendarPage from './Calendar';
 import ToDoList from '../components/ToDoListComponents/ToDoList';
 import StudyRoomComponent from '../components/StudyRoomComponent';
 import Analytics from './Analytics';
+import  FriendsTab  from '../components/friends/FriendsTab';
+
 import ProfileBox from './ProfileBox';
 
-function Dashboard() {
+function Dashboard() { 
     const navigate = useNavigate();
 
     const gotoCalendar = () => {
@@ -56,11 +58,15 @@ function Dashboard() {
                 </div>
                 <div className = "dashboard-main-panel" data-testid="main-panel">
                     <div className="dashboard-panel"><ProfileBox /></div>
-                    <div className="dashboard-panel">Friends</div>
+                    <div className="dashboard-panel"><FriendsTab /></div>
                 </div>
                 <div className = "dashboard-right-panel" data-testid="right-panel">
                     <StudyRoomComponent />
-                    <div className="dashboard-panel"><ToDoList/></div>
+                    <div><ToDoList
+                        isShared={false}
+                        listData={[]}
+                    />
+                    </div>
                 </div>
 
                 </div>

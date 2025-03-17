@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import Q
+from django.core.exceptions import ValidationError
 from .choices import *
 
 
@@ -10,22 +11,34 @@ and enforces order to prevent duplicate entries (e.g., storing both (1,2) and (2
 '''
 
 class Friends(models.Model):
-
-    user1 = models.ForeignKey('User', on_delete=models.CASCADE, related_name="friendships_initiated")
-    user2 = models.ForeignKey('User', on_delete=models.CASCADE, related_name="friendships_received")
-    status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
+    user1 = models.ForeignKey(
+        'User', on_delete=models.CASCADE, related_name="friendships_initiated")
+    user2 = models.ForeignKey(
+        'User', on_delete=models.CASCADE, related_name="friendships_received")
+    status = models.CharField(
+        max_length=10, choices=Status.choices, default=Status.PENDING)
     created_at = models.DateTimeField(auto_now_add=True)
+    requested_by = models.ForeignKey(
+        'User', on_delete=models.CASCADE, related_name="requested_by")
 
     class Meta:
-        unique_together = ('user1', 'user2')
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user1', 'user2'], name='unique_friendship')
+        ]
 
     def save(self, *args, **kwargs):
         '''
-        Ensure that user1 is always the smaller ID to maintain order
-        This will help to avoid adding two lines of data for same 2 friends
+        Ensure that user1 is always the smaller ID to maintain order.
+        Also, ensure that requested_by is either user1 or user2.
         '''
         if self.user1_id > self.user2_id:
             self.user1_id, self.user2_id = self.user2_id, self.user1_id
+
+        if self.requested_by not in [self.user1, self.user2]:
+            raise ValidationError(
+                "The requested_by field must be either user1 or user2.")
+
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -41,12 +54,12 @@ class Friends(models.Model):
         :return: Boolean (True if they are friends, False otherwise)
         '''
         return Friends.objects.filter(
-            (Q(user1=user_a, user2=user_b) | Q(user1=user_b, user2=user_a)) &
-            Q(status=Status.ACCEPTED)
+            (Q(user1=user_a, user2=user_b) | Q(user1=user_b, user2=user_a)) & Q(
+                status=Status.ACCEPTED)
         ).exists()
 
     @staticmethod
-    def get_friends_with_status(user_1, status):
+    def get_friends_with_status(user, status):
         '''
         Get all friends of a user with a specific friendship status.
 
@@ -55,6 +68,56 @@ class Friends(models.Model):
         :return: Queryset of Friends objects matching the criteria
         '''
         return Friends.objects.filter(
-            (Q(user1=user_1) | Q(user2=user_1)) &
-            Q(status=status)
+            (Q(user1=user) | Q(user2=user)) & Q(status=status)
         )
+
+    @staticmethod
+    def get_invitations_sent(user):
+        all_friends = Friends.get_friends_with_status(user, Status.PENDING)
+        return [request for request in all_friends if request.requested_by == user]
+
+    @staticmethod
+    def get_invitations_received(user):
+        all_friends = Friends.get_friends_with_status(user, Status.PENDING)
+        return [request for request in all_friends if request.requested_by != user]
+
+    @staticmethod
+    def get_all_friends(user):
+        requests = Friends.objects.all()
+        return [request for request in requests if request.user1 == user or request.user2 == user]
+
+    @staticmethod
+    def update_status(friendsId, status):
+        '''
+        Update the status of a friendship.
+        '''
+        try:
+            friendship = Friends.objects.get(pk=friendsId)
+            friendship.status = status
+            friendship.save()
+        except Friends.DoesNotExist:
+            raise ValueError("Friendship not found.")
+
+    @staticmethod
+    def get_friend(Id, current_user):
+        try:
+            request = Friends.objects.get(pk=Id)
+            return request.user1 if request.user2==current_user else request.user2
+        except Friends.DoesNotExist:
+            raise ValueError("Friendship not found.")
+
+    @staticmethod
+    def delete_friend(friendsId, user=None):
+        '''
+        Update the status of a friendship.
+        '''
+        try:
+            friendship = Friends.objects.get(pk=friendsId)
+            if friendship.status == Status.PENDING:
+                friendship.delete()
+            else: #in status.ACCEPTED
+                friendship.status = Status.PENDING
+                friendship.requested_by = Friends.get_friend(friendsId, user)
+                friendship.save()
+        except Friends.DoesNotExist:
+            raise ValueError("Friendship not found.")

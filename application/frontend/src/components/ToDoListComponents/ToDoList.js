@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { getAuthenticatedRequest } from "../../utils/authService";
-import "../../styles/ToDoList.css";
+import "../../styles/toDoList/ToDoList.css";
 import AddTaskModal from "./CreateNewTask";
 import AddListModal from "./CreateNewList";
 
-const ToDoList = () => {
+const ToDoList = ({ isShared, listId=undefined }) => {
     const [lists, setLists] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -15,13 +15,17 @@ const ToDoList = () => {
     const [expandedTasks, setExpandedTasks] = useState({}); // Tracks expanded tasks
 
     useEffect(() => {
-        console.log("Fetching data in useEffect...");
+        //console.log("Fetching data in useEffect...");
         const fetchData = async () => {
 
             try {
-                const data = await getAuthenticatedRequest("/todolists/false/");
-
-                console.log("Fetched data:", data);
+                let data;
+                if (!isShared) {
+                    data = await getAuthenticatedRequest(`/todolists/`);
+                } else {
+                    data = await getAuthenticatedRequest(`/todolists/${listId}/`);
+                }
+                //console.log("Fetched data:", data);
                 setLists(data);
             } catch (error) {
                 if (error.response) {
@@ -33,7 +37,8 @@ const ToDoList = () => {
             }
         };
         fetchData();
-    }, []);
+    }, [isShared, listId]);
+
 
     const toggleTaskCompletion = async (taskId) => {
         try {
@@ -60,7 +65,13 @@ const ToDoList = () => {
     const handleDeleteTask = async (taskId) => {
         try {
             const data = await getAuthenticatedRequest(`/delete_task/${taskId}/`, "DELETE");
-            setLists(data);
+            console.log(data.data)
+            setLists(prevLists =>
+                prevLists.map(list => ({
+                    ...list,
+                    tasks: list.tasks.filter(task => task.id !== taskId) // Remove the deleted task from tasks array
+                })))
+        
         } catch (error) {
             console.error("Error fetching to-do lists:", error);
         } finally {
@@ -104,23 +115,27 @@ const ToDoList = () => {
     return (
         <div className={isFullScreen ? "todo-container full-screen" : "todo-container"}>
             <div className="todo-header">
-                <h3>To-Do Lists</h3>
-                <div className="header-buttons">
-                    <button onClick={handleAddList} className="btn btn-success btn-sm" aria-label="Add List">
-                        <i className="bi bi-plus-circle"></i>
-                    </button>
-                    <button onClick={toggleFullScreen} className="full-screen-btn">
-                        {isFullScreen ? (
-                            <>
-                                <i className="bi bi-box-arrow-in-down"></i> Exit View
-                            </>
-                        ) : (
-                            <>
-                                <i className="bi bi-arrows-fullscreen"></i> View All
-                            </>
-                        )}
-                    </button>
-                </div>
+                {!isShared ? (
+                    <>
+                        <h3>To-Do Lists</h3>
+                        <div className="header-buttons">
+                            <button onClick={handleAddList} className="btn btn-success btn-sm" aria-label="Add List">
+                                <i className="bi bi-plus-circle"></i>
+                            </button>
+                            <button onClick={toggleFullScreen} className="full-screen-btn">
+                                {isFullScreen ? (
+                                    <>
+                                        <i className="bi bi-box-arrow-in-down"></i> Exit View
+                                    </>
+                                ) : (
+                                    <>
+                                        <i className="bi bi-arrows-fullscreen">View All</i>
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                    </>) : (<></>)
+                }
             </div>
 
             <div className="todo-list">
@@ -130,9 +145,12 @@ const ToDoList = () => {
                             <button onClick={() => handleAddTask(list.id)} className="btn btn-success btn-sm" aria-label="Add Task">
                                 <i className="bi bi-plus-circle"></i>
                             </button>
-                            <button onClick={() => handleDeleteList(list.id)} className="btn btn-danger btn-sm">
-                                <i className="bi bi-trash"></i>
-                            </button>
+                            {!isShared ? (
+                                <button onClick={() => handleDeleteList(list.id)} className="btn btn-danger btn-sm">
+                                    <i className="bi bi-trash"></i>
+                                </button>
+                            ) : (<></>)
+                            }
                         </div>
 
                         <h4>{list.name}</h4>
@@ -164,7 +182,7 @@ const ToDoList = () => {
                                                     </>
                                                 ) : (
                                                     <>
-                                                        <i className="bi bi-chevron-down"></i> Show Details
+                                                        <i className="bi bi-chevron-down"></i>
                                                     </>
                                                 )}
                                             </button>
@@ -190,11 +208,15 @@ const ToDoList = () => {
                 listId={selectedListId}
                 setLists={setLists}
             />
-            <AddListModal
+            {!isShared ?
+                (<AddListModal
                 addListWindow={addListWindow}
                 setAddListWindow={setAddListWindow}
                 setLists={setLists}
-            />
+                />
+                ) : (<></>)
+            }
+            
         </div>
     );
 };
