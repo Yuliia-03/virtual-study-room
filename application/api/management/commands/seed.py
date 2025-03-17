@@ -47,7 +47,7 @@ class Command(BaseCommand):
             call_command('loaddata', 'api/tests/fixtures/default_list_task.json')
             
             call_command('loaddata', 'api/tests/fixtures/default_study_session.json')
-            call_command('loaddata', 'api/tests/fixtures/default_session_users.json')
+            # call_command('loaddata', 'api/tests/fixtures/default_session_users.json')
         except Exception as e:
             self.stdout.write(self.style.ERROR(f'Error while seeding database: {e}'))
       
@@ -62,17 +62,14 @@ class Command(BaseCommand):
             description = "This is a test user"
         )
         self.generate_random_friends()
-        self.generating_rewards()
+        #self.generating_rewards()
         self.generate_random_Lists()
         self.generate_random_toDoLists()
         self.generate_toDoListUsers()
         self.generate_events()
         self.generating_study_sessions()
         self.generating_session_users()
-        
 
-
-    
     def generate_random_friends(self):
         friends_count = Friends.objects.count()
         while friends_count < self.FRIENDS_COUNT:
@@ -356,17 +353,19 @@ class Command(BaseCommand):
         #Making sure every session has at least 1 user 
         for session in sessions:
             user = choice(users)
-            self.create_session_user(user, session)
-            session_user_count += 1
-            if session_user_count >= self.SESSION_USER_COUNT:
-                return
+            if user.id < 4:
+                self.create_session_user(user, session)
+                session_user_count += 1
+                if session_user_count >= self.SESSION_USER_COUNT:
+                    return
         
         #Add remaining random no. of users to random sessions
         while session_user_count < self.SESSION_USER_COUNT:
             user = choice(users)
-            session = choice(sessions)
-            self.create_session_user(user, session)
-            session_user_count +=1
+            if user.id < 4:
+                session = choice(sessions)
+                self.create_session_user(user, session)
+                session_user_count +=1
         
         print("Study Session Users seeding complete!")
 

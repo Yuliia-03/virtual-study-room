@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 // Import badge images
 import badge1 from '../assets/badges/badge_1.png';  // Trophy
 import badge2 from '../assets/badges/badge_2.png';  // Star
@@ -14,7 +15,41 @@ const badges = [
   badge5, badge6, badge7, badge8 
 ];
 
-const UserBadges = ({ userBadges }) => {
+const UserBadges = () => {
+  const [userBadges, setUserBadges] = useState([]); // State to store earned badges
+
+  useEffect(() => {
+    const fetchBadges = async () => {
+      const token = localStorage.getItem("access_token"); // Get the access token from localStorage
+
+      if (!token) {
+        console.error("No access token found. Please log in.");
+        return;
+      }
+
+      try {
+        const response = await axios.get(
+          "http://127.0.0.1:8000/api/analytics/", // Endpoint for fetching analytics
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Include the access token in the request
+            },
+            withCredentials: true,
+          }
+        );
+        setUserBadges(response.data.earned_badges); // Set the earned badges
+        console.log("Earned Badges:", response.data.earned_badges); // Debug: Log the response
+      } catch (error) {
+        console.error(
+          "Error fetching badges:",
+          error.response ? error.response.status : error.message
+        );
+      }
+    };
+
+    fetchBadges();
+  }, []); // Empty dependency array ensures this runs only once when the component mounts
+
   const rows = [];
   for (let i = 0; i < badges.length; i += 4) {
     rows.push(badges.slice(i, i + 4));
@@ -96,4 +131,4 @@ const UserBadges = ({ userBadges }) => {
   );
 };
 
-export default UserBadges; 
+export default UserBadges;

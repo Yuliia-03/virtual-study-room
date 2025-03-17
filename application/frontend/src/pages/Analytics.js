@@ -4,7 +4,7 @@ import axios from "axios";
 import "../styles/Analytics.css";
 
 const Analytics = () => {
-    const [analytics, setAnalytics] = useState({ streaks: 0, average_study_hours: 0 });
+    const [analytics, setAnalytics] = useState({ streaks: 0, total_hours_studied:0, average_study_hours: 0 });
 
     useEffect(() => {
         const fetchAnalytics = async () => {
@@ -17,8 +17,8 @@ const Analytics = () => {
 
             try {
                 const response = await axios.get(
-                    "https://studyspot.pythonanywhere.com/api/analytics/",
-                    // "http://127.0.0.1:8000/api/analytics/", // Endpoint for fetching analytics
+                    //"https://studyspot.pythonanywhere.com/api/analytics/",
+                    "http://127.0.0.1:8000/api/analytics/", // Endpoint for fetching analytics
                     {
                         headers: {
                             Authorization: `Bearer ${token}`, // Include the access token in the request
@@ -27,6 +27,7 @@ const Analytics = () => {
                     }
                 );
                 setAnalytics(response.data); // Set the analytics data
+
             } catch (error) {
                 console.error(
                     "Error fetching analytics:",
@@ -36,6 +37,7 @@ const Analytics = () => {
         };
 
         fetchAnalytics();
+        console.log(analytics);
     }, []); // Empty dependency array ensures this runs only once when the component mounts
 
     return ( 

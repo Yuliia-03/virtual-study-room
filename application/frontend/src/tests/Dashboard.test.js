@@ -5,6 +5,7 @@ import axios from "axios";
 import Dashboard from '../pages/Dashboard'; 
 import Analytics from '../pages/Analytics';
 import ToDoList from '../components/ToDoListComponents/ToDoList';
+import { BrowserRouter as Router } from "react-router-dom";
 
 //mock the necessary modules
 jest.mock('../pages/Analytics', () => () => <div>Mocked Analytics</div>);
@@ -12,10 +13,15 @@ jest.mock('../components/ToDoListComponents/ToDoList', () => () => <div>Mocked T
 jest.mock("axios");
 jest.mock("@fontsource/vt323", () => {}); 
 jest.mock("@fontsource/press-start-2p", () => {});  
+jest.mock('../firebase-config.js');
 
 describe("Dashboard", () => {
     test('renders the Dashboard heading', () => {
-        render(<Dashboard />); 
+        render(
+          <Router>
+            <Dashboard/>
+          </Router>
+        ); 
     
         // Check for the main heading
         const heading = screen.getByRole('heading', { name: /dashboard/i });
@@ -24,7 +30,11 @@ describe("Dashboard", () => {
       });
 
       test('renders the left panel with correct content', () => {
-        render(<Dashboard />);
+        render(
+          <Router>
+            <Dashboard/>
+          </Router>
+        ); 
     
         // Find the left panel
         const leftPanel = screen.getByTestId('left-panel'); // Add data-testid="left-panel" to the left panel div
@@ -37,7 +47,11 @@ describe("Dashboard", () => {
       });
 
       test('renders the main panel with correct content', () => {
-        render(<Dashboard />);
+        render(
+          <Router>
+            <Dashboard/>
+          </Router>
+        ); 
     
         // Find the main panel
         const mainPanel = screen.getByTestId('main-panel'); // Add data-testid="main-panel" to the main panel div
@@ -49,7 +63,11 @@ describe("Dashboard", () => {
         expect(within(mainPanel).getByText('Add Friends')).toBeInTheDocument();
       });
       test('renders the right panel with correct content', () => {
-        render(<Dashboard />);
+        render(
+          <Router>
+            <Dashboard/>
+          </Router>
+        ); 
     
         // Find the right panel
         const rightPanel = screen.getByTestId('right-panel'); // Add data-testid="right-panel" to the right panel div

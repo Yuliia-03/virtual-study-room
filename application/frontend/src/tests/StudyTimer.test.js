@@ -6,6 +6,8 @@ import StudyTimer from '../components/StudyTimer';
 //ok all the tests are passing but the code coverage is low im sorry
 
 // Mock Audio constructor and play method more completely
+
+jest.mock('../firebase-config.js');
 const mockPlay = jest.fn();
 window.Audio = jest.fn().mockImplementation(() => {
   return {

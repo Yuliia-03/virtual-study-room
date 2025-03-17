@@ -28,6 +28,8 @@ from api.views.calendar import EventViewSet
 event_list = EventViewSet.as_view({'get': 'list', 'post': 'create'})  
 event_detail = EventViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})
 
+from api.views.shared_materials_view import get_current_session
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
@@ -77,6 +79,9 @@ urlpatterns = [
     path('api/description/', save_description, name='save_description'),
     path('api/badges/', get_user_badges, name='get_user_badges'),
 
+
+    path('api/shared_materials/', get_current_session, name='get_current_session'),
+
     path('api/events/', event_list, name='event-list'),  
-    path('api/events/<int:pk>/', event_detail, name='event-detail'), 
+    path('api/events/<int:pk>/', event_detail, name='event-detail')
 ]
