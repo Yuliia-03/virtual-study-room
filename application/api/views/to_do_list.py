@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.views import View
 from rest_framework.permissions import IsAuthenticated
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 class ViewToDoList(APIView):
 
@@ -77,7 +79,20 @@ class ViewToDoList(APIView):
         try:
 
             if toDoList.objects.filter(pk=task_id).exists():
+                task = toDoList.objects.get(id=task_id)
+
+                # Send WebSocket update
+                channel_layer = get_channel_layer()
+                async_to_sync(channel_layer.group_send)(
+                    f"room_{task.list.roomCode}",
+                    {
+                        "type": "remove_task",
+                        "task_id": task_id,
+                    }
+                )
+
                 toDoList.objects.get(pk=task_id).delete()
+
                 return Response({"data": task_id}, status=status.HTTP_200_OK)
             else:
                 return Response({"error": "Task doesn't exist"}, status=status.HTTP_400_BAD_REQUEST)
@@ -93,6 +108,16 @@ class ViewToDoList(APIView):
                 toDoList.objects.filter(list=list_id).delete()
                 Permission.objects.filter(list_id = list_id).delete()
                 List.objects.get(pk=list_id).delete()
+
+                # Send WebSocket update
+                channel_layer = get_channel_layer()
+                async_to_sync(channel_layer.group_send)(
+                    f"room_{list.roomCode}",
+                    {
+                        "type": "delete_list",
+                        "list_id": list_id,
+                    }
+                )
 
                 return self.get(request)
             else:
@@ -115,6 +140,21 @@ class ViewToDoList(APIView):
                     title=title, content=content, list=list)
                 task.save()
 
+                # Send WebSocket update
+                channel_layer = get_channel_layer()
+                async_to_sync(channel_layer.group_send)(
+                    f"room_{list.roomCode}",
+                    {
+                        "type": "add_task",
+                        "task": {
+                            "id": task.pk,
+                            "title": task.title,
+                            "content": task.content,
+                            "is_completed": task.is_completed,
+                            "list_id": task.list.pk,
+                        },
+                    }
+                )
 
                 response_data={
                     "listId": task.list.pk,
@@ -166,6 +206,18 @@ class ViewToDoList(APIView):
             new_task_status = not task.is_completed
             task.is_completed = new_task_status
             task.save()
+
+            # Send WebSocket update
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                f"room_{task.list.roomCode}",
+                {
+                    "type": "toggle_task",
+                    "task_id": task_id,
+                    "is_completed": task.is_completed,
+                }
+            )
+
 
             return Response({"is_completed": task.is_completed}, status=status.HTTP_200_OK)
 

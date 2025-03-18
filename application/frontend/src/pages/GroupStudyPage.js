@@ -398,7 +398,7 @@ function GroupStudyPage() {
           <div style={{ flex: 1, width: "100%" }}>
             {" "}
             {/* This div takes all available space */}
-            <ToDoList isShared={true} listId={roomList} />
+            <ToDoList isShared={true} listId={roomList} socket = { socket }/>
           </div>
         </div>
         <div
