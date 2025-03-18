@@ -246,6 +246,8 @@ def destroy_room(request, study_session):
         toDo.delete_list(request = request, list_id = toDoList)
     print("to do list deleted")
 
+    study_session.delete()
+
 
 
 
