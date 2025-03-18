@@ -17,10 +17,9 @@ class StudySession(models.Model):
     endTime = models.DateTimeField(null=True, blank=True)
     date = models.DateField(default=datetime.date.today)
     toDoList = models.ForeignKey(List, on_delete=models.CASCADE, null=True, blank=True)
-
-    # MAY NEED TO ADD A PARTICIPANTS FIELD HERE, TO SHOW ALL USERS IN THE SESSION?
-    # yes many to many participants <-> study session
     participants = models.ManyToManyField(User, related_name='study_sessions', blank = True)
+
+
     def generate_room_code(self):
         """To generate an 8-digit room code with uppercase letters and numbers"""
         characters = string.ascii_uppercase + string.digits

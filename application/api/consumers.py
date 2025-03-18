@@ -1,6 +1,9 @@
 # this is for websocket handling
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
+
+from django.core.exceptions import ObjectDoesNotExist
+
 from .models import StudySession
 from asgiref.sync import sync_to_async
 
@@ -15,7 +18,17 @@ class RoomConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         self.room_code = self.scope["url_route"]["kwargs"]["room_code"]
+
         print(f"Consumers.py Room code: {self.room_code}")  # Debugging: Log the room code
+
+        try:
+            # Use sync_to_async to call the synchronous ORM code
+            self.study_session = await sync_to_async(StudySession.objects.get)(roomCode=self.room_code)
+        except ObjectDoesNotExist:
+            # If the study session does not exist, close the connection
+            await self.close()
+            return
+
         # Create a name to refer to the room
         self.room_group_name = f"room_{self.room_code}"
 
