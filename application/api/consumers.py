@@ -34,6 +34,9 @@ class RoomConsumer(AsyncWebsocketConsumer):
         # Fetch and broadcast the updated participants list
         await self.broadcast_participants()
 
+        # disconnect from websocket
+        await self.close(self)
+
 
     # Methods for updating the users in the study room for all participants
 
@@ -101,7 +104,7 @@ class RoomConsumer(AsyncWebsocketConsumer):
                 self.room_group_name,
                 {
                     "type" : "file_deleted",
-                    "file" : data["file"],
+                    "fileName" : data["fileName"],
                 }
             )
 

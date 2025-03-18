@@ -58,6 +58,9 @@ function SharedMaterials( { socket }) {
         }
     }, [roomCode, socket]);
 
+
+    // Code for uploading a file
+
     const handleUploadFile = async (event) => {
         const file = event.target.files[0];
         if (!file) {
@@ -103,6 +106,9 @@ function SharedMaterials( { socket }) {
             toast.error("Error Uploading File");
         }
     }
+
+
+    // Code for deleting a file
 
     const handleDeleteFile = async (fileName) => {
         const fileRef = ref(storage, `shared-materials/${roomCode}/${fileName}`);
