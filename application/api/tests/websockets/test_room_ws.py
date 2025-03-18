@@ -73,6 +73,13 @@ class RoomConsumerTests(TestCase):
         connected, _ = await communicator.connect()
         self.assertTrue(connected)
 
+        # Receive the participants_update message
+        participants_response = await communicator.receive_json_from()
+        self.assertEqual(participants_response, {
+            "type": "participants_update",
+            "participants": [],  # Initially, no participants
+        })
+
         # Add user to the study session
         await database_sync_to_async(study_session.participants.add)(user)
 
@@ -90,11 +97,11 @@ class RoomConsumerTests(TestCase):
         # Create a test StudySession and User
         study_session = await database_sync_to_async(StudySession.objects.create)(createdBy=self.user,
                                                                                   sessionName="Test Room")
-
         # Connect first user
         communicator1 = WebsocketCommunicator(application, f"ws/room/{study_session.roomCode}/")
         connected, _ = await communicator1.connect()
         self.assertTrue(connected)
+
 
         # Connect second user
         communicator2 = WebsocketCommunicator(application, f"ws/room/{study_session.roomCode}/")
@@ -106,17 +113,26 @@ class RoomConsumerTests(TestCase):
         user2 = self.user2
         await database_sync_to_async(study_session.participants.add)(user1, user2)
 
+        # Function to wait for the correct message
+        async def wait_for_correct_message(communicator, expected_message):
+            while True:
+                message = await communicator.receive_json_from()
+                if message == expected_message:
+                    return message
+
+        # Expected participants update message
+        expected_message = {
+            "type": "participants_update",
+            "participants": ["@alice123", "@bob456"],
+        }
+
+        # Wait for the correct message for both users
+        response1 = await wait_for_correct_message(communicator1, expected_message)
+        response2 = await wait_for_correct_message(communicator2, expected_message)
+
         # Verify participants update for both users
-        response1 = await communicator1.receive_json_from()
-        response2 = await communicator2.receive_json_from()
-        self.assertEqual(response1, {
-            "type": "participants_update",
-            "participants": ["@alice123", "@bob456"],
-        })
-        self.assertEqual(response2, {
-            "type": "participants_update",
-            "participants": ["@alice123", "@bob456"],
-        })
+        self.assertEqual(response1, expected_message)
+        self.assertEqual(response2, expected_message)
 
         # Disconnect
         await communicator1.disconnect()
