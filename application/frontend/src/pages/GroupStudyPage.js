@@ -304,8 +304,11 @@ function GroupStudyPage() {
         roomCode: finalRoomCode, // Sends the room name to the backend
       });
 
+      if (participants.length == 0) {
+        await deleteFirebaseFiles(finalRoomCode);
+        console.log("all firebase files deleted successfully");
+      }
       // delete all files associated with this room from firebase
-      await deleteFirebaseFiles(finalRoomCode);
 
       console.log("leaving .. . .");
 
@@ -338,10 +341,16 @@ function GroupStudyPage() {
       const listRef = ref(storage, `shared-materials/${roomCode}/`);
       const res = await listAll(listRef);
 
-      // Delete each file in the storage location
-      const deletePromises = res.items.map((itemRef) => deleteObject(itemRef));
-      await Promise.all(deletePromises);
-      console.log("files deleted successfully!");
+      if (res.items.length != 0) {
+        // Delete each file in the storage location
+        const deletePromises = res.items.map((itemRef) =>
+          deleteObject(itemRef)
+        );
+        await Promise.all(deletePromises);
+        console.log("files deleted successfully!");
+      } else {
+        console.log("no firebase files to delete");
+      }
     } catch (error) {
       console.log("error deleting files");
     }
@@ -486,7 +495,6 @@ function GroupStudyPage() {
               </div>
             ))}
           </div>
-          ); };
         </div>
         <MotivationalMessage data-testid="motivationalMessage-container" />
       </div>

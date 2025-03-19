@@ -245,8 +245,9 @@ def destroy_room(request, study_session):
     if toDoList:
         toDo.delete_list(request = request, list_id = toDoList)
     print("to do list deleted")
-
+    print("session name: ", study_session.sessionName)
     study_session.delete()
+    print("session deleted")
 
 
 
