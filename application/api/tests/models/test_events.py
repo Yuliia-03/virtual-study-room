@@ -1,44 +1,45 @@
 from django.test import TestCase
 from api.models.user import User
 from datetime import datetime, timedelta
-from api.models.events import Event
+from api.models.events import Appointments
 
 class EventModelTest(TestCase):
 
+    fixtures = [
+        'api/tests/fixtures/default_user.json'
+    ]
+
     def setUp(self):
         # Create a test user
-        self.user = User.objects.create_user(email = "test_user@email.com", firstname = "test_user", lastname = "test_user", username = "test_user", password = "test_user")
 
+        self.user = User.objects.get(pk=1)
         
         # Create a test event
-        self.event = Event.objects.create(
+        self.event = Appointments.objects.create(
             user=self.user,
-            title='Test Event',
-            description='This is a test event',
-            start_time=datetime.now(),
-            end_time=datetime.now() + timedelta(hours=1),
-            location='Test Location',
-            is_completed=False
+            name='Test Event',
+            comments='This is a test event',
+            start_date=datetime.now(),
+            end_date=datetime.now() + timedelta(hours=1),
+            status='Test Location'
         )
 
     def test_event_creation(self):
         """Test if the event is created properly."""
-        self.assertEqual(self.event.title, 'Test Event')
-        self.assertEqual(self.event.description, 'This is a test event')
-        self.assertEqual(self.event.location, 'Test Location')
-        self.assertFalse(self.event.is_completed)
+        self.assertEqual(self.event.name, 'Test Event')
+        self.assertEqual(self.event.comments, 'This is a test event')
+        self.assertEqual(self.event.status, 'Test Location')
         self.assertEqual(self.event.user, self.user)
     
     def test_event_completion(self):
         """Test marking the event as completed."""
-        self.event.is_completed = True
         self.event.save()
-        completed_event = Event.objects.get(id=self.event.id)
-        self.assertTrue(completed_event.is_completed)
+        completed_event = Appointments.objects.get(id=self.event.pk)
+        self.assertEqual(completed_event.user, self.user)
 
     def test_event_time_validation(self):
         """Test that event end time is after the start time."""
-        self.assertTrue(self.event.end_time > self.event.start_time)
+        self.assertTrue(self.event.end_date > self.event.start_date)
 
     def test_event_string_representation(self):
         """Test the string representation of the event."""
@@ -46,17 +47,17 @@ class EventModelTest(TestCase):
 
     def test_event_updating(self):
         """Test updating an event's title and description."""
-        self.event.title = 'Updated Event'
-        self.event.description = 'Updated Description'
+        self.event.name = 'Updated Event'
+        self.event.comments = 'Updated Description'
         self.event.save()
-        updated_event = Event.objects.get(id=self.event.id)
-        self.assertEqual(updated_event.title, 'Updated Event')
-        self.assertEqual(updated_event.description, 'Updated Description')
+        updated_event = Appointments.objects.get(id=self.event.pk)
+        self.assertEqual(updated_event.name, 'Updated Event')
+        self.assertEqual(updated_event.comments, 'Updated Description')
 
     def test_event_deletion(self):
         """Test deleting an event."""
-        event_id = self.event.id
+        event_id = self.event.pk
         self.event.delete()
-        with self.assertRaises(Event.DoesNotExist):
-            Event.objects.get(id=event_id)
+        with self.assertRaises(Appointments.DoesNotExist):
+            Appointments.objects.get(pk=event_id)
 

@@ -39,3 +39,11 @@ class AnalyticsTestCase(APITestCase):
         self.client.credentials()
         response = self.client.get('/api/analytics/')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_update_shared_status(self):
+        old_status = self.user.share_analytics
+        response = self.client.patch('/api/share_analytics/')
+        self.user.refresh_from_db()
+        new_status = self.user.share_analytics
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertNotEqual(old_status, new_status)

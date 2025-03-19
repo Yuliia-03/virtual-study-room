@@ -317,22 +317,7 @@ function GroupStudyPage() {
       >
         {/*1st Column */}
         <div className="column" role="column" data-testid="column-1">
-          <div className="todo-list-container" data-testid="todo-list-container">
-            <h2 className="todo-heading">
-              To Do:
-              <div className="checkbox-wrapper-5">
-                <div className="check">
-                  <input id="check-5" type="checkbox"></input>
-                  <label htmlFor="check-5"></label>
-                </div>
-              </div>
-            </h2>
-            <div style={{ flex: 1, width: "100%" }}>
-              {" "}
-              {/* This div takes all available space */}
-              <ToDoList isShared={true} listId={roomList} />
-            </div>
-          </div>
+          <ToDoList isShared={true} listId={roomList} />
 
           <div
             className="sharedMaterials-container"
