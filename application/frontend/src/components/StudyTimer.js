@@ -3,7 +3,8 @@ import { getDatabase, ref, set, onValue } from 'firebase/database';
 import { database } from '../firebase-config';
 import 'tailwindcss';
 import '@fontsource/vt323';
-import '@fontsource/press-start-2p';
+import '@fontsource/press-start-2p'; 
+import blueberryImg from '../assets/other/blueberry.jpeg';
 
 const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
   const [studyLength, setStudyLength] = useState(25);
@@ -329,6 +330,42 @@ const StudyTimer = ({ roomId, isHost, onClose, "data-testid": dataTestId }) => {
                 Well done!
                 <br />
                 Here, have a blueberry
+              </div>
+              
+              <div className="flex justify-center items-center" style={{ 
+                flex: '1', 
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                margin: '20px 0'
+              }}>
+                <div style={{
+                  position: 'relative',
+                  width: '140px',
+                  height: '140px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  overflow: 'hidden'
+                }}>
+                  <img 
+                    src={blueberryImg} 
+                    alt="Blueberry reward" 
+                    style={{
+                      maxWidth: '100%',
+                      maxHeight: '100%',
+                      objectFit: 'contain',
+                      imageRendering: 'pixelated',
+                      filter: 'drop-shadow(0 0 10px rgba(186, 198, 241, 0.5))',
+                      mixBlendMode: 'multiply',
+                      backgroundColor: 'transparent !important',
+                      backgroundImage: 'none !important',
+                      isolation: 'isolate',
+                      position: 'relative',
+                      zIndex: 2
+                    }}
+                  />
+                </div>
               </div>
               
               <div style={{ 
