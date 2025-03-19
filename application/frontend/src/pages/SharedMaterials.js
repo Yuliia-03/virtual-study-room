@@ -67,7 +67,7 @@ function SharedMaterials({ socket }) {
         socket.removeEventListener("message", handleWebSocketMessage);
       };
     }
-  }, [roomCode, socket]);
+  }, [roomCode]);
 
   // Code for uploading a file
 
