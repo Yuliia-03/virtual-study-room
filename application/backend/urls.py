@@ -25,6 +25,7 @@ from api.views.profile_view import get_logged_in_user, save_description, get_use
 from api.views.analytics import get_analytics, update_analytics
 from api.views.groupStudyRoom import create_room, join_room
 from api.views.calendar import EventViewSet
+from api.views.spotify_view import AuthURL, spotify_callback, IsAuthenticated
 event_list = EventViewSet.as_view({'get': 'list', 'post': 'create'})  
 event_detail = EventViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})
 
@@ -85,5 +86,5 @@ urlpatterns = [
     path('api/shared_materials/', get_current_session, name='get_current_session'),
 
     path('api/events/', event_list, name='event-list'),  
-    path('api/events/<int:pk>/', event_detail, name='event-detail')
+    path('api/events/<int:pk>/', event_detail, name='event-detail'),
 ]

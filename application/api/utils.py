@@ -1,8 +1,10 @@
 from datetime import datetime, timedelta
 from calendar import HTMLCalendar
-from .models.events import Event
+from .models.events import Appointments
 from .models.spotify_token import SpotifyToken
 from django.utils import timezone
+from api.credentials import CLIENT_ID, CLIENT_SECRET
+from requests import post
 
 class Calendar(HTMLCalendar):
 	def __init__(self, year=None, month=None):
@@ -32,7 +34,7 @@ class Calendar(HTMLCalendar):
 	# formats a month as a table
 	# filter events by year and month
 	def formatmonth(self, withyear=True):
-		events = Event.objects.filter(start_time__year=self.year, start_time__month=self.month)
+		events = Appointments.objects.filter(start_time__year=self.year, start_time__month=self.month)
 
 		cal = f'<table border="0" cellpadding="0" cellspacing="0" class="calendar">\n'
 		cal += f'{self.formatmonthname(self.year, self.month, withyear=withyear)}\n'
@@ -45,9 +47,13 @@ class Calendar(HTMLCalendar):
 class Spotify_API():
 	def get_user_tokens(self, session_id):
 		user_tokens = SpotifyToken.objects.filter(user=session_id)
+		print(f"Querying for tokens with session_id={session_id}: {user_tokens}")
+		print(user_tokens)
 		if user_tokens.exists():
-			return user_tokens
+			print("Token found:", user_tokens[0])
+			return user_tokens[0]
 		else:
+			print("No token found for session_id:", session_id)
 			return None
 		
 	def update_or_create_user_tokens(self, session_id, access_token, token_type, expires_in, refresh_token):
@@ -62,3 +68,31 @@ class Spotify_API():
 		else:
 			tokens = SpotifyToken(user=session_id, access_token=access_token, refresh_token=refresh_token, token_type=token_type, expires_in=expires_in)
 			tokens.save()
+
+	def is_spotify_authenticated(self, session_id):
+		tokens = self.get_user_tokens(session_id)
+		if tokens:
+			expiry = tokens.expires_in
+			if expiry <= timezone.now():
+				self.refresh_spotify_token(session_id)
+			return True
+
+		return False
+	
+	def refresh_spotify_token(self, session_id):
+		refresh_token = self.get_user_tokens(session_id).refresh_token
+		response = post('https://accounts.spotify.com/api/token', data = {
+			'grant_type': 'refresh_token',
+			'refresh_token': refresh_token,
+			'client_id': CLIENT_ID,
+			'client_secret': CLIENT_SECRET,
+		}).json()
+
+		access_token = response.get('access_token')
+		token_type = response.get('token_type')
+		expires_in = response.get('expires_in')
+		refresh_token = response.get('refresh_token')
+
+		self.update_or_create_user_tokens(session_id, access_token, token_type, expires_in, refresh_token)
+
+	

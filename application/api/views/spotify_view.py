@@ -4,8 +4,8 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from requests import Request, post
-from utils import update_or_create_user_tokens
-
+from api.utils import Spotify_API
+import base64
 class AuthURL(APIView):
     def get(self, request, format=True):
         scopes = 'user-read-playback-state user-modify-playback-state user-read-currently-playing'
@@ -35,19 +35,20 @@ def spotify_callback(request, format=None):
     refresh_token = response.get('refresh_token')
     expires_in = response.get('expires_in')
     error = response.get('error')
-
     if not request.session.exists(request.session.session_key):
         request.session.create()
 
-    update_or_create_user_tokens(
+    spotify_api = Spotify_API()
+    spotify_api.update_or_create_user_tokens(
         request.session.session_key, access_token, token_type, expires_in, refresh_token
     )
 
-    return redirect('http://localhost:3000')
+    return redirect('http://localhost:3000/musicPlayer')
     
 class IsAuthenticated(APIView):
     def get(self, request, format=None):
-        is_authenticated = is_spotify_authenticated(
+        spotify_api = Spotify_API()
+        is_authenticated = spotify_api.is_spotify_authenticated(
             self.request.session.session_key)
         return Response({'status': is_authenticated}, status=status.HTTP_200_OK)
 

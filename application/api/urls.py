@@ -12,12 +12,10 @@ router.register(r'events', EventViewSet, basename='event')
 
 urlpatterns = [
     #path('views/login-page', login),
-<<<<<<< HEAD
     path('', include(router.urls)),
-    path('get-auth-url', AuthURL.as_view()),
-    path('redirect', spotify_callback), 
-    path('is-authenticated', IsAuthenticated.as_view())
-=======
+    path('get-auth-url', AuthURL.as_view()), 
+    path('is-authenticated', IsAuthenticated.as_view()),
+    path('spotify/callback/', spotify_callback, name="spotify-callback"),
     #path('', include(router.urls)),
->>>>>>> main
+
 ]
