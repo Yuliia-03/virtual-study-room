@@ -162,8 +162,8 @@ function GroupStudyPage() {
     ws.onclose = () => {
       console.log("Disconnected from WebSocket");
       if (shouldReconnect) {
-        //console.log("Reconnecting");
-        //setTimeout(connectWebSocket, 1000); // Attempt to reconnect after 1 seconds
+        console.log("Reconnecting");
+        setTimeout(connectWebSocket, 1000); // Attempt to reconnect after 1 seconds
       }
     };
     setSocket(ws);
@@ -427,7 +427,7 @@ function GroupStudyPage() {
           className="sharedMaterials-container"
           data-testid="sharedMaterials-container"
         >
-          <SharedMaterials />
+          <SharedMaterials socket={socket} />
         </div>
       </div>
       {/*2nd Column */}
