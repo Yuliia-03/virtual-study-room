@@ -6,16 +6,16 @@
     overflow: hidden;
     align-items: center;
     justify-content: center;
-    height: 50vh;
+    height: 80vh;
     width: 22vw;
     margin: 1%;
     background-color: #fff;
     border-radius: 30px;
     box-sizing: border-box;
     overflow: hidden;
-    overflow-x: scroll;
-    scrollbar-width: thin;
-    scrollbar-color: #888 #f1f1f1;
+    overflow-x: hidden;
+    scrollbar-width: thick;
+    scrollbar-color: #BAD7F2;
     padding: 20px;
     padding-top: 40px;
 }
