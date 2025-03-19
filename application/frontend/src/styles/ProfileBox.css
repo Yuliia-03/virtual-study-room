@@ -278,6 +278,83 @@
     white-space: normal;
 }
 
+.todo-label {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 900 !important;
+    color: white !important;
+    cursor: pointer;
+    padding: 0 10px !important;
+    letter-spacing: 0.5px !important;
+    display: flex;
+    align-items: center;
+    text-transform: uppercase !important;
+    margin-right: auto; /* Push content to the left */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 75%; /* Prevent text from pushing into the X button */
+}
+
+.todo-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 50px;
+    margin: 10px 0;
+    background-color: #F2BAC9;
+    border-radius: 40px;
+    padding: 0 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.checkbox-wrapper-28 {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    flex: 1;
+    min-width: 0; /* Allow flexbox to shrink this item */
+}
+
+.delete-button {
+    margin-right: 10px;
+    padding: 0px 8px;
+    font-size: 18px;
+    font-weight: 900;
+    color: #FFFFFF;
+    background-color: #BAF2E9;
+    border-radius: 20px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 25px;
+    min-height: 25px;
+}
+
+.delete-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.add-more-button {
+    font-family: 'Inter', sans-serif !important; 
+    font-weight: 900 !important;
+    font-size: 15px !important;
+    color: white !important;
+    text-transform: uppercase !important;
+    padding: 10px 20px;
+    margin: 15px auto;
+    display: block;
+    border-radius: 30px;
+}
+
 
 
 
