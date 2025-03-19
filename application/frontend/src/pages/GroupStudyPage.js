@@ -5,7 +5,7 @@ import musicLogo from "../assets/music_logo.png";
 import customLogo from "../assets/customisation_logo.png";
 import copyLogo from "../assets/copy_logo.png";
 import exitLogo from "../assets/exit_logo.png";
-import ToDoList from "../components/ToDoListComponents/ToDoList";
+import ToDoList from "../components/ToDoListComponents/newToDoList";
 import StudyTimer from "../components/StudyTimer.js";
 import StudyParticipants from "../components/StudyParticipants.js";
 import { getAuthenticatedRequest } from "../utils/authService";
