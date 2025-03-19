@@ -37,8 +37,18 @@ class RoomConsumer(AsyncWebsocketConsumer):
     @sync_to_async
     def get_participants(self):
         # Fetch participants from the StudySession model
-        study_session = StudySession.objects.get(roomCode=self.room_code)
+        try:
+            print("Yes")
+            print(StudySession.objects.filter(roomCode=self.room_code))
+            study_session = StudySession.objects.get(roomCode=self.room_code)
+        except StudySession.DoesNotExist:
+            print(f"StudySession with room code {self.room_code} does not exist.")
+            # You can also add some handling logic here, for example:
+            # - Return a message to the user
+            # - Try again or handle the error in a way that doesn't crash the program
+            study_session = None  # Or handle it appropriately
         participants = study_session.participants.all()
+        
         return [participant.username for participant in participants]
 
     async def broadcast_participants(self):

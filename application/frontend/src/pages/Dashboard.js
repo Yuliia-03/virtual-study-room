@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 // import ToDoList from '../pages/ToDoList';
 import CalendarPage from './Calendar';
-import ToDoList from '../components/ToDoListComponents/ToDoList';
+import ToDoList from '../components/ToDoListComponents/newToDoList';
 import StudyRoomComponent from '../components/StudyRoomComponent';
 import Analytics from './Analytics';
 import  FriendsTab  from '../components/friends/FriendsTab';

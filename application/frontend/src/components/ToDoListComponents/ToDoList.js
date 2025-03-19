@@ -4,7 +4,7 @@ import "../../styles/toDoList/ToDoList.css";
 import AddTaskModal from "./CreateNewTask";
 import AddListModal from "./CreateNewList";
 
-const ToDoList = ({ isShared, listId=undefined, socket }) => {
+const ToDoList = ({ isShared, listId = undefined, socket, roomCode }) => {
     const [lists, setLists] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -16,7 +16,6 @@ const ToDoList = ({ isShared, listId=undefined, socket }) => {
 
 
     useEffect(() => {
-        //console.log("Fetching data in useEffect...");
         const fetchData = async () => {
 
             try {
@@ -26,7 +25,6 @@ const ToDoList = ({ isShared, listId=undefined, socket }) => {
                 } else {
                     data = await getAuthenticatedRequest(`/todolists/${listId}/`);
                 }
-                //console.log("Fetched data:", data);
                 setLists(data);
             } catch (error) {
                 if (error.response) {
@@ -39,65 +37,73 @@ const ToDoList = ({ isShared, listId=undefined, socket }) => {
         };
         fetchData();
 
-        // Listen for websocket messages
-        if (socket) {
-            const handleWebSocketMessage = (event) => {
-                const wsdata = JSON.parse(event.data);
+        if (isShared) {
+            const socket = new WebSocket(`ws://localhost:8000/ws/todolist/${roomCode}/`);
 
-                // Respond differently depending on the signal received
-                if (wsdata.type === "add_task") {
-                    setLists((prevLists) =>
-                    prevLists.map((list) =>
-                        list.id === wsdata.task.list_id
-                            ? { ...list, tasks: [...list.tasks, wsdata.task] }
-                            : list
-                    )
-                    );
-                }
-                else if (wsdata.type === "remove_task"){
-                    setLists((prevLists) =>
-                    prevLists.map((list) => ({
-                        ...list,
-                        tasks: list.tasks.filter((task) => task.id !== wsdata.task_id),
-                    }))
-                    );
-                }
-                // Task is toggled complete or un-complete
-                else if (wsdata.type === "toggle_task"){
-                    setLists((prevLists) =>
-                    prevLists.map((list) => ({
-                        ...list,
-                        tasks: list.tasks.map((task) =>
-                            task.id === wsdata.task_id
-                                ? { ...task, is_completed: wsdata.is_completed }
-                                : task
-                        ),
-                    }))
-                    );
-                }
-                else if (wsdata.type === "delete_list"){
-                    setLists((prevLists) =>
-                    prevLists.filter((list) => list.id !== wsdata.list_id)
-                    );
-                }
+            socket.onopen = () => {
+                console.log("WebSocket connected");
             };
 
-            socket.addEventListener("message", handleWebSocketMessage);
+            socket.onmessage = (event) => {
+                const data = JSON.parse(event.data);
 
-            // Clean up websocket listener on unmount
-            return () => {
-                socket.removeEventListener("message", handleWebSocketMessage);
-            }
-        };
-    }, [isShared, listId, socket]);
+                socket.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+
+                    setLists(prevLists => {
+                        return prevLists.map(list => {
+                            if (list.id !== listId) return list; // Only process the relevant list
+
+                            if (data.type === "remove_task") {
+                                return {
+                                    ...list,
+                                    tasks: list.tasks.filter(task => task.id !== data.task_id)
+                                };
+                            }
+
+                            if (data.type === "toggle_task") {
+                                return {
+                                    ...list,
+                                    tasks: list.tasks.map(task =>
+                                        task.id === data.task_id ? { ...task, is_completed: data.is_completed } : task
+                                    )
+                                };
+                            }
+
+                            if (data.type === "add_task") {
+                                if (!list.tasks.some(task => task.id === data.task.id)) {
+                                    return {
+                                        ...list,
+                                        tasks: [...list.tasks, data.task] 
+                                    };
+                                }
+                            }
+
+                            return list;
+                        });
+                    });
+                };
+
+            };
+        }
+
+    }, [isShared, listId]);
 
 
     const toggleTaskCompletion = async (taskId) => {
         try {
-            const response = await getAuthenticatedRequest(`/update_task/${taskId}/`, "PATCH");
-            if (response.status === 0) {
-                console.error("Error updating task status");
-            } else {
+            const task = await getAuthenticatedRequest(`/update_task/${taskId}/`, "PATCH"); 
+            
+            
+            if (isShared && socket.readyState === WebSocket.OPEN) {
+                const message = JSON.stringify({
+                    type: "toggle_task",
+                    task_id: taskId,
+                    is_completed: !task.is_completed, 
+                });
+                socket.send(message);
+            }
+            if (!isShared) {
                 setLists(prevLists =>
                     prevLists.map(list => ({
                         ...list,
@@ -106,17 +112,6 @@ const ToDoList = ({ isShared, listId=undefined, socket }) => {
                         )
                     }))
                 );
-
-                // Send WebSocket update
-                if (socket && socket.readyState === WebSocket.OPEN) {
-                    const message = JSON.stringify({
-                        type: "toggle_task",
-                        task_id: taskId,
-                        is_completed: !response.data.is_completed,
-                    });
-                    socket.send(message);
-                }
-
             }
         } catch (error) {
             console.error("Error fetching to-do lists:", error);
@@ -129,19 +124,19 @@ const ToDoList = ({ isShared, listId=undefined, socket }) => {
         try {
             const data = await getAuthenticatedRequest(`/delete_task/${taskId}/`, "DELETE");
             console.log(data.data)
-            setLists(prevLists =>
-                prevLists.map(list => ({
-                    ...list,
-                    tasks: list.tasks.filter(task => task.id !== taskId) // Remove the deleted task from tasks array
-                })))
-
-            // Send WebSocket update
-            if (socket && socket.readyState === WebSocket.OPEN) {
+            
+            if (isShared && socket.readyState === WebSocket.OPEN) {
                 const message = JSON.stringify({
                     type: "remove_task",
                     task_id: taskId,
                 });
                 socket.send(message);
+            } else {
+                setLists(prevLists =>
+                    prevLists.map(list => ({
+                        ...list,
+                        tasks: list.tasks.filter(task => task.id !== taskId) // Remove the deleted task from tasks array
+                    })))
             }
 
         } catch (error) {
@@ -156,7 +151,6 @@ const ToDoList = ({ isShared, listId=undefined, socket }) => {
             const data = await getAuthenticatedRequest(`/delete_list/${listId}/`, "DELETE");
             setLists(data);
 
-            // Send WebSocket update
             if (socket && socket.readyState === WebSocket.OPEN) {
                 const message = JSON.stringify({
                     type: "delete_list",
@@ -175,10 +169,8 @@ const ToDoList = ({ isShared, listId=undefined, socket }) => {
     const handleAddTask = (listId) => {
         setSelectedListId(listId);
         setAddTaskWindow(true);
-        // NOTIFY ALL PARTICIPANTS HERE
 
-        // Send WebSocket update (if needed)
-        if (socket && socket.readyState === WebSocket.OPEN) {
+        if (isShared && socket.readyState === WebSocket.OPEN) {
             const message = JSON.stringify({
                 type: "add_task",
                 list_id: listId,
@@ -198,7 +190,7 @@ const ToDoList = ({ isShared, listId=undefined, socket }) => {
     const toggleTaskDetails = (taskId) => {
         setExpandedTasks((prev) => ({
             ...prev,
-            [taskId]: !prev[taskId], // Toggle state for the specific task
+            [taskId]: !prev[taskId],
         }));
     };
 
@@ -299,6 +291,7 @@ const ToDoList = ({ isShared, listId=undefined, socket }) => {
                 setAddTaskWindow={setAddTaskWindow}
                 listId={selectedListId}
                 setLists={setLists}
+                isShared={ isShared}
             />
             {!isShared ?
                 (<AddListModal

@@ -9,6 +9,8 @@ from rest_framework.permissions import IsAuthenticated
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
+from api.models import StudySession
+
 class ViewToDoList(APIView):
 
     permission_classes = [IsAuthenticated]
@@ -82,14 +84,22 @@ class ViewToDoList(APIView):
                 task = toDoList.objects.get(id=task_id)
 
                 # Send WebSocket update
-                channel_layer = get_channel_layer()
-                async_to_sync(channel_layer.group_send)(
-                    f"room_{task.list.roomCode}",
-                    {
-                        "type": "remove_task",
-                        "task_id": task_id,
-                    }
-                )
+                if task.list.is_shared:
+
+                    try:
+                        study_session = StudySession.objects.get(toDoList=task.list)  # ✅ Fix: Use correct variable
+                        room_code = study_session.roomCode  # Get the correct room code
+                    except StudySession.DoesNotExist:
+                        return Response({"error": "No study session found for this list"}, status=status.HTTP_400_BAD_REQUEST)
+
+                    channel_layer = get_channel_layer()
+                    async_to_sync(channel_layer.group_send)(
+                        f"room_{room_code}",
+                        {
+                            "type": "remove_task",
+                            "task_id": task_id,
+                        }
+                    )
 
                 toDoList.objects.get(pk=task_id).delete()
 
@@ -109,15 +119,6 @@ class ViewToDoList(APIView):
                 Permission.objects.filter(list_id = list_id).delete()
                 List.objects.get(pk=list_id).delete()
 
-                # Send WebSocket update
-                channel_layer = get_channel_layer()
-                async_to_sync(channel_layer.group_send)(
-                    f"room_{list.roomCode}",
-                    {
-                        "type": "delete_list",
-                        "list_id": list_id,
-                    }
-                )
 
                 return self.get(request)
             else:
@@ -133,36 +134,46 @@ class ViewToDoList(APIView):
             title = data.get("title")
             list_id = data.get("list_id")
             content = data.get("content")
+            print("Received request data:", request.data)
 
             if List.objects.filter(pk=list_id).exists():
-                list = List.objects.get(pk=list_id)
+                list_obj = List.objects.get(pk=list_id)
                 task = toDoList.objects.create(
-                    title=title, content=content, list=list)
+                    title=title, content=content, list=list_obj
+                )
                 task.save()
 
-                # Send WebSocket update
-                channel_layer = get_channel_layer()
-                async_to_sync(channel_layer.group_send)(
-                    f"room_{list.roomCode}",
-                    {
-                        "type": "add_task",
-                        "task": {
-                            "id": task.pk,
-                            "title": task.title,
-                            "content": task.content,
-                            "is_completed": task.is_completed,
-                            "list_id": task.list.pk,
-                        },
-                    }
-                )
+                # Send WebSocket update if the list is shared
+                if task.list.is_shared:
+                    
+                    try:
+                        study_session = StudySession.objects.get(toDoList=list_obj)  
+                        room_code = study_session.roomCode  # Get the correct room code
+                    except StudySession.DoesNotExist:
+                        return Response({"error": "No study session found for this list"}, status=status.HTTP_400_BAD_REQUEST)
 
-                response_data={
+                    # Now send WebSocket message using room_code
+                    channel_layer = get_channel_layer() 
+                    async_to_sync(channel_layer.group_send)(
+                        f"room_{room_code}",
+                        {
+                            "type": "add_task",
+                            "task": {
+                                "id": task.pk,
+                                "title": task.title,
+                                "content": task.content,
+                                "is_completed": task.is_completed,
+                                "list_id": task.list.pk,
+                            },
+                        }
+                    )
+
+                response_data = {
                     "listId": task.list.pk,
                     "id": task.pk,
                     "title": task.title,
                     "content": task.content,
                     "is_completed": task.is_completed,
-                    #"creation_date": task.creation_date
                 }
                 return Response(response_data, status=status.HTTP_200_OK)
 
@@ -201,23 +212,29 @@ class ViewToDoList(APIView):
 
         try:
         # This line throws DoesNotExist if not found
-            task = toDoList.objects.get(id=task_id)
-
+            task = toDoList.objects.get(pk=task_id)
             new_task_status = not task.is_completed
             task.is_completed = new_task_status
             task.save()
 
             # Send WebSocket update
-            channel_layer = get_channel_layer()
-            async_to_sync(channel_layer.group_send)(
-                f"room_{task.list.roomCode}",
-                {
-                    "type": "toggle_task",
-                    "task_id": task_id,
-                    "is_completed": task.is_completed,
-                }
-            )
+            if task.list.is_shared:
 
+                try:
+                    study_session = StudySession.objects.get(toDoList=task.list)  # ✅ Fix: Use correct variable
+                    room_code = study_session.roomCode  # Get the correct room code
+                except StudySession.DoesNotExist:
+                    return Response({"error": "No study session found for this list"}, status=status.HTTP_400_BAD_REQUEST)
+
+                channel_layer = get_channel_layer()
+                async_to_sync(channel_layer.group_send)(
+                    f"room_{room_code}",
+                    {
+                        "type": "toggle_task",
+                        "task_id": task_id,
+                        "is_completed": task.is_completed,
+                    }
+                )
 
             return Response({"is_completed": task.is_completed}, status=status.HTTP_200_OK)
 

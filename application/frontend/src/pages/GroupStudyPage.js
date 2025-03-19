@@ -398,7 +398,7 @@ function GroupStudyPage() {
           <div style={{ flex: 1, width: "100%" }}>
             {" "}
             {/* This div takes all available space */}
-            <ToDoList isShared={true} listId={roomList} socket = { socket }/>
+            <ToDoList isShared={true} listId={roomList} socket={socket} roomCode={roomCode} />
           </div>
         </div>
         <div
@@ -473,8 +473,6 @@ function GroupStudyPage() {
                 </div>
               ))}
             </div>
-          );
-        };
         </div>
         <MotivationalMessage data-testid="motivationalMessage-container" />
       </div>
