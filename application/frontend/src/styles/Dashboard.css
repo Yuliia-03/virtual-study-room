@@ -2,7 +2,7 @@
     /* Flex to store components in the dashboard */
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    padding: 10px;
     overflow: hidden;
     justify-content: center;
     margin: 0;

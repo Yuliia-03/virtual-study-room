@@ -44,13 +44,15 @@
     font-size: 24px;
     font-weight: 400;
     color: white;
-    margin: 0;
+    margin: 0 !important;
     letter-spacing: 0.5px;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     position: relative;
     display: inline-block;
     padding-bottom: 12px; 
     margin-right: 10px !important;
+    margin: 0 !important;
+    white-space: nowrap;
 }
 
 .gs-heading2::after {
@@ -450,28 +452,22 @@
     align-items: start;
 }
 
-.utility-bar{
-    width: 150px;
-    height: 40px;
-    border-radius: 10px;
-    margin-left: 7%;
-    margin-top: 3%;
-}
-
-.utility-bar-2{
-    width: 150px;
-    height: 40px;
-    border-radius: 10px;
-    margin-left: 68%;
-    margin-top: 3%;
-}
-
-.utility-bar, .utility-bar-2{
+.utility-bar {
     display: flex;
     align-items: center;
-    justify-content: center;
-    grid-area: code;
-    background-color: #FFFEF8;
+    gap: 20px;
+    position: static !important;
+    z-index: 1001;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin-right: 25px !important;
+}
+
+.utility-bar-2 {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
 }
 
 .users {
@@ -555,9 +551,18 @@
 .customisation-button,
 .copy-button,
 .exit-button {
-    position: fixed !important;
-    top: 30px !important;
-    z-index: 1001 !important;
+    position: static !important;
+    width: 30px;
+    height: 30px;
+    background-color: transparent !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0;
+    margin: 0 !important;
+    transition: transform 0.2s ease;
 }
 
 .music-button {
@@ -582,33 +587,39 @@
 }
 
 .music-button.active { 
-    transform: scale(0.95);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transform: scale(0.9);
 }
 
 .customisation-button.active { 
-    transform: scale(0.95);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transform: scale(0.9);
 }
 
 .copy-button.active { 
-    transform: scale(0.95);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transform: scale(0.9);
 }
 
 .exit-button.active { 
-    transform: scale(0.95);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transform: scale(0.9);
 }
 
-.music-button:hover, .customisation-button:hover, .copy-button:hover, .exit-button:hover{
-    filter: grayscale(100%);
+.music-button:hover, .customisation-button:hover, .copy-button:hover, .exit-button:hover {
+    transform: scale(1.15);
+}
+
+.music-button:hover img, 
+.customisation-button:hover img,
+.copy-button:hover img,
+.exit-button:hover img {
+    filter: brightness(0) invert(1) drop-shadow(0 0 3px rgba(255, 255, 255, 0.7));
 }
 
 .exit-button img,  .copy-button img, .customisation-button img, .music-button img{
     max-width: none;
-    width: 20px;
-    height: 20px;
+    width: 28px;
+    height: 28px;
+    filter: brightness(0) invert(1);
+    display: block;
+    opacity: 0.85;
 }
 
 .music-button::after {
@@ -790,4 +801,52 @@ body::-webkit-scrollbar-thumb {
     overflow-x: auto !important;
     min-width: fit-content !important; /* Ensures all content is accounted for */
     width: auto !important;
+}
+
+/* Add these new styles to fix the header layout */
+.header-right-section {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.header-right-section,
+.header-right-section > * {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Make button icons larger and more visible */
+.music-button img, 
+.customisation-button img,
+.copy-button img,
+.exit-button img {
+    width: 24px;
+    height: 24px;
+    filter: brightness(0) invert(1); /* Make icons white for better visibility */
+    display: block;
+}
+
+/* Button hover effect */
+.music-button:hover, 
+.customisation-button:hover,
+.copy-button:hover,
+.exit-button:hover {
+    transform: scale(1.1);
+    background-color: #9aabf0;
+}
+
+/* Active state for buttons */
+.music-button.active, 
+.customisation-button.active,
+.copy-button.active,
+.exit-button.active {
+    transform: scale(0.95);
+    background-color: #8796da;
+}
+
+.gs-heading2 {
+    margin: 0 !important;
+    white-space: nowrap;
 }

@@ -13,14 +13,14 @@ describe('UserBadges', () => {
     const badges = screen.getAllByRole('img');
     expect(badges.length).toBeGreaterThan(0);
   });
-
+ 
   test('handles empty badge list', () => {
     render(<UserBadges userId="test-user-123" userBadges={[]} />);
     const badges = screen.getAllByRole('img');
     expect(badges.length).toBe(8);
     const earnedBadges = screen.queryAllByText(/Earned:/);
     expect(earnedBadges.length).toBe(0); //no badges should be marked as earned
-  });
+  }); 
 
   test('handles null badge list', () => {
     render(<UserBadges userId="test-user-123" userBadges={null} />);

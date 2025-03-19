@@ -1,0 +1,110 @@
+/* Container for pending friend requests */
+.pending-friends {
+    max-width: 100%;
+    margin: 20px auto;
+    padding: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* Scrollable list wrapper */
+.invitations-container {
+    max-height: 300px;
+    /* Adjust height as needed */
+    overflow-y: auto;
+    width: 100%;
+    padding-right: 5px;
+}
+
+/* Custom scrollbar styling */
+.invitations-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.invitations-container::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 6px;
+}
+
+/* Invitations list */
+.invitations-list {
+    align-items: center;
+    justify-content: space-between;
+    list-style: none;
+    padding: 0px;
+    margin: 10px;
+    max-width: 95%;
+    max-height: 20%;
+    align-items: center;white-space: normal;
+        overflow-y: auto;
+    background: white;
+}
+
+
+/* Each request - keeps all elements in one row */
+.invitation-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 18px;
+    width: 100%;
+    white-space: normal;
+    overflow-y: auto;
+}
+
+
+/* Name and username inside request */
+.invitation-name {
+    flex-grow: 1;
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* Adds "..." if text is too long */
+    padding-right: 10px;
+    /* Spacing between name and buttons */
+}
+
+/* Buttons for Accept/Reject */
+.invitation-actions {
+    display: flex;
+    gap: 15px;
+}
+
+/* Button styling */
+.accept-btn,
+.reject-btn {
+    background: none;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.accept-btn:hover {
+    background-color: greenyellow;
+    color: green;
+}
+
+.reject-btn:hover {
+    color: red;
+}
+
+.small-pic {
+    align-items: center;
+    width: 50px;
+    /* Set the desired width */
+    height: 50px;
+    /* Set the desired height */
+    border-radius: 10%;
+    /* Make the image circular */
+    object-fit: cover;
+    /* Ensure the image covers the area without stretching */
+}
