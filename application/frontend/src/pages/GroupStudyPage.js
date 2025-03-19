@@ -317,7 +317,22 @@ function GroupStudyPage() {
       >
         {/*1st Column */}
         <div className="column" role="column" data-testid="column-1">
-          <ToDoList isShared={true} listId={roomList} />
+          <div className="todo-list-container" data-testid="todo-list-container">
+            <h2 className="todo-heading">
+              To Do:
+              <div className="checkbox-wrapper-5">
+                <div className="check">
+                  <input id="check-5" type="checkbox"></input>
+                  <label htmlFor="check-5"></label>
+                </div>
+              </div>
+            </h2>
+            <div style={{ flex: 1, width: "100%" }}>
+              {" "}
+              {/* This div takes all available space */}
+              <ToDoList isShared={true} listId={roomList} />
+            </div>
+          </div>
 
           <div
             className="sharedMaterials-container"
@@ -329,10 +344,52 @@ function GroupStudyPage() {
         {/*2nd Column */}
         <div className="column" role="column" data-testid="column-2">
           <div className="user-list-container" data-testid="user-list-container">
-            {/* Debugging messages */}
-            {messages.map((msg, index) => (
-              <p key={index}>{msg}</p>
-            ))}
+            <h2 className="heading"> Study Room: {roomName} </h2>
+            <h3 className="gs-heading2"> Code: {finalRoomCode}</h3>
+            <div className="utility-bar" data-testid="utility-bar">
+              <button
+                type="button"
+                className={`music-button ${isActiveMusic ? "active" : ""}`}
+                onMouseDown={() => handleMouseDown("music")}
+                onMouseUp={() => handleMouseUp("music")}
+                onMouseLeave={() => handleMouseUp("music")}
+              >
+                <img src={musicLogo} alt="Music" />
+              </button>
+              <button
+                type="button"
+                className={`customisation-button ${
+                  isActiveCustom ? "active" : ""
+                }`}
+                onMouseDown={() => handleMouseDown("custom")}
+                onMouseUp={() => handleMouseUp("custom")}
+                onMouseLeave={() => handleMouseUp("custom")}
+              >
+                <img src={customLogo} alt="Customisation" />
+              </button>
+            </div>
+            <div className="utility-bar-2" data-testid="utility-bar-2">
+              <button
+                type="button"
+                className={`music-button ${isActiveMusic ? "active" : ""}`}
+                onMouseDown={() => handleMouseDown("music")}
+                onMouseUp={() => handleMouseUp("music")}
+                onMouseLeave={() => handleMouseUp("music")}
+              >
+                <img src={musicLogo} alt="Music" />
+              </button>
+              <button
+                type="button"
+                className={`customisation-button ${
+                  isActiveCustom ? "active" : ""
+                }`}
+                onMouseDown={() => handleMouseDown("custom")}
+                onMouseUp={() => handleMouseUp("custom")}
+                onMouseLeave={() => handleMouseUp("custom")}
+              >
+                <img src={customLogo} alt="Customisation" />
+              </button>
+            </div>
             <StudyParticipants />
           </div>
           <MotivationalMessage data-testid="motivationalMessage-container" />
