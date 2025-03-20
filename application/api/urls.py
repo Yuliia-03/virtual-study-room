@@ -3,7 +3,7 @@ from .views.login_page import login
 from rest_framework.routers import DefaultRouter
 #from .views.calendar import list_events
 from .views.calendar import EventViewSet
-from .views.spotify_view import AuthURL, spotify_callback, IsAuthenticated, GetAlbumTracks
+from .views.spotify_view import AuthURL, spotify_callback, IsAuthenticated, GetAlbumTracks, GetSpotifyToken
 
 router = DefaultRouter()
 # router.register(r'events', list_events, basename='event')
@@ -17,6 +17,7 @@ urlpatterns = [
     path('is-authenticated', IsAuthenticated.as_view()),
     path('spotify/callback/', spotify_callback, name="spotify-callback"),
     path('get-album-tracks', GetAlbumTracks.as_view(), name='get_album_tracks'),
+    path('api/token/', GetSpotifyToken.as_view(), name='get-token'),
     #path('', include(router.urls)),
 
 ]

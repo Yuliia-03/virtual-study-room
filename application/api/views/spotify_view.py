@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from requests import Request, post,get
 from api.utils import Spotify_API
 import re
+from api.models import SpotifyToken
 class AuthURL(APIView):
     def get(self, request, format=True):
         scopes = 'user-read-playback-state user-modify-playback-state user-read-currently-playing'
@@ -80,3 +81,21 @@ class GetAlbumTracks(APIView):
             return Response({"Error": "Failed to fetch album tracks"}, status=response.status_code)
 
         return Response(response.json(), status=status.HTTP_200_OK)
+    
+class GetSpotifyToken(APIView):
+    def get(self, request, format=None):
+        session_id = request.session.session_key
+        if not session_id:
+            request.session.create()
+            session_id = request.session.session_key
+            print(f"New session created: {session_id}")
+        else:
+            print(f"Existing session: {session_id}")
+
+        token = SpotifyToken.objects.filter(user=session_id).first()
+        if token:
+            print(f"Token found for session_id={session_id}: {token.access_token}")
+            return Response({'access_token': token.access_token}, status=status.HTTP_200_OK)
+        else:
+            print(f"No token found for session_id={session_id}")
+            return Response({'error': 'No token available'}, status=status.HTTP_404_NOT_FOUND)

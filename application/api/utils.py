@@ -61,6 +61,7 @@ class Spotify_API():
 		tokens = self.get_user_tokens(session_id)
 		expires_in = timezone.now() + timedelta(seconds=expires_in)
 		if tokens:
+			print(f"Updating tokens for session_id={session_id}")
 			tokens.access_token = access_token
 			tokens.expires_in = expires_in
 			tokens.token_type = token_type
@@ -71,6 +72,7 @@ class Spotify_API():
 			else:
 				tokens.save(update_fields=['access_token', 'expires_in', 'token_type'])
 		else:
+			print(f"Creating new tokens for session_id={session_id}")
 			tokens = SpotifyToken(
             user=session_id,
             access_token=access_token,
