@@ -255,7 +255,7 @@ function ProfileBox() {
               >
                 &times;
               </span>
-              <div className="button-container">
+              <div className="profile-popup-container">
                 <div className="inventory-align">
                   <label htmlFor="change-avatar" className="upload-button">
                     UPLOAD AVATAR
