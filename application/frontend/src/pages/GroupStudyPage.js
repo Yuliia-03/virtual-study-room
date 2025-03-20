@@ -107,8 +107,6 @@ function GroupStudyPage() {
     };
   }, [finalRoomCode, shouldReconnect]);
 
-
-
   // Method for connecting to the websocket
   const connectWebSocket = () => {
     // Check if a WebSocket connection already exists, not sure if this actually does anything?
@@ -286,7 +284,6 @@ function GroupStudyPage() {
     }
   };
 
-
   // Method to leave room
   const leaveRoom = useCallback(async () => {
     // User is leaving so they should not reconnect to the room automatically
@@ -319,8 +316,10 @@ function GroupStudyPage() {
 
       if (response.status === 200) setIsActiveExit(true);
       // Redirect to the Dashboard
-      navigate("/dashboard/", {});
-      console.log("User has left the room");
+      navigate(`/dashboard/${response.username}`, {
+        state: { userName: response.username },
+      });
+      console.log("User has left the room", response.username);
     } catch (error) {
       console.error("Error leaving room:", error);
     }
@@ -404,14 +403,12 @@ function GroupStudyPage() {
   //Third Column: Timer, customisation, chatbox
 
   return (
-
     <>
       {/* Restructured header */}
       <div className="study-room-header">
         <h2 className="heading">Study Room: {roomName}</h2>
         <div className="header-right-section">
           <div className="utility-bar">
-            
             <button
               type="button"
               className={`music-button ${isActiveMusic ? "active" : ""}`}
@@ -457,14 +454,19 @@ function GroupStudyPage() {
         </div>
       </div>
 
-    {/*End of header */}
+      {/*End of header */}
       <div
         className="groupStudyRoom-container"
         data-testid="groupStudyRoom-container"
       >
         {/*1st Column */}
-                <div className="column" role="column" data-testid="column-1">
-                <ToDoList isShared={true} listId={roomList} socket={socket} roomCode={roomCode} />
+        <div className="column" role="column" data-testid="column-1">
+          <ToDoList
+            isShared={true}
+            listId={roomList}
+            socket={socket}
+            roomCode={roomCode}
+          />
 
           <div
             className="sharedMaterials-container"
@@ -475,26 +477,29 @@ function GroupStudyPage() {
         </div>
         {/*2nd Column */}
         <div className="column" role="column" data-testid="column-2">
-        <div className="user-list-container" data-testid="user-list-container">
-          <div className="users">
-            {/* Dynamically render participants */}
-            {participants.map((participant, index) => (
-              <div key={index} className="user-circle">
-                <div className="user-image">
-                  <img
-                    src={participant.imageUrl}
-                    alt="profile"
-                    className="user-image"
-                  />
-                </div>
+          <div
+            className="user-list-container"
+            data-testid="user-list-container"
+          >
+            <div className="users">
+              {/* Dynamically render participants */}
+              {participants.map((participant, index) => (
+                <div key={index} className="user-circle">
+                  <div className="user-image">
+                    <img
+                      src={participant.imageUrl}
+                      alt="profile"
+                      className="user-image"
+                    />
+                  </div>
 
-                <div className="user-name">{participant.username}</div>
-              </div>
-            ))}
+                  <div className="user-name">{participant.username}</div>
+                </div>
+              ))}
+            </div>
           </div>
+          <MotivationalMessage data-testid="motivationalMessage-container" />
         </div>
-        <MotivationalMessage data-testid="motivationalMessage-container" />
-      </div>
         {/*3rd Column */}
         <div className="column" role="column" data-testid="column-3">
           {/* StudyTimer replaces the timer-container div */}
