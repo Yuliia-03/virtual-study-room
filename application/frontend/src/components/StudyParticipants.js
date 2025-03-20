@@ -35,7 +35,8 @@ const StudyParticipants = () => {
 
       // Set up WebSocket connection
   const setupWebSocket = (roomCode) =>{
-   const socket = new WebSocket(`ws://localhost:8000/ws/room/${roomCode}/`);
+   //const socket = new WebSocket(`ws://localhost:8000/ws/room/${roomCode}/`);
+    const socket = new WebSocket(`ws://studyspot.pythonanywhere.com/ws/room/${roomCode}/`);
 
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);

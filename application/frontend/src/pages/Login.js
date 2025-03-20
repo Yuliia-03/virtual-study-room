@@ -68,7 +68,9 @@ function Login() {
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/login/",
+        //"http://127.0.0.1:8000/api/login/",
+
+        "https://studyspot.pythonanywhere.com/api/login/",
         formData, // Contains email and password
         { headers: { "Content-Type": "application/json" } } // No Authorization header here
       );

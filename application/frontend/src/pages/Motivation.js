@@ -7,8 +7,8 @@ const MotivationalMessage = ({ "data-testid": dataTestId }) => {
 
   useEffect(() => {
     axios
-      //      .get("https://studyspot.pythonanywhere.com/api/motivational-message/")
-      .get("http://127.0.0.1:8000/api/motivational-message/")
+      .get("https://studyspot.pythonanywhere.com/api/motivational-message/")
+      //.get("http://127.0.0.1:8000/api/motivational-message/")
       .then((response) => {
         console.log("API Response:", response.data);
         setMessage(response.data.message); 

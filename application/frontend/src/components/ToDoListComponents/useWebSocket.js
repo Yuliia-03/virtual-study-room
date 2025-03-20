@@ -4,7 +4,8 @@ const useWebSocket = (isShared, socket, listId, setLists, roomCode) => {
     useEffect(() => {
         if (!isShared) return;
 
-        const wsSocket = new WebSocket(`ws://localhost:8000/ws/todolist/${roomCode}/`);
+        //const wsSocket = new WebSocket(`ws://localhost:8000/ws/todolist/${roomCode}/`);
+        const wsSocket = new WebSocket(`ws://studyspot.pythonanywhere.com/ws/todolist/${roomCode}/`);
 
         wsSocket.onopen = () => {
             console.log("WebSocket connected");

@@ -116,8 +116,9 @@ function GroupStudyPage() {
       console.log("Using existing WebSocket connection");
       return; // Reuse the existing connection
     }
+    const ws = new WebSocket(`wss://https://studyspot.pythonanywhere.com/ws/room/${finalRoomCode}/`);
 
-    const ws = new WebSocket(`ws://localhost:8000/ws/room/${finalRoomCode}/`);
+    //const ws = new WebSocket(`ws://localhost:8000/ws/room/${finalRoomCode}/`);
 
     //Logs when connection is established
     ws.onopen = () => {
