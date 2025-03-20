@@ -324,8 +324,10 @@ function GroupStudyPage() {
 
       if (response.status === 200) setIsActiveExit(true);
       // Redirect to the Dashboard
-      navigate("/dashboard/", {});
-      console.log("User has left the room");
+      navigate(`/dashboard/${response.username}`, {
+        state: { userName: response.username },
+      });
+      console.log("User has left the room", response.username);
     } catch (error) {
       console.error("Error leaving room:", error);
     }
