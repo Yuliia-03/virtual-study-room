@@ -68,6 +68,18 @@ const ToDoList = ({ isShared, listId = undefined, socket, roomCode = undefined }
             console.error("Error fetching to-do lists:", error);
         }
     };
+
+
+
+    const handleDeleteList = async (listId) => {
+        try {
+            const data = await getAuthenticatedRequest(`/delete_list/${listId}/`, "DELETE");
+            setLists(data);
+        } catch (error) {
+            console.error("Error fetching to-do lists:", error);
+        } 
+    };
+
     const handleAddTask = (listId) => {
         setSelectedListId(listId);
         setAddTaskWindow(true);
@@ -126,6 +138,12 @@ const ToDoList = ({ isShared, listId = undefined, socket, roomCode = undefined }
                         <button onClick={() => handleAddTask(list.id)} className="btn btn-success btn-sm">
                             <i className="bi bi-plus-circle"></i>
                         </button>
+                        {!isShared ? (
+                            <button onClick={() => handleDeleteList(list.id)} className="btn btn-danger btn-sm">
+                                <i className="bi bi-trash"></i>
+                            </button>
+                        ) : (<></>)
+                        }
                     </div>
 
                     <h4>{list.name}</h4>
