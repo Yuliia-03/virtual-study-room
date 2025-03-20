@@ -47,9 +47,12 @@ const CalendarPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Set description to "No description available" if empty
+    const description = eventDescription.trim() || "No description available";
+
     const newEvent = {
       title: eventTitle,
-      description: eventDescription,
+      description: description,
       start: eventStart,
       end: eventEnd,
       // Do NOT include the user field here; the backend will handle it
