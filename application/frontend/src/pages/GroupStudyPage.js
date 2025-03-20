@@ -307,7 +307,7 @@ function GroupStudyPage() {
       );
       console.log("Participants", response1.participantsList.length);
       console.log("num participants: ", participants.length);
-      if (response1.participantsList.length == 0) {
+      if (response1.participantsList.length == 1) {
         await deleteFirebaseFiles(finalRoomCode);
         console.log("all firebase files deleted successfully");
       }
