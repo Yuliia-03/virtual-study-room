@@ -7,7 +7,7 @@ import useWebSocket from './useWebSocket';
 import useToDoList from './useToDoList';
 import TaskItem from './TaskItem';
 
-const ToDoList = ({ isShared, listId = undefined, socket, roomCode }) => {
+const ToDoList = ({ isShared, listId = undefined, socket, roomCode = undefined }) => {
     const { lists, loading, setLists } = useToDoList(isShared, listId);
     const [addTaskWindow, setAddTaskWindow] = useState(false);
     const [selectedListId, setSelectedListId] = useState(null);
