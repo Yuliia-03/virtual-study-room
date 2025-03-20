@@ -227,6 +227,7 @@ function GroupStudyPage() {
       );
 
       setParticipants(participantsWithImages); // Update participants state with image URLs
+      console.log("num Participants", participants);
     } catch (error) {
       console.error("Error fetching participants:", error);
     }
@@ -304,7 +305,14 @@ function GroupStudyPage() {
         roomCode: finalRoomCode, // Sends the room name to the backend
       });
 
-      if (participants.length == 0) {
+      const roomCode = finalRoomCode;
+      const participantsResponse = await getAuthenticatedRequest(
+        `/get-participants/?roomCode=${roomCode}`,
+        "GET"
+      );
+      console.log("Participants", participantsResponse.participantsList.length);
+      console.log("num participants: ", participants.length);
+      if (participantsResponse.participantsList.length == 0) {
         await deleteFirebaseFiles(finalRoomCode);
         console.log("all firebase files deleted successfully");
       }
