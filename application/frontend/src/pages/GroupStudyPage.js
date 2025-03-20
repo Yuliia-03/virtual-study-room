@@ -300,23 +300,23 @@ function GroupStudyPage() {
         console.log("Connection to websocket already terminated.");
       }
 
-      // This stuff gets sent to the backend!
-      const response = await getAuthenticatedRequest("/leave-room/", "POST", {
-        roomCode: finalRoomCode, // Sends the room name to the backend
-      });
-
       const roomCode = finalRoomCode;
-      const participantsResponse = await getAuthenticatedRequest(
+      const response1 = await getAuthenticatedRequest(
         `/get-participants/?roomCode=${roomCode}`,
         "GET"
       );
-      console.log("Participants", participantsResponse.participantsList.length);
+      console.log("Participants", response1.participantsList.length);
       console.log("num participants: ", participants.length);
-      if (participantsResponse.participantsList.length == 0) {
+      if (response1.participantsList.length == 0) {
         await deleteFirebaseFiles(finalRoomCode);
         console.log("all firebase files deleted successfully");
       }
       // delete all files associated with this room from firebase
+
+      // This stuff gets sent to the backend!
+      const response = await getAuthenticatedRequest("/leave-room/", "POST", {
+        roomCode: finalRoomCode, // Sends the room name to the backend
+      });
 
       console.log("leaving .. . .");
 
