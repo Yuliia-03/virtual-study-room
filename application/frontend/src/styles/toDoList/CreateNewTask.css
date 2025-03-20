@@ -1,5 +1,5 @@
 /* Modal Overlay */
-.modal-overlay {
+.modal-overlay-task {
   position: fixed;
   top: 0;
   left: 0;
@@ -12,35 +12,36 @@
   z-index: 1000; /* Ensure it's on top of other elements */
 }
 
-.modal-content {
+.modal-content-task {
+  margin: auto;
+  padding: 20px;
+  border: 5px solid #f2bac9;
   background-color: white;
-  padding: 0px;
-  border-radius: 12px;
-  width: 100%;
-  height: 40%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 50%;
+  border-radius: 20px;
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
-  align-items: stretch;
-  gap: 15px;
+  z-index: 2001; /*ensures it is on top of dashboard heading*/
 }
 
-.form-class {
+.form-class-task {
   width: 100%;
   margin-bottom: 20px;
   margin-left: 5px;
 }
 
-.modal-content h2 {
+.modal-content-task h2 {
   font-family: "Inter", sans-serif;
   font-size: 24px;
   font-weight: 700;
   color: black;
-  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 /* Form Group */
-.form-group {
+.form-group-task {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -49,7 +50,7 @@
   gap: 5px; /* Space between label and input */
 }
 
-.form-group label {
+.form-group-task label {
   font-family: "Inter", sans-serif;
   font-size: 20px;
   font-weight: 600;
@@ -57,34 +58,42 @@
   margin-bottom: 5px;
 }
 
-.form-group input {
+.form-group-task input {
+  background-color: antiquewhite;
+  padding: 10px;
+  border-radius: 20px;
+  border: none;
+  text-align: left;
+  resize: none;
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  min-height: 60px;
+  color: black;
+  font-weight: 600;
   font-family: "Inter", sans-serif;
-  font-size: 14px;
-  color: #333;
 }
 
-.form-group input:focus {
+.form-group-task input:focus {
   border-color: #f2bac9; /* Match calendar modal focus color */
   outline: none;
 }
 
-.form-group textarea {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-  color: #333;
+.form-group-task textarea {
+  background-color: antiquewhite;
+  padding: 10px;
+  border-radius: 20px;
+  border: none;
+  text-align: left;
   resize: none;
+  width: 100%;
+  min-height: 60px;
+  color: black;
+  font-weight: 600;
+  font-family: "Inter", sans-serif;
+  margin-top: 5px;
 }
 
 /* Button Group */
-.button-group {
+.button-group-task {
   width: 100%;
   display: flex;
   justify-content: flex-end;
@@ -94,7 +103,7 @@
 }
 
 /* Save Button */
-.btn-save {
+.btn-save-task {
   background-color: #f2bac9; /* Match calendar modal button color */
   color: white;
   padding: 8px 16px;
@@ -107,12 +116,12 @@
   transition: background-color 0.3s ease;
 }
 
-.btn-save:hover {
+.btn-save-task:hover {
   background-color: #d89aa9; /* Darker shade on hover */
 }
 
 /* Cancel Button */
-.btn-cancel {
+.btn-cancel-task {
   background-color: #bad7f2; /* Match calendar modal button color */
   color: white;
   padding: 8px 16px;
@@ -125,6 +134,6 @@
   transition: background-color 0.3s ease;
 }
 
-.btn-cancel:hover {
+.btn-cancel-task:hover {
   background-color: #9ab7d8; /* Darker shade on hover */
 }

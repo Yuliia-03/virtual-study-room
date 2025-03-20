@@ -168,7 +168,7 @@
   font-size: 15px;
 }
 
-.modal,
+.modal-profile,
 .inventory-content {
   display: flex;
   justify-content: center;
@@ -183,11 +183,12 @@
   z-index: 2000; /*ensures it is on top of dashboard heading*/
 }
 
-.modal-content {
+.modal-content-profile {
   margin: auto;
   padding: 20px;
   border: 5px solid #f2bac9;
-  width: 80%;
+  background-color: white;
+  width: 50%;
   border-radius: 20px;
   display: flex;
   justify-content: center;

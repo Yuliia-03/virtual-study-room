@@ -1,5 +1,5 @@
 /* Modal Overlay */
-.modal-overlay {
+.modal-overlay-new-list {
   position: fixed;
   top: 0;
   left: 0;
@@ -13,21 +13,22 @@
 }
 
 /* Modal Content */
-.modal-content {
+.modal-content-new-list {
+  margin: auto;
+  padding: 20px;
+  border: 5px solid #f2bac9;
   background-color: white;
-  padding: 25px; /* Increased padding for taller modal */
-  border-radius: 12px;
-  width: 350px; /* Reduced width */
-  max-width: 90%; /* Ensure it doesn't overflow on small screens */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 50%;
+  border-radius: 20px;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  gap: 20px; /* Increased space between elements */
+  flex-direction: column;
+  z-index: 2001; /*ensures it is on top of dashboard heading*/
 }
 
 /* Modal Title */
-.modal-content h2 {
+.modal-content-new-list h2 {
   font-family: "Inter", sans-serif;
   font-size: 24px;
   font-weight: 700;
@@ -37,7 +38,7 @@
   text-align: center; /* Center the title */
 }
 
-.form-class {
+.form-class-list {
   width: 100%;
   margin-bottom: 20px;
   margin-left: 30px;
@@ -45,7 +46,7 @@
 }
 
 /* Form Group */
-.form-group {
+.form-group-list {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -54,30 +55,35 @@
   gap: 5px; /* Space between label and input */
 }
 
-.form-group label {
+.form-group-list label {
   font-family: "Inter", sans-serif;
   font-size: 20px;
   font-weight: 600;
   color: #333;
+  margin-left: 10px;
 }
 
-.form-group input {
+.form-group-list input {
+  background-color: antiquewhite;
+  padding: 10px;
+  border-radius: 20px;
+  border: none;
+  text-align: left;
+  resize: none;
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  min-height: 60px;
+  color: black;
+  font-weight: 600;
   font-family: "Inter", sans-serif;
-  font-size: 14px;
-  color: #333;
 }
 
-.form-group input:focus {
+.form-group-list input:focus {
   border-color: #f2bac9; /* Match calendar modal focus color */
   outline: none;
 }
 
 /* Button Group */
-.button-group {
+.button-group-list {
   width: 100%;
   display: flex;
   justify-content: flex-end;
@@ -87,7 +93,7 @@
 }
 
 /* Save Button */
-.btn-save {
+.btn-save-list {
   background-color: #f2bac9; /* Match calendar modal button color */
   color: white;
   padding: 8px 16px;
@@ -100,12 +106,12 @@
   transition: background-color 0.3s ease;
 }
 
-.btn-save:hover {
+.btn-save-list:hover {
   background-color: #d89aa9; /* Darker shade on hover */
 }
 
 /* Cancel Button */
-.btn-cancel {
+.btn-cancel-list {
   background-color: #bad7f2; /* Match calendar modal button color */
   color: white;
   padding: 8px 16px;
@@ -118,6 +124,6 @@
   transition: background-color 0.3s ease;
 }
 
-.btn-cancel:hover {
+.btn-cancel-list:hover {
   background-color: #9ab7d8; /* Darker shade on hover */
 }

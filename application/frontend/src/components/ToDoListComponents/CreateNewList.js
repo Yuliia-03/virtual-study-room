@@ -55,12 +55,12 @@ const AddListModal = ({ addListWindow, setAddListWindow, setLists }) => {
 
   if (!addListWindow) return null;
   return (
-    <div role="dialog" className="modal-overlay">
-      <div className="modal-content">
+    <div role="dialog" className="modal-overlay-new-list">
+      <div className="modal-content-new-list">
         <h2>Add List</h2>
-        <div className="form-class">
+        <div className="form-class-list">
           <form onSubmit={handleSubmit}>
-            <div className="form-group">
+            <div className="form-group-list">
               <label>List Name:</label>
               <input
                 type="text"
@@ -71,13 +71,13 @@ const AddListModal = ({ addListWindow, setAddListWindow, setLists }) => {
                 required
               />
             </div>
-            <div className="button-group">
-              <button type="submit" className="btn-save">
+            <div className="button-group-list">
+              <button type="submit" className="btn-save-list">
                 Save
               </button>
               <button
                 type="button"
-                className="btn-cancel"
+                className="btn-cancel-list"
                 onClick={handleCancel}
               >
                 Cancel
