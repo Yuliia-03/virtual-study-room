@@ -5,7 +5,7 @@ import musicLogo from "../assets/music_logo.png";
 import customLogo from "../assets/customisation_logo.png";
 import copyLogo from "../assets/copy_logo.png";
 import exitLogo from "../assets/exit_logo.png";
-import ToDoList from "../components/ToDoListComponents/ToDoList";
+import ToDoList from "../components/ToDoListComponents/newToDoList";
 import StudyTimer from "../components/StudyTimer.js";
 import StudyParticipants from "../components/StudyParticipants.js";
 import { getAuthenticatedRequest } from "../utils/authService";
@@ -57,9 +57,9 @@ function GroupStudyPage() {
   const [messages, setMessages] = useState([]);
 
   const [customInput, setCustomInput] = useState(""); // For the customisation box
-  const [chatInput, setChatInput] = useState(""); //For chat box
+  const [chatInput, setChatInput] = useState(""); //Fot chat box
 
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState("ANON_USER"); // Default to 'ANON_USER' before fetching. Stores username fetched from the backend
 
   const [isTyping, setIsTyping] = useState(false);
   const [typingUser, setTypingUser] = useState("");
@@ -106,6 +106,8 @@ function GroupStudyPage() {
       }
     };
   }, [finalRoomCode, shouldReconnect]);
+
+
 
   // Method for connecting to the websocket
   const connectWebSocket = () => {
@@ -285,6 +287,7 @@ function GroupStudyPage() {
     }
   };
 
+
   // Method to leave room
   const leaveRoom = useCallback(async () => {
     // User is leaving so they should not reconnect to the room automatically
@@ -371,7 +374,7 @@ function GroupStudyPage() {
         .then(() => {
           toast.success("Code copied to clipboard!", {
             position: "top-center",
-            autoClose: 100,
+            autoClose: 1000,
             closeOnClick: true,
             pauseOnHover: true,
           });
@@ -409,41 +412,14 @@ function GroupStudyPage() {
   //Third Column: Timer, customisation, chatbox
 
   return (
-    <div
-      className="groupStudyRoom-container"
-      data-testid="groupStudyRoom-container"
-    >
-      {/*1st Column */}
-      <div className="column" role="column" data-testid="column-1">
-        <div className="todo-list-container" data-testid="todo-list-container">
-          <h2 className="todo-heading">
-            To Do:
-            <div className="checkbox-wrapper-5">
-              <div className="check">
-                <input id="check-5" type="checkbox"></input>
-                <label htmlFor="check-5"></label>
-              </div>
-            </div>
-          </h2>
-          <div style={{ flex: 1, width: "100%" }}>
-            {" "}
-            {/* This div takes all available space */}
-            <ToDoList isShared={true} listId={roomList} />
-          </div>
-        </div>
-        <div
-          className="sharedMaterials-container"
-          data-testid="sharedMaterials-container"
-        >
-          <SharedMaterials socket={socket} />
-        </div>
-      </div>
-      {/*2nd Column */}
-      <div className="column" role="column" data-testid="column-2">
-        <div className="user-list-container" data-testid="user-list-container">
-          <h2 className="heading"> Study Room: {roomName} </h2>
-          <h3 className="gs-heading2"> Code: {finalRoomCode}</h3>
-          <div className="utility-bar" data-testid="utility-bar">
+
+    <>
+      {/* Restructured header */}
+      <div className="study-room-header">
+        <h2 className="heading">Study Room: {roomName}</h2>
+        <div className="header-right-section">
+          <div className="utility-bar">
+            
             <button
               type="button"
               className={`music-button ${isActiveMusic ? "active" : ""}`}
@@ -464,8 +440,6 @@ function GroupStudyPage() {
             >
               <img src={customLogo} alt="Customisation" />
             </button>
-          </div>
-          <div className="utility-bar-2" data-testid="utility-bar-2">
             <button
               type="button"
               className={`copy-button ${isActiveCopy ? "active" : ""}`}
@@ -476,7 +450,6 @@ function GroupStudyPage() {
             >
               <img src={copyLogo} alt="Copy" />
             </button>
-            <ToastContainer />
             <button
               type="button"
               className={`exit-button ${isActiveExit ? "active" : ""}`}
@@ -488,6 +461,29 @@ function GroupStudyPage() {
               <img src={exitLogo} alt="Exit" />
             </button>
           </div>
+          <h3 className="gs-heading2">Code: {finalRoomCode}</h3>
+        </div>
+      </div>
+
+    {/*End of header */}
+      <div
+        className="groupStudyRoom-container"
+        data-testid="groupStudyRoom-container"
+      >
+        {/*1st Column */}
+                <div className="column" role="column" data-testid="column-1">
+                <ToDoList isShared={true} listId={roomList} socket={socket} roomCode={roomCode} />
+
+          <div
+            className="sharedMaterials-container"
+            data-testid="sharedMaterials-container"
+          >
+            <SharedMaterials socket={socket} />
+          </div>
+        </div>
+        {/*2nd Column */}
+        <div className="column" role="column" data-testid="column-2">
+        <div className="user-list-container" data-testid="user-list-container">
           <div className="users">
             {/* Dynamically render participants */}
             {participants.map((participant, index) => (
@@ -499,6 +495,7 @@ function GroupStudyPage() {
                     className="user-image"
                   />
                 </div>
+
                 <div className="user-name">{participant.username}</div>
               </div>
             ))}
@@ -506,51 +503,53 @@ function GroupStudyPage() {
         </div>
         <MotivationalMessage data-testid="motivationalMessage-container" />
       </div>
-      {/*3rd Column */}
-      <div className="column" role="column" data-testid="column-3">
-        {/* StudyTimer replaces the timer-container div */}
-        <StudyTimer
-          roomId={finalRoomCode}
-          isHost={true}
-          onClose={() => console.log("Timer closed")}
-          data-testid="studyTimer-container"
-        />
-        {/* <StudyTimer roomId="yourRoomId" isHost={true} onClose={() => console.log('Timer closed')} data-testid="studyTimer-container" /> */}
-        {/* Chat Box */}
-        <div className="chatBox-container" data-testid="chatBox-container">
-          {/* Chat Messages */}
-          <div className="chat-messages">
-            {messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`chat-message ${
-                  msg.sender === username ? "current-user" : "other-user"
-                }`}
-              >
-                <strong>{msg.sender}:</strong> {msg.text}
-              </div>
-            ))}
-            {typingUser && (
-              <p className="typing-indicator">
-                {" "}
-                <strong>{typingUser}</strong> is typing...
-              </p>
-            )}
-          </div>
-          {/* Chat Input */}
-          <input
-            value={chatInput}
-            onChange={(e) => {
-              setChatInput(e.target.value);
-              handleTyping();
-            }}
-            onKeyDown={(e) => e.key === "Enter" && sendMessage(e)}
-            placeholder="Type a message..."
+        {/*3rd Column */}
+        <div className="column" role="column" data-testid="column-3">
+          {/* StudyTimer replaces the timer-container div */}
+          <StudyTimer
+            roomId={finalRoomCode}
+            isHost={true}
+            onClose={() => console.log("Timer closed")}
+            data-testid="studyTimer-container"
           />
-          <button onClick={sendMessage}>Send</button>
+          {/* <StudyTimer roomId="yourRoomId" isHost={true} onClose={() => console.log('Timer closed')} data-testid="studyTimer-container" /> */}
+          {/* Chat Box */}
+          <div className="chatBox-container" data-testid="chatBox-container">
+            {/* Chat Messages */}
+            <div className="chat-messages">
+              {messages.map((msg, index) => (
+                <div
+                  key={index}
+                  className={`chat-message ${
+                    msg.sender === username ? "current-user" : "other-user"
+                  }`}
+                >
+                  <strong>{msg.sender}:</strong> {msg.text}
+                </div>
+              ))}
+              {typingUser && (
+                <p className="typing-indicator">
+                  {" "}
+                  <strong>{typingUser}</strong> is typing...
+                </p>
+              )}
+            </div>
+            {/* Chat Input */}
+            <input
+              value={chatInput}
+              onChange={(e) => {
+                setChatInput(e.target.value);
+                handleTyping();
+              }}
+              onKeyDown={(e) => e.key === "Enter" && sendMessage(e)}
+              placeholder="Type a message..."
+            />
+            <button onClick={sendMessage}>Send</button>
+          </div>
         </div>
       </div>
-    </div>
+      <ToastContainer />
+    </>
   );
 }
 
