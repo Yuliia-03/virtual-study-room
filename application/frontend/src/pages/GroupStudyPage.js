@@ -5,7 +5,7 @@ import musicLogo from "../assets/music_logo.png";
 import customLogo from "../assets/customisation_logo.png";
 import copyLogo from "../assets/copy_logo.png";
 import exitLogo from "../assets/exit_logo.png";
-import ToDoList from "../components/ToDoListComponents/ToDoList";
+import ToDoList from "../components/ToDoListComponents/newToDoList";
 import StudyTimer from "../components/StudyTimer.js";
 import StudyParticipants from "../components/StudyParticipants.js";
 import { getAuthenticatedRequest } from "../utils/authService";
@@ -404,12 +404,14 @@ function GroupStudyPage() {
   //Third Column: Timer, customisation, chatbox
 
   return (
+
     <>
       {/* Restructured header */}
       <div className="study-room-header">
         <h2 className="heading">Study Room: {roomName}</h2>
         <div className="header-right-section">
           <div className="utility-bar">
+            
             <button
               type="button"
               className={`music-button ${isActiveMusic ? "active" : ""}`}
@@ -461,8 +463,8 @@ function GroupStudyPage() {
         data-testid="groupStudyRoom-container"
       >
         {/*1st Column */}
-        <div className="column" role="column" data-testid="column-1">
-          <ToDoList isShared={true} listId={roomList} />
+                <div className="column" role="column" data-testid="column-1">
+                <ToDoList isShared={true} listId={roomList} socket={socket} roomCode={roomCode} />
 
           <div
             className="sharedMaterials-container"
@@ -485,6 +487,7 @@ function GroupStudyPage() {
                     className="user-image"
                   />
                 </div>
+
                 <div className="user-name">{participant.username}</div>
               </div>
             ))}
