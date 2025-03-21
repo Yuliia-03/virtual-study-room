@@ -32,6 +32,7 @@ ALLOWED_HOSTS = [
     ##"http://127.0.0.1:8000/api", # Localhost IP
     "127.0.0.1",  # Localhost IP
     "https://virtual-study-room-phi.vercel.app", # real website
+    "*",
 ]
 
 
@@ -94,6 +95,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React frontend
     #"http://127.0.0.1:8000/api",
     "https://virtual-study-room-phi.vercel.app", # real website
+    "*",
 ]
 
 # Security settings
@@ -102,7 +104,7 @@ CSRF_COOKIE_HTTPONLY = True  # Enable HTTPOnly for CSRF cookie
 # Optional: If you're using JWT, you can also disable CSRF for API requests
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",  # If your frontend is running on localhost:3000 (adjust as needed)
-    
+    "*",
 
 ]
 
